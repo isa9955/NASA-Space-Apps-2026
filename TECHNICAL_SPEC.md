@@ -4,9 +4,27 @@
 both the current scaffold and planned work; a planned capability is not
 evidence that a service, dataset, or scientific result already exists.
 
-### Phase 6 current implementation
+### Current frontend handoff status (supersedes earlier UI snapshots)
 
-The React UI now guides Start → Candidate → Science → Route → Habitat.
+The temporary Phase 6 `web/` frontend has been removed from the checkout.
+Developer 1 will implement the frontend independently; no replacement UI or
+deployment workflow is included. The complete former UI is preserved in Git
+commit `5c3e283`. See `docs/FRONTEND_HANDOFF.md` for the authoritative handoff:
+current endpoints/contracts, coordinate conventions, intended workflow and
+acceptance criteria. Backend handlers, shared API contracts, datasets,
+scientific processing, assessments, route records and tests are unchanged.
+Earlier UI/build/browser results below are historical, not verification of a
+currently shipped frontend. Phase 7 deployment remains pending.
+
+Current structure: `api/` owns read-only HTTP transport and shared contracts;
+`pipeline/` owns offline science and versioned artifacts; `docs/` owns handoff,
+methodology and provenance. No frontend directory currently exists. React,
+TypeScript, Vite and OpenLayers remain the suggested stack; the future app
+directory/build settings must be agreed before configuring Azure deployment.
+
+### Phase 6 historical implementation snapshot
+
+The former React UI guided Start → Candidate → Science → Route → Habitat.
 `GET /api/starts` exposes only the existing packaged route starts and recorded
 destination/status pairs. The UI constrains selection to this manifest instead
 of presenting uncomputed origins. It compares candidates and reads full
@@ -54,13 +72,14 @@ and interpolation parameters under the existing API v2 envelope. Endpoint
 geometry exactly matches the requested site coordinates. The API packages and
 serves these artifacts without recomputing scientific results.
 
-The minimal frontend is now `web/` (React/TypeScript/Vite/OpenLayers), consuming
+The former minimal frontend used `web/` (React/TypeScript/Vite/OpenLayers), consuming
 the local API through Vite's `/api` proxy. It provides candidate markers,
 known-site start/destination selectors, route polylines, metrics, warnings,
 coverage and loading/error states. Map geometry uses the Mars MOLA display
 projection, with no Earth tiles or fabricated basemap. Only reference-to-original
 candidate pairs are precomputed; other requests produce explicit errors.
-See `web/README.md` for setup and the verified end-to-end demo sequence.
+That frontend and its README remain in commit `5c3e283`; use
+`docs/FRONTEND_HANDOFF.md` for current integration instructions.
 
 **IMPORTANT:** Interpolated topography is not a safety guarantee. Missing SWIM,
 radiation/shielding evidence and local hazard validation remain blockers to
@@ -416,9 +435,10 @@ pipeline/
   requirements.txt
 ```
 
-There is no frontend, NASA data, pipeline source, scoring implementation,
-routing implementation, deployment workflow, or configured Azure environment
-in the repository today.
+The tree above is the historical Phase 1 snapshot. The current repository
+contains the implemented NASA pipeline, assessments, routes, mission context
+and five API endpoints. The frontend has been removed for independent
+implementation; deployment configuration remains pending.
 
 ### Minimal target structure
 

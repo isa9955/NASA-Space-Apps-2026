@@ -11,10 +11,14 @@ The Azure Functions API serves precomputed sites and route records; see
 Both original candidates now have provisional MOLA routes, with interpolation
 coverage explicitly reported; no site or route is certified safe.
 
-Phase 5.1 adds the minimal interactive frontend in [`web/`](web/README.md).
+The frontend will be implemented independently by our teammate. The temporary
+Phase 6 `web/` implementation has been removed from the checkout and remains
+available in Git commit `5c3e283`. No replacement UI is included.
+See [`docs/FRONTEND_HANDOFF.md`](docs/FRONTEND_HANDOFF.md) for the intended
+Start → Candidate → Science → Route → Habitat workflow, API contracts, Mars
+map requirements, local integration and acceptance criteria.
 
-Phase 6 completes the guided Start → Candidate → Science → Route → Habitat
-journey, with candidate comparison/provenance, supported-start discovery and
-an explicitly illustrative habitat/greenhouse preview. Historical Mars Odyssey
-THEMIS label context is documented in [`docs/data-sources.md`](docs/data-sources.md);
-it is not a candidate-site temperature or scoring input.
+Phase 6 backend discovery and historical Mars Odyssey THEMIS context remain
+available. See [`docs/data-sources.md`](docs/data-sources.md); THEMIS context
+is not a candidate-site temperature or scoring input. Azure deployment
+configuration and production verification remain pending Phase 7.

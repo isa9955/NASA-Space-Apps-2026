@@ -1,5 +1,10 @@
 # Mars Habitat Finder API — Phase 6
 
+The temporary frontend has been removed; the teammate will implement it
+independently. See [`../docs/FRONTEND_HANDOFF.md`](../docs/FRONTEND_HANDOFF.md)
+for the complete integration guide. All five endpoints, shared TypeScript
+contracts, schemas, scientific artifacts and backend tests remain unchanged.
+
 ## Guided-journey discovery and context
 
 - `GET /api/starts` returns `{ schemaVersion: "2.0.0", starts: [{ id, name,
@@ -43,8 +48,9 @@ partly on interpolated neighboring cells for slope estimates.
 
 Full schema/types are `src/contracts/route.schema.json` and `route.ts`. No
 safety claim is implied. Unavailable records still use null geometry/metrics;
-check status before drawing. The new `web/` client consumes these endpoints
-through the Vite development proxy. Site assessments remain unchanged.
+check status before drawing. The independent frontend should consume these
+endpoints through a local `/api` proxy and same-origin URLs in production.
+Site assessments remain unchanged.
 
 Provide exactly one `startId` and `siteId`, using valid site-ID syntax. Missing,
 duplicate or unknown query keys yield 400 `INVALID_ARGUMENT`; unknown start/site
@@ -181,7 +187,7 @@ Azure verification remain future work; nothing has been deployed.
 
 ## Essential verification
 
-`npm test` builds and runs two smoke checks against compiled handlers: schema
+`npm test` builds and runs six checks against compiled handlers: schema
 validation, unchanged detail records and packaging bytes, null/unknown science
 states, 400/404 behavior, and rejection of missing/malformed artifacts.
 Local HTTP checks were also run through Core Tools for both endpoints, all three

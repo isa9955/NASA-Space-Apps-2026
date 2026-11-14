@@ -1,5 +1,15 @@
 # Phase 3 assessment methodology
 
+## Frontend handoff status
+
+The temporary `web/` implementation has been removed for independent frontend
+development. The original UI is preserved in Git commit `5c3e283`.
+`docs/FRONTEND_HANDOFF.md` now owns integration/setup and UI acceptance criteria.
+The scientific methods, source products, pipeline code, exported artifacts,
+API behavior and tests are unchanged. UI descriptions and browser/build
+results in the Phase 5.1/6 sections below describe the former implementation;
+they are historical evidence, not a currently available frontend.
+
 ## Phase 6: complete guided exploration journey
 
 The UI now follows Start → Candidate → Science → Route → Habitat. Supported
@@ -157,7 +167,7 @@ validates the route schema, assessment SHA-256, endpoint geometry and source
 provenance, then copies the artifact byte-for-byte. TypeScript serves records;
 it does not run A*, scientific scoring or NASA downloads.
 
-A minimal React/TypeScript/Vite/OpenLayers frontend now lives in `web/`.
+The former minimal React/TypeScript/Vite/OpenLayers frontend lived in `web/`.
 It uses the actual `/api/sites` and `/api/routes` responses, with request
 cancellation, loading/error states, known-site start/destination selectors,
 clickable candidate markers, route lines, metrics, evidence coverage and hazard
@@ -171,14 +181,12 @@ pipeline/.venv/Scripts/python.exe pipeline/src/build_routes.py
 $env:PYTHONPATH = "pipeline/src"
 pipeline/.venv/Scripts/python.exe -m unittest discover -s pipeline/tests -v
 npm --prefix api test
-npm --prefix web ci
-npm --prefix web run build
 ```
 
 If caches are absent, the routing command retrieves only the original small
 PDS byte ranges; `--refresh-mola` explicitly refreshes them. Source hashes must
-still match. Run Functions on port 7071 and `npm --prefix web run dev` on port
-5173; Vite proxies `/api` to Functions. See `web/README.md` for launch commands.
+still match. Run Functions on port 7071. The independent frontend should proxy
+`/api` to that host; see `docs/FRONTEND_HANDOFF.md` for current setup.
 
 Verification includes Python routing/count/NoData/penalty tests, actual route
 geometry and metric integrity, API schema/packaging checks, frontend TypeScript
