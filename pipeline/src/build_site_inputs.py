@@ -20,6 +20,7 @@ from mars_pipeline.mola import (
     MOLA_SOURCE_URL,
     download_regional_window,
     elevation_and_slope,
+    MolaWindow,
 )
 from mars_pipeline.swim import (
     SWIM_PRODUCT_ID,
@@ -191,6 +192,7 @@ def build_site_inputs(
     cache_dir: Path,
     swim_path: Path | None = None,
     swim_retrieval_note: str | None = None,
+    mola_window: MolaWindow | None = None,
 ) -> dict[str, Any]:
     config = json.loads(config_path.read_text(encoding="utf-8"))
     sites = config["sites"]
@@ -200,7 +202,7 @@ def build_site_inputs(
     ]
 
     read_at = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
-    mola_window = download_regional_window(
+    mola_window = mola_window or download_regional_window(
         locations,
         cache_dir / "mola_arcadia_subset.tif",
     )

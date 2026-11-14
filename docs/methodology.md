@@ -1,5 +1,80 @@
 # Phase 3 assessment methodology
 
+## Automatic terrain candidate selection
+
+**IMPORTANT:** Selection version `mola-selection-1.0.0` replaces two manual
+sampling points with terrain-selected candidates. It preserves predefined
+`arcadia-sample-01` and its original coordinates. Selection is a regional
+terrain exploration step; it does not establish habitability. The existing
+`screening-1.0.0` and `evidence-rules-1.0.0` models remain unchanged.
+
+1. Read `pipeline/config/candidate_selection.json`. Search bounds are
+   194.8–195.2°E, 37.8–38.2°N in the same Mars coordinate convention as Phase 2.
+   Fetch only regional byte ranges of official MOLA topography
+   `MEGT44N180HB` and matching counts `MEGC44N180HB`, plus a one-cell slope
+   margin. No new instrument/dataset, SWIM recovery or global download occurs.
+2. Enumerate interior pixel centers inside the bounds. Require at least one
+   direct observation in **every** cell of the 3x3 neighborhood. Reject missing
+   or non-finite slopes. Use the existing latitude-corrected MOLA slope routine
+   without changing scientific normalization. Valid observed zero elevations
+   remain valid. Margin cells may lie just outside the search bounds.
+3. Order eligible cells by ascending slope, descending minimum neighborhood
+   count, descending center count, then ascending absolute tile row/column.
+   Counts break ties, rather than creating a new weighted quality score.
+4. Exclude cells within 3,000 m of the reference. Take the first feasible pair
+   in lexicographic rank order whose members are at least 3,000 m apart. Use
+   PyProj spherical geodesic distance on the same 3,396,000 m Mars sphere.
+   This deterministic pair search does not claim a globally optimal slope sum.
+   Fail explicitly if no pair exists; never relax quality or distance rules.
+5. Extract all three sites through the existing Phase 2 reader, run the existing
+   Phase 3 assessment CLI, and rebuild the API artifact. No live API calculation.
+
+The 3 km spacing and one-count eligibility threshold are project sampling
+choices, not NASA safety criteria. A 0.4-degree search is spatially limited and
+biased toward lower slopes with available orbital coverage. Small differences
+in regional slopes do not demonstrate better local habitat conditions. The
+selected centers have one and two observations; observed neighborhoods still
+lack measurement uncertainties and habitat-scale validation. SWIM remains
+unavailable and radiation risk/shielding remain unresolved.
+
+`pipeline/candidate_selection.json` records the actual eligible count, selected
+cells, slope/count evidence, separations, product IDs, parameters and regional
+raster hashes. This report is also carried in the MOLA source provenance of
+the input/assessment artifacts, so API details expose the discovery method
+using existing source metadata fields.
+
+Reproduce from the repository root:
+
+```powershell
+pipeline/.venv/Scripts/python.exe pipeline/src/select_candidates.py
+pipeline/.venv/Scripts/python.exe pipeline/src/build_site_assessments.py
+npm --prefix api test
+```
+
+The selection command needs access to the official PDS host and writes
+`pipeline/config/selected_sites.json`, `pipeline/candidate_selection.json`,
+and `pipeline/site_inputs.json`. Raw regional rasters remain ignored under
+`pipeline/data/selection/`. Repeated selection on identical rasters/configuration
+returns the same grid-cell IDs; retrieval timestamps can differ. The original
+manual config remains available in `pipeline/config/study_region.json`.
+
+**IMPORTANT — API coordination:** v2 schema and routes are unchanged. New
+site IDs encode tile row and column: `arcadia-mola-r793-c1903` and
+`arcadia-mola-r746-c1895` for this run. Old `arcadia-sample-02` and
+`arcadia-sample-03` are retired and return 404; no alias silently assigns their
+IDs to different coordinates. Consumers must discover current IDs through
+`GET /api/sites`. The reference remains `arcadia-sample-01`. Restart an existing
+Functions worker after rebuilding, because it caches the artifact.
+
+Verified run: 45 eligible cells from 8,748 source bytes. Selected cells are
+21,958.69 m apart and 11,209.09 m / 10,749.66 m from the reference. Their slopes
+are 0.12373338° / 0.16910413°; the reference remains 0.15699468°. All three have
+Medium terrain evidence support under the unchanged confidence rules, and
+Unknown overall evidence confidence and null overall suitability. Essential
+checks passed: neighborhood rejection, deterministic ordering/separation,
+actual-data re-selection with reversed enumeration, unchanged reference
+inputs, Phase 3 sanity checks, and API build/record-integrity checks.
+
 ## Evidence and scope
 
 **IMPORTANT:** Results are reproducible screens of three Arcadia sampling

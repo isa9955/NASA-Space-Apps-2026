@@ -1,88 +1,733 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://mars-habitat-finder.example/contracts/site.schema.json",
-  "title": "Mars Habitat Finder site response",
-  "type": "object",
-  "required": ["site"],
-  "properties": {
-    "site": {
+  "title": "Mars Habitat Finder scientific API v2",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/siteResponse"
+    },
+    {
+      "$ref": "#/$defs/sitesResponse"
+    },
+    {
+      "$ref": "#/$defs/errorResponse"
+    }
+  ],
+  "$defs": {
+    "location": {
       "type": "object",
-      "required": ["id", "name", "dataStatus", "location", "environmentalFactors", "suitability", "confidence", "sources", "route"],
+      "required": [
+        "type",
+        "coordinates",
+        "coordinateReference"
+      ],
       "properties": {
-        "id": { "type": "string" },
-        "name": { "type": "string" },
-        "dataStatus": { "const": "placeholder" },
-        "location": {
+        "type": {
+          "const": "Point"
+        },
+        "coordinates": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 360
+            },
+            {
+              "type": "number",
+              "minimum": -90,
+              "maximum": 90
+            }
+          ],
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "coordinateReference": {
           "type": "object",
-          "required": ["type", "coordinates"],
+          "required": [
+            "body",
+            "latitudeType",
+            "longitudeDirection",
+            "longitudeRange",
+            "datum"
+          ],
           "properties": {
-            "type": { "const": "Point" },
-            "coordinates": { "$ref": "#/$defs/coordinates" }
+            "body": {
+              "const": "Mars"
+            },
+            "latitudeType": {
+              "const": "planetocentric"
+            },
+            "longitudeDirection": {
+              "const": "positive east"
+            },
+            "longitudeRange": {
+              "type": "string"
+            },
+            "datum": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "observation": {
+      "type": "object",
+      "required": [
+        "value",
+        "unit",
+        "status",
+        "sourceId"
+      ],
+      "properties": {
+        "value": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "unit": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "status": {
+          "type": "string"
+        },
+        "sourceId": {
+          "type": "string"
+        },
+        "unavailableReason": {
+          "type": "string"
+        },
+        "method": {
+          "type": "string"
+        },
+        "dataBasis": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "id",
+        "provider",
+        "productId",
+        "productUrl",
+        "availability"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "provider": {
+          "type": "string"
+        },
+        "productId": {
+          "type": "string"
+        },
+        "productUrl": {
+          "type": "string"
+        },
+        "availability": {
+          "enum": [
+            "available",
+            "not-retrieved"
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "factor": {
+      "type": "object",
+      "required": [
+        "status",
+        "score",
+        "weight",
+        "weightedContribution",
+        "observation",
+        "explanation"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "assessed",
+            "insufficient-evidence"
+          ]
+        },
+        "score": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "weight": {
+          "type": "number"
+        },
+        "weightedContribution": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "observation": {
+          "$ref": "#/$defs/observation"
+        },
+        "explanation": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "evidence": {
+      "type": "object",
+      "required": [
+        "level",
+        "rationale"
+      ],
+      "properties": {
+        "level": {
+          "enum": [
+            "high",
+            "medium",
+            "low",
+            "unknown"
+          ]
+        },
+        "rationale": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "pixelSizeMeters": {
+          "type": "number"
+        },
+        "observationCount": {
+          "type": "number"
+        },
+        "countsSourceId": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "suitability": {
+      "type": "object",
+      "required": [
+        "status",
+        "overallStatus",
+        "score",
+        "scale",
+        "algorithmVersion",
+        "factors",
+        "modelStatus",
+        "modelScore",
+        "availableWeight",
+        "explanation"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "partial",
+            "not-assessed"
+          ]
+        },
+        "overallStatus": {
+          "const": "unknown"
+        },
+        "score": {
+          "type": "null"
+        },
+        "scale": {
+          "const": "0-100"
+        },
+        "algorithmVersion": {
+          "type": "string"
+        },
+        "factors": {
+          "type": "object",
+          "required": [
+            "terrain",
+            "water"
+          ],
+          "properties": {
+            "terrain": {
+              "$ref": "#/$defs/factor"
+            },
+            "water": {
+              "$ref": "#/$defs/factor"
+            }
           },
           "additionalProperties": false
         },
-        "environmentalFactors": {
+        "modelStatus": {
+          "enum": [
+            "complete",
+            "incomplete"
+          ]
+        },
+        "modelScore": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "availableWeight": {
+          "type": "number"
+        },
+        "explanation": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "confidence": {
+      "type": "object",
+      "required": [
+        "status",
+        "level",
+        "probability",
+        "algorithmVersion",
+        "coverage",
+        "factors",
+        "rationale"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "insufficient-evidence",
+            "assessed"
+          ]
+        },
+        "level": {
+          "enum": [
+            "high",
+            "medium",
+            "low",
+            "unknown"
+          ]
+        },
+        "probability": {
+          "type": "null"
+        },
+        "algorithmVersion": {
+          "type": "string"
+        },
+        "coverage": {
           "type": "object",
-          "required": ["water", "terrain", "solar", "thermal", "radiation"],
+          "required": [
+            "supportedFactors",
+            "requiredFactors",
+            "missingFactors"
+          ],
           "properties": {
-            "water": { "$ref": "#/$defs/factor" },
-            "terrain": { "$ref": "#/$defs/factor" },
-            "solar": { "$ref": "#/$defs/factor" },
-            "thermal": { "$ref": "#/$defs/factor" },
-            "radiation": { "$ref": "#/$defs/factor" }
+            "supportedFactors": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "requiredFactors": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "missingFactors": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
           },
           "additionalProperties": false
+        },
+        "factors": {
+          "type": "object",
+          "required": [
+            "terrain",
+            "water"
+          ],
+          "properties": {
+            "terrain": {
+              "$ref": "#/$defs/evidence"
+            },
+            "water": {
+              "$ref": "#/$defs/evidence"
+            }
+          },
+          "additionalProperties": false
+        },
+        "rationale": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "radiation": {
+      "type": "object",
+      "required": [
+        "status",
+        "risk",
+        "shieldingRequirements",
+        "dose",
+        "observationIds",
+        "summary"
+      ],
+      "properties": {
+        "status": {
+          "const": "insufficient-evidence"
+        },
+        "risk": {
+          "const": "unknown"
+        },
+        "shieldingRequirements": {
+          "const": "unresolved"
+        },
+        "dose": {
+          "type": "null"
+        },
+        "observationIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "summary": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "candidateSite": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "location",
+        "dataStatus",
+        "observations",
+        "suitability",
+        "evidenceConfidence",
+        "radiationReview",
+        "strengths",
+        "limitations",
+        "missingInformation",
+        "humanReviewWarnings",
+        "sources"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+          "maxLength": 100
+        },
+        "name": {
+          "type": "string"
+        },
+        "location": {
+          "$ref": "#/$defs/location"
+        },
+        "dataStatus": {
+          "const": "nasa-derived-partial-assessment"
+        },
+        "observations": {
+          "type": "object",
+          "required": [
+            "swimCombinedIceConsistency",
+            "molaTopography",
+            "molaObservationCount",
+            "molaRegionalSlope"
+          ],
+          "additionalProperties": {
+            "$ref": "#/$defs/observation"
+          }
         },
         "suitability": {
-          "type": "object",
-          "required": ["status", "score", "summary"],
-          "properties": {
-            "status": { "$ref": "#/$defs/assessmentStatus" },
-            "score": { "type": ["number", "null"] },
-            "summary": { "type": "string" }
-          },
-          "additionalProperties": false
+          "$ref": "#/$defs/suitability"
         },
-        "confidence": {
-          "type": "object",
-          "required": ["status", "level", "summary"],
-          "properties": {
-            "status": { "$ref": "#/$defs/assessmentStatus" },
-            "level": { "enum": ["low", "medium", "high", null] },
-            "summary": { "type": "string" }
-          },
-          "additionalProperties": false
+        "evidenceConfidence": {
+          "$ref": "#/$defs/confidence"
+        },
+        "radiationReview": {
+          "$ref": "#/$defs/radiation"
+        },
+        "strengths": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "missingInformation": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "humanReviewWarnings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         },
         "sources": {
           "type": "array",
           "items": {
-            "type": "object",
-            "required": ["label", "status", "url"],
-            "properties": {
-              "label": { "type": "string" },
-              "status": { "enum": ["placeholder", "available"] },
-              "url": { "type": ["string", "null"], "format": "uri" }
-            },
-            "additionalProperties": false
+            "$ref": "#/$defs/source"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "siteSummary": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "location",
+        "dataStatus",
+        "suitability",
+        "evidenceConfidence",
+        "radiationReview",
+        "limitations",
+        "missingInformation",
+        "humanReviewWarnings"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+          "maxLength": 100
+        },
+        "name": {
+          "type": "string"
+        },
+        "location": {
+          "$ref": "#/$defs/location"
+        },
+        "dataStatus": {
+          "const": "nasa-derived-partial-assessment"
+        },
+        "suitability": {
+          "$ref": "#/$defs/suitability"
+        },
+        "evidenceConfidence": {
+          "$ref": "#/$defs/confidence"
+        },
+        "radiationReview": {
+          "$ref": "#/$defs/radiation"
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string"
           }
         },
-        "route": {
+        "missingInformation": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "humanReviewWarnings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "artifact": {
+      "type": "object",
+      "required": [
+        "schemaVersion",
+        "scoringVersion",
+        "model",
+        "region",
+        "sources",
+        "sites",
+        "inputProvenance"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "const": "phase3-site-assessments/1.0.0"
+        },
+        "scoringVersion": {
+          "type": "string"
+        },
+        "model": {
+          "type": "object"
+        },
+        "region": {
+          "type": "object"
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/source"
+          }
+        },
+        "sites": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/candidateSite"
+          },
+          "minItems": 1
+        },
+        "inputProvenance": {
           "type": "object",
-          "required": ["status", "summary", "waypoints"],
+          "required": [
+            "file",
+            "sha256"
+          ],
           "properties": {
-            "status": { "enum": ["placeholder", "provisional", "unavailable"] },
-            "summary": { "type": "string" },
-            "waypoints": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "required": ["label", "coordinates"],
-                "properties": {
-                  "label": { "type": "string" },
-                  "coordinates": { "$ref": "#/$defs/coordinates" }
-                },
-                "additionalProperties": false
-              }
+            "file": {
+              "type": "string"
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "siteResponse": {
+      "type": "object",
+      "required": [
+        "schemaVersion",
+        "assessmentSchemaVersion",
+        "scoringVersion",
+        "inputProvenance",
+        "site"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "const": "2.0.0"
+        },
+        "assessmentSchemaVersion": {
+          "const": "phase3-site-assessments/1.0.0"
+        },
+        "scoringVersion": {
+          "type": "string"
+        },
+        "inputProvenance": {
+          "type": "object",
+          "required": [
+            "file",
+            "sha256"
+          ],
+          "properties": {
+            "file": {
+              "type": "string"
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            }
+          },
+          "additionalProperties": false
+        },
+        "site": {
+          "$ref": "#/$defs/candidateSite"
+        }
+      },
+      "additionalProperties": false
+    },
+    "sitesResponse": {
+      "type": "object",
+      "required": [
+        "schemaVersion",
+        "assessmentSchemaVersion",
+        "scoringVersion",
+        "inputProvenance",
+        "sites"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "const": "2.0.0"
+        },
+        "assessmentSchemaVersion": {
+          "const": "phase3-site-assessments/1.0.0"
+        },
+        "scoringVersion": {
+          "type": "string"
+        },
+        "inputProvenance": {
+          "type": "object",
+          "required": [
+            "file",
+            "sha256"
+          ],
+          "properties": {
+            "file": {
+              "type": "string"
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            }
+          },
+          "additionalProperties": false
+        },
+        "sites": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/siteSummary"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "errorResponse": {
+      "type": "object",
+      "required": [
+        "schemaVersion",
+        "error"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "const": "2.0.0"
+        },
+        "error": {
+          "type": "object",
+          "required": [
+            "code",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "enum": [
+                "INVALID_ARGUMENT",
+                "SITE_NOT_FOUND",
+                "ASSESSMENTS_UNAVAILABLE"
+              ]
+            },
+            "message": {
+              "type": "string"
             }
           },
           "additionalProperties": false
@@ -90,26 +735,5 @@
       },
       "additionalProperties": false
     }
-  },
-  "$defs": {
-    "assessmentStatus": { "enum": ["placeholder", "not-assessed", "assessed"] },
-    "coordinates": {
-      "type": "array",
-      "prefixItems": [{ "type": "number" }, { "type": "number" }],
-      "minItems": 2,
-      "maxItems": 2
-    },
-    "factor": {
-      "type": "object",
-      "required": ["status", "value", "unit", "summary"],
-      "properties": {
-        "status": { "$ref": "#/$defs/assessmentStatus" },
-        "value": { "type": ["number", "null"] },
-        "unit": { "type": ["string", "null"] },
-        "summary": { "type": "string" }
-      },
-      "additionalProperties": false
-    }
-  },
-  "additionalProperties": false
+  }
 }

@@ -1,5 +1,14 @@
 # Phase 2: NASA raster ingestion
 
+For automatic terrain discovery, run
+`pipeline/.venv/Scripts/python.exe pipeline/src/select_candidates.py`, then the
+assessment command below and `npm --prefix api run build`. The selector
+preserves `arcadia-sample-01`, replaces samples 02/03 with grid-cell IDs, and
+writes `config/selected_sites.json` plus `candidate_selection.json`. The
+original `config/study_region.json` remains the manual baseline; running the
+ingestion command with that original config restores manual sampling inputs.
+Use the selector command to reproduce the current automatically selected set.
+
 Phase 3 now consumes this artifact offline. Run
 `pipeline/.venv/Scripts/python.exe pipeline/src/build_site_assessments.py` from
 the repository root to produce `pipeline/site_assessments.json`. See

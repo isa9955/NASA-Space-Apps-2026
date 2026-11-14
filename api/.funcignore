@@ -1,0 +1,6 @@
+src/
+test/
+scripts/
+.func/
+local.settings.json
+*.ts

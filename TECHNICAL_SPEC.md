@@ -4,6 +4,47 @@
 both the current scaffold and planned work; a planned capability is not
 evidence that a service, dataset, or scientific result already exists.
 
+### Phase 4 current implementation (supersedes earlier scaffold snapshots)
+
+**Current data update — deterministic candidate selection:** one predefined
+reference (`arcadia-sample-01`) is retained; two manual samples are replaced by
+offline MOLA terrain discoveries. The bounded Arcadia scan requires direct
+observations throughout each 3x3 slope neighborhood, orders by slope with count
+and grid-cell tie-breaks, and chooses a pair separated by at least 3 km from
+each other and the reference. See `docs/methodology.md` and
+`pipeline/candidate_selection.json` for assumptions and the reproducible report.
+The two new IDs encode MOLA grid cells; samples 02/03 are retired. API v2
+schema/routes are unchanged; clients discover IDs from `/api/sites`. Python
+scoring versions remain unchanged. **IMPORTANT:** these are terrain-selected
+exploration candidates; habitat suitability and overall confidence remain
+Unknown, with missing SWIM and unresolved radiation/shielding.
+
+`GET /api/sites` and `GET /api/sites/{id}` now serve the existing Phase 3
+assessments through TypeScript Azure Functions. The list returns summaries;
+detail retains the `{ site }` envelope and returns the unchanged assessment.
+Both add API `schemaVersion: "2.0.0"`, assessment schema/scoring versions and
+input provenance. Final request/response, error and migration details are in
+`api/README.md`; `api/src/contracts/site.schema.json` defines the wire schema.
+
+The API build validates and copies `pipeline/site_assessments.json` into
+`api/dist/data/`; runtime resolves this packaged artifact relative to compiled
+code, validates it and caches it per worker. Build/runtime failures never fall
+back to fixtures. Python remains the only scientific implementation. Production
+packaging must include the API root metadata, compiled schema/code/data and
+production dependencies. No Azure deployment workflow is implemented yet.
+
+**IMPORTANT:** This is a breaking contract evolution from the Phase 1 fixture:
+use `observations`, `suitability.factors`, `evidenceConfidence`, `radiationReview`
+and full source provenance. The placeholder ID and route are no longer served.
+The frontend must adopt v2; no frontend or routing changes occur in Phase 4.
+
+**BLOCKER:** SWIM has not been recovered. The packaged records preserve null
+overall suitability scores, Unknown overall evidence confidence, unavailable
+water observations, and unresolved radiation/shielding. No ingestion or
+scientific rescoring was performed. Neither endpoint ranks samples or implies
+site safety. Local Functions HTTP smoke checks and scientific integrity checks
+passed; deployed Azure behavior remains unverified.
+
 ## 1. Project overview
 
 ### Problem and proposed solution

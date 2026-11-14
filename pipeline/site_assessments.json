@@ -19,7 +19,7 @@
   "region": {
     "id": "arcadia-small-overlap",
     "name": "Arcadia Planitia sample window",
-    "description": "Three MOLA count-supported sampling points within the published Arcadia SWIM study region; points are inputs for data extraction, not ranked candidate sites.",
+    "description": "One predefined reference and two automatically selected regional MOLA terrain candidates; habitat suitability remains unknown.",
     "coordinateReference": {
       "body": "Mars",
       "latitudeType": "planetocentric",
@@ -44,7 +44,7 @@
       "publishedLatitude": "60 degrees south to 60 degrees north",
       "publishedNoData": -30,
       "availability": "not-retrieved",
-      "retrievalNote": "Official SWIM product host returned HTTP 523 or timed out during the 2026-11-14 retrieval attempt; no raster values were synthesized."
+      "retrievalNote": "SWIM remains unavailable; candidate discovery uses MOLA terrain only."
     },
     {
       "id": "mola-megdr-128ppd",
@@ -74,8 +74,8 @@
         "interpretation": "The PDS4 topography label describes interpolation where bins have no observations and does not declare a special constant. The supplied ENVI header marks zero as ignore; the companion count raster is used to distinguish zero-observation bins from observed zero elevation."
       },
       "availability": "available",
-      "regionalBytesFetched": 225,
-      "regionalRasterSha256": "c7b61636f2d141796e94bbf52ce48e36e863f57f333535ba2ccaa5013670c87b",
+      "regionalBytesFetched": 8748,
+      "regionalRasterSha256": "f7df8fd2f290643c1de29dd0200fa4f718740286befe86e100ca6bc166b5b9fb",
       "countsProduct": {
         "productId": "MEGC44N180HB",
         "productUrl": "https://pds-geosciences.wustl.edu/mgs/urn-nasa-pds-mgs_mola_topography_derived/meg128/megc44n180hb.img",
@@ -83,7 +83,68 @@
         "dataType": "unsigned 8-bit integer",
         "zeroMeaning": "No MOLA observations in the bin; a topography value in this cell may be interpolated."
       },
-      "retrievedAt": "2026-11-14T19:49:06.410145Z"
+      "retrievedAt": "2026-11-14T20:21:42.731991Z",
+      "candidateSelection": {
+        "configuration": {
+          "version": "mola-selection-1.0.0",
+          "referenceSiteId": "arcadia-sample-01",
+          "boundsDegrees": {
+            "west": 194.8,
+            "east": 195.2,
+            "south": 37.8,
+            "north": 38.2
+          },
+          "minimumSeparationMeters": 3000,
+          "minimumNeighborhoodCount": 1
+        },
+        "eligibleCellCount": 45,
+        "topographyProductId": "MEGT44N180HB",
+        "countsProductId": "MEGC44N180HB",
+        "topographyRasterSha256": "f7df8fd2f290643c1de29dd0200fa4f718740286befe86e100ca6bc166b5b9fb",
+        "countsRasterSha256": "899bdb1d3cb27dce64fcf1e3f90b9b8b616653167282e50af8c5b2376d806bb8",
+        "regionalBytesFetched": 8748,
+        "reference": {
+          "id": "arcadia-sample-01",
+          "name": "Arcadia sample 01",
+          "longitudeEastDeg": 194.83984375,
+          "latitudePlanetocentricDeg": 37.98828125
+        },
+        "selected": [
+          {
+            "id": "arcadia-mola-r793-c1903",
+            "coordinates": [
+              194.87109375097162,
+              37.800781258030625
+            ],
+            "elevationMeters": -3966.0,
+            "slopeDegrees": 0.12373338031488165,
+            "observationCount": 1,
+            "minimumNeighborhoodCount": 1,
+            "tileRow": 793,
+            "tileColumn": 1903
+          },
+          {
+            "id": "arcadia-mola-r746-c1895",
+            "coordinates": [
+              194.80859375096753,
+              38.16796875805461
+            ],
+            "elevationMeters": -3963.0,
+            "slopeDegrees": 0.16910413283654532,
+            "observationCount": 2,
+            "minimumNeighborhoodCount": 1,
+            "tileRow": 746,
+            "tileColumn": 1895
+          }
+        ],
+        "pairSeparationMeters": 21958.69087025668,
+        "referenceSeparationMeters": {
+          "arcadia-mola-r793-c1903": 11209.093639737897,
+          "arcadia-mola-r746-c1895": 10749.66431034198
+        },
+        "ordering": "ascending slope; descending minimum 3x3 count; descending center count; ascending tile row and column; first feasible pair",
+        "limitation": "Terrain-only discovery with regional MOLA data, not evidence of habitability or site safety."
+      }
     },
     {
       "id": "mola-megdr-128ppd-counts",
@@ -99,8 +160,8 @@
       "dataType": "unsigned 8-bit integer",
       "zeroMeaning": "No observations in that pixel; zero is a valid count, not a missing count.",
       "availability": "available",
-      "regionalRasterSha256": "7d3c5b2c3e697a0b597870e58bf14e3278105b61b403b9314a855aa00d7c6a1f",
-      "retrievedAt": "2026-11-14T19:49:06.410145Z"
+      "regionalRasterSha256": "899bdb1d3cb27dce64fcf1e3f90b9b8b616653167282e50af8c5b2376d806bb8",
+      "retrievedAt": "2026-11-14T20:21:42.731991Z"
     }
   ],
   "sites": [
@@ -284,7 +345,7 @@
           "publishedLatitude": "60 degrees south to 60 degrees north",
           "publishedNoData": -30,
           "availability": "not-retrieved",
-          "retrievalNote": "Official SWIM product host returned HTTP 523 or timed out during the 2026-11-14 retrieval attempt; no raster values were synthesized."
+          "retrievalNote": "SWIM remains unavailable; candidate discovery uses MOLA terrain only."
         },
         {
           "id": "mola-megdr-128ppd",
@@ -314,8 +375,8 @@
             "interpretation": "The PDS4 topography label describes interpolation where bins have no observations and does not declare a special constant. The supplied ENVI header marks zero as ignore; the companion count raster is used to distinguish zero-observation bins from observed zero elevation."
           },
           "availability": "available",
-          "regionalBytesFetched": 225,
-          "regionalRasterSha256": "c7b61636f2d141796e94bbf52ce48e36e863f57f333535ba2ccaa5013670c87b",
+          "regionalBytesFetched": 8748,
+          "regionalRasterSha256": "f7df8fd2f290643c1de29dd0200fa4f718740286befe86e100ca6bc166b5b9fb",
           "countsProduct": {
             "productId": "MEGC44N180HB",
             "productUrl": "https://pds-geosciences.wustl.edu/mgs/urn-nasa-pds-mgs_mola_topography_derived/meg128/megc44n180hb.img",
@@ -323,7 +384,68 @@
             "dataType": "unsigned 8-bit integer",
             "zeroMeaning": "No MOLA observations in the bin; a topography value in this cell may be interpolated."
           },
-          "retrievedAt": "2026-11-14T19:49:06.410145Z"
+          "retrievedAt": "2026-11-14T20:21:42.731991Z",
+          "candidateSelection": {
+            "configuration": {
+              "version": "mola-selection-1.0.0",
+              "referenceSiteId": "arcadia-sample-01",
+              "boundsDegrees": {
+                "west": 194.8,
+                "east": 195.2,
+                "south": 37.8,
+                "north": 38.2
+              },
+              "minimumSeparationMeters": 3000,
+              "minimumNeighborhoodCount": 1
+            },
+            "eligibleCellCount": 45,
+            "topographyProductId": "MEGT44N180HB",
+            "countsProductId": "MEGC44N180HB",
+            "topographyRasterSha256": "f7df8fd2f290643c1de29dd0200fa4f718740286befe86e100ca6bc166b5b9fb",
+            "countsRasterSha256": "899bdb1d3cb27dce64fcf1e3f90b9b8b616653167282e50af8c5b2376d806bb8",
+            "regionalBytesFetched": 8748,
+            "reference": {
+              "id": "arcadia-sample-01",
+              "name": "Arcadia sample 01",
+              "longitudeEastDeg": 194.83984375,
+              "latitudePlanetocentricDeg": 37.98828125
+            },
+            "selected": [
+              {
+                "id": "arcadia-mola-r793-c1903",
+                "coordinates": [
+                  194.87109375097162,
+                  37.800781258030625
+                ],
+                "elevationMeters": -3966.0,
+                "slopeDegrees": 0.12373338031488165,
+                "observationCount": 1,
+                "minimumNeighborhoodCount": 1,
+                "tileRow": 793,
+                "tileColumn": 1903
+              },
+              {
+                "id": "arcadia-mola-r746-c1895",
+                "coordinates": [
+                  194.80859375096753,
+                  38.16796875805461
+                ],
+                "elevationMeters": -3963.0,
+                "slopeDegrees": 0.16910413283654532,
+                "observationCount": 2,
+                "minimumNeighborhoodCount": 1,
+                "tileRow": 746,
+                "tileColumn": 1895
+              }
+            ],
+            "pairSeparationMeters": 21958.69087025668,
+            "referenceSeparationMeters": {
+              "arcadia-mola-r793-c1903": 11209.093639737897,
+              "arcadia-mola-r746-c1895": 10749.66431034198
+            },
+            "ordering": "ascending slope; descending minimum 3x3 count; descending center count; ascending tile row and column; first feasible pair",
+            "limitation": "Terrain-only discovery with regional MOLA data, not evidence of habitability or site safety."
+          }
         },
         {
           "id": "mola-megdr-128ppd-counts",
@@ -339,19 +461,19 @@
           "dataType": "unsigned 8-bit integer",
           "zeroMeaning": "No observations in that pixel; zero is a valid count, not a missing count.",
           "availability": "available",
-          "regionalRasterSha256": "7d3c5b2c3e697a0b597870e58bf14e3278105b61b403b9314a855aa00d7c6a1f",
-          "retrievedAt": "2026-11-14T19:49:06.410145Z"
+          "regionalRasterSha256": "899bdb1d3cb27dce64fcf1e3f90b9b8b616653167282e50af8c5b2376d806bb8",
+          "retrievedAt": "2026-11-14T20:21:42.731991Z"
         }
       ]
     },
     {
-      "id": "arcadia-sample-02",
-      "name": "Arcadia sample 02",
+      "id": "arcadia-mola-r793-c1903",
+      "name": "Arcadia terrain candidate 1",
       "location": {
         "type": "Point",
         "coordinates": [
-          194.83203125,
-          38.05078125
+          194.87109375097162,
+          37.800781258030625
         ],
         "coordinateReference": {
           "body": "Mars",
@@ -371,19 +493,19 @@
           "unavailableReason": "swim_raster_not_retrieved"
         },
         "molaTopography": {
-          "value": -3980.0,
+          "value": -3966.0,
           "unit": "meter relative to MOLA areoid",
           "status": "sampled_product_value",
           "sourceId": "mola-megdr-128ppd"
         },
         "molaObservationCount": {
-          "value": 4.0,
+          "value": 1.0,
           "unit": "observations per 128 ppd cell",
           "status": "observed",
           "sourceId": "mola-megdr-128ppd-counts"
         },
         "molaRegionalSlope": {
-          "value": 0.5404463066168825,
+          "value": 0.12373338031488165,
           "unit": "degree",
           "status": "derived",
           "sourceId": "mola-megdr-128ppd",
@@ -400,11 +522,11 @@
         "factors": {
           "terrain": {
             "status": "assessed",
-            "score": 94.59553693383117,
+            "score": 98.76266619685119,
             "weight": 0.5,
-            "weightedContribution": 47.297768466915585,
+            "weightedContribution": 49.38133309842559,
             "observation": {
-              "value": 0.5404463066168825,
+              "value": 0.12373338031488165,
               "unit": "degree",
               "status": "derived",
               "sourceId": "mola-megdr-128ppd",
@@ -458,14 +580,14 @@
             "level": "medium",
             "rationale": [
               "Confidence describes support for regional terrain evidence only.",
-              "Projected pixel size: 463.058 m; center-cell count: 4.",
+              "Projected pixel size: 463.058 m; center-cell count: 1.",
               "Neighborhood basis: all_3x3_cells_have_direct_observations.",
               "Product and count raster references and hashes are recorded.",
               "Source observation period: 1999-02 through 2001-06; current surface conditions are unverified.",
               "Measurement uncertainty, fine-scale hazards and independent local validation are unavailable."
             ],
             "pixelSizeMeters": 463.0576672,
-            "observationCount": 4.0,
+            "observationCount": 1.0,
             "countsSourceId": "mola-megdr-128ppd-counts"
           },
           "water": {
@@ -488,7 +610,7 @@
         "summary": "No site-specific radiation or shielding evidence exists in the Phase 2 input; specialist review required."
       },
       "strengths": [
-        "Regional slope measured as 0.5404 degrees supports an explicit terrain screen."
+        "Regional slope measured as 0.1237 degrees supports an explicit terrain screen."
       ],
       "limitations": [
         "Screening thresholds and weights are project assumptions, not NASA habitat standards.",
@@ -524,7 +646,7 @@
           "publishedLatitude": "60 degrees south to 60 degrees north",
           "publishedNoData": -30,
           "availability": "not-retrieved",
-          "retrievalNote": "Official SWIM product host returned HTTP 523 or timed out during the 2026-11-14 retrieval attempt; no raster values were synthesized."
+          "retrievalNote": "SWIM remains unavailable; candidate discovery uses MOLA terrain only."
         },
         {
           "id": "mola-megdr-128ppd",
@@ -554,8 +676,8 @@
             "interpretation": "The PDS4 topography label describes interpolation where bins have no observations and does not declare a special constant. The supplied ENVI header marks zero as ignore; the companion count raster is used to distinguish zero-observation bins from observed zero elevation."
           },
           "availability": "available",
-          "regionalBytesFetched": 225,
-          "regionalRasterSha256": "c7b61636f2d141796e94bbf52ce48e36e863f57f333535ba2ccaa5013670c87b",
+          "regionalBytesFetched": 8748,
+          "regionalRasterSha256": "f7df8fd2f290643c1de29dd0200fa4f718740286befe86e100ca6bc166b5b9fb",
           "countsProduct": {
             "productId": "MEGC44N180HB",
             "productUrl": "https://pds-geosciences.wustl.edu/mgs/urn-nasa-pds-mgs_mola_topography_derived/meg128/megc44n180hb.img",
@@ -563,7 +685,68 @@
             "dataType": "unsigned 8-bit integer",
             "zeroMeaning": "No MOLA observations in the bin; a topography value in this cell may be interpolated."
           },
-          "retrievedAt": "2026-11-14T19:49:06.410145Z"
+          "retrievedAt": "2026-11-14T20:21:42.731991Z",
+          "candidateSelection": {
+            "configuration": {
+              "version": "mola-selection-1.0.0",
+              "referenceSiteId": "arcadia-sample-01",
+              "boundsDegrees": {
+                "west": 194.8,
+                "east": 195.2,
+                "south": 37.8,
+                "north": 38.2
+              },
+              "minimumSeparationMeters": 3000,
+              "minimumNeighborhoodCount": 1
+            },
+            "eligibleCellCount": 45,
+            "topographyProductId": "MEGT44N180HB",
+            "countsProductId": "MEGC44N180HB",
+            "topographyRasterSha256": "f7df8fd2f290643c1de29dd0200fa4f718740286befe86e100ca6bc166b5b9fb",
+            "countsRasterSha256": "899bdb1d3cb27dce64fcf1e3f90b9b8b616653167282e50af8c5b2376d806bb8",
+            "regionalBytesFetched": 8748,
+            "reference": {
+              "id": "arcadia-sample-01",
+              "name": "Arcadia sample 01",
+              "longitudeEastDeg": 194.83984375,
+              "latitudePlanetocentricDeg": 37.98828125
+            },
+            "selected": [
+              {
+                "id": "arcadia-mola-r793-c1903",
+                "coordinates": [
+                  194.87109375097162,
+                  37.800781258030625
+                ],
+                "elevationMeters": -3966.0,
+                "slopeDegrees": 0.12373338031488165,
+                "observationCount": 1,
+                "minimumNeighborhoodCount": 1,
+                "tileRow": 793,
+                "tileColumn": 1903
+              },
+              {
+                "id": "arcadia-mola-r746-c1895",
+                "coordinates": [
+                  194.80859375096753,
+                  38.16796875805461
+                ],
+                "elevationMeters": -3963.0,
+                "slopeDegrees": 0.16910413283654532,
+                "observationCount": 2,
+                "minimumNeighborhoodCount": 1,
+                "tileRow": 746,
+                "tileColumn": 1895
+              }
+            ],
+            "pairSeparationMeters": 21958.69087025668,
+            "referenceSeparationMeters": {
+              "arcadia-mola-r793-c1903": 11209.093639737897,
+              "arcadia-mola-r746-c1895": 10749.66431034198
+            },
+            "ordering": "ascending slope; descending minimum 3x3 count; descending center count; ascending tile row and column; first feasible pair",
+            "limitation": "Terrain-only discovery with regional MOLA data, not evidence of habitability or site safety."
+          }
         },
         {
           "id": "mola-megdr-128ppd-counts",
@@ -579,19 +762,19 @@
           "dataType": "unsigned 8-bit integer",
           "zeroMeaning": "No observations in that pixel; zero is a valid count, not a missing count.",
           "availability": "available",
-          "regionalRasterSha256": "7d3c5b2c3e697a0b597870e58bf14e3278105b61b403b9314a855aa00d7c6a1f",
-          "retrievedAt": "2026-11-14T19:49:06.410145Z"
+          "regionalRasterSha256": "899bdb1d3cb27dce64fcf1e3f90b9b8b616653167282e50af8c5b2376d806bb8",
+          "retrievedAt": "2026-11-14T20:21:42.731991Z"
         }
       ]
     },
     {
-      "id": "arcadia-sample-03",
-      "name": "Arcadia sample 03",
+      "id": "arcadia-mola-r746-c1895",
+      "name": "Arcadia terrain candidate 2",
       "location": {
         "type": "Point",
         "coordinates": [
-          194.82421875,
-          38.08203125
+          194.80859375096753,
+          38.16796875805461
         ],
         "coordinateReference": {
           "body": "Mars",
@@ -611,19 +794,19 @@
           "unavailableReason": "swim_raster_not_retrieved"
         },
         "molaTopography": {
-          "value": -3974.0,
+          "value": -3963.0,
           "unit": "meter relative to MOLA areoid",
           "status": "sampled_product_value",
           "sourceId": "mola-megdr-128ppd"
         },
         "molaObservationCount": {
-          "value": 3.0,
+          "value": 2.0,
           "unit": "observations per 128 ppd cell",
           "status": "observed",
           "sourceId": "mola-megdr-128ppd-counts"
         },
         "molaRegionalSlope": {
-          "value": 0.6382999636020613,
+          "value": 0.16910413283654532,
           "unit": "degree",
           "status": "derived",
           "sourceId": "mola-megdr-128ppd",
@@ -640,11 +823,11 @@
         "factors": {
           "terrain": {
             "status": "assessed",
-            "score": 93.61700036397939,
+            "score": 98.30895867163456,
             "weight": 0.5,
-            "weightedContribution": 46.80850018198969,
+            "weightedContribution": 49.15447933581728,
             "observation": {
-              "value": 0.6382999636020613,
+              "value": 0.16910413283654532,
               "unit": "degree",
               "status": "derived",
               "sourceId": "mola-megdr-128ppd",
@@ -698,14 +881,14 @@
             "level": "medium",
             "rationale": [
               "Confidence describes support for regional terrain evidence only.",
-              "Projected pixel size: 463.058 m; center-cell count: 3.",
+              "Projected pixel size: 463.058 m; center-cell count: 2.",
               "Neighborhood basis: all_3x3_cells_have_direct_observations.",
               "Product and count raster references and hashes are recorded.",
               "Source observation period: 1999-02 through 2001-06; current surface conditions are unverified.",
               "Measurement uncertainty, fine-scale hazards and independent local validation are unavailable."
             ],
             "pixelSizeMeters": 463.0576672,
-            "observationCount": 3.0,
+            "observationCount": 2.0,
             "countsSourceId": "mola-megdr-128ppd-counts"
           },
           "water": {
@@ -728,7 +911,7 @@
         "summary": "No site-specific radiation or shielding evidence exists in the Phase 2 input; specialist review required."
       },
       "strengths": [
-        "Regional slope measured as 0.6383 degrees supports an explicit terrain screen."
+        "Regional slope measured as 0.1691 degrees supports an explicit terrain screen."
       ],
       "limitations": [
         "Screening thresholds and weights are project assumptions, not NASA habitat standards.",
@@ -764,7 +947,7 @@
           "publishedLatitude": "60 degrees south to 60 degrees north",
           "publishedNoData": -30,
           "availability": "not-retrieved",
-          "retrievalNote": "Official SWIM product host returned HTTP 523 or timed out during the 2026-11-14 retrieval attempt; no raster values were synthesized."
+          "retrievalNote": "SWIM remains unavailable; candidate discovery uses MOLA terrain only."
         },
         {
           "id": "mola-megdr-128ppd",
@@ -794,8 +977,8 @@
             "interpretation": "The PDS4 topography label describes interpolation where bins have no observations and does not declare a special constant. The supplied ENVI header marks zero as ignore; the companion count raster is used to distinguish zero-observation bins from observed zero elevation."
           },
           "availability": "available",
-          "regionalBytesFetched": 225,
-          "regionalRasterSha256": "c7b61636f2d141796e94bbf52ce48e36e863f57f333535ba2ccaa5013670c87b",
+          "regionalBytesFetched": 8748,
+          "regionalRasterSha256": "f7df8fd2f290643c1de29dd0200fa4f718740286befe86e100ca6bc166b5b9fb",
           "countsProduct": {
             "productId": "MEGC44N180HB",
             "productUrl": "https://pds-geosciences.wustl.edu/mgs/urn-nasa-pds-mgs_mola_topography_derived/meg128/megc44n180hb.img",
@@ -803,7 +986,68 @@
             "dataType": "unsigned 8-bit integer",
             "zeroMeaning": "No MOLA observations in the bin; a topography value in this cell may be interpolated."
           },
-          "retrievedAt": "2026-11-14T19:49:06.410145Z"
+          "retrievedAt": "2026-11-14T20:21:42.731991Z",
+          "candidateSelection": {
+            "configuration": {
+              "version": "mola-selection-1.0.0",
+              "referenceSiteId": "arcadia-sample-01",
+              "boundsDegrees": {
+                "west": 194.8,
+                "east": 195.2,
+                "south": 37.8,
+                "north": 38.2
+              },
+              "minimumSeparationMeters": 3000,
+              "minimumNeighborhoodCount": 1
+            },
+            "eligibleCellCount": 45,
+            "topographyProductId": "MEGT44N180HB",
+            "countsProductId": "MEGC44N180HB",
+            "topographyRasterSha256": "f7df8fd2f290643c1de29dd0200fa4f718740286befe86e100ca6bc166b5b9fb",
+            "countsRasterSha256": "899bdb1d3cb27dce64fcf1e3f90b9b8b616653167282e50af8c5b2376d806bb8",
+            "regionalBytesFetched": 8748,
+            "reference": {
+              "id": "arcadia-sample-01",
+              "name": "Arcadia sample 01",
+              "longitudeEastDeg": 194.83984375,
+              "latitudePlanetocentricDeg": 37.98828125
+            },
+            "selected": [
+              {
+                "id": "arcadia-mola-r793-c1903",
+                "coordinates": [
+                  194.87109375097162,
+                  37.800781258030625
+                ],
+                "elevationMeters": -3966.0,
+                "slopeDegrees": 0.12373338031488165,
+                "observationCount": 1,
+                "minimumNeighborhoodCount": 1,
+                "tileRow": 793,
+                "tileColumn": 1903
+              },
+              {
+                "id": "arcadia-mola-r746-c1895",
+                "coordinates": [
+                  194.80859375096753,
+                  38.16796875805461
+                ],
+                "elevationMeters": -3963.0,
+                "slopeDegrees": 0.16910413283654532,
+                "observationCount": 2,
+                "minimumNeighborhoodCount": 1,
+                "tileRow": 746,
+                "tileColumn": 1895
+              }
+            ],
+            "pairSeparationMeters": 21958.69087025668,
+            "referenceSeparationMeters": {
+              "arcadia-mola-r793-c1903": 11209.093639737897,
+              "arcadia-mola-r746-c1895": 10749.66431034198
+            },
+            "ordering": "ascending slope; descending minimum 3x3 count; descending center count; ascending tile row and column; first feasible pair",
+            "limitation": "Terrain-only discovery with regional MOLA data, not evidence of habitability or site safety."
+          }
         },
         {
           "id": "mola-megdr-128ppd-counts",
@@ -819,14 +1063,14 @@
           "dataType": "unsigned 8-bit integer",
           "zeroMeaning": "No observations in that pixel; zero is a valid count, not a missing count.",
           "availability": "available",
-          "regionalRasterSha256": "7d3c5b2c3e697a0b597870e58bf14e3278105b61b403b9314a855aa00d7c6a1f",
-          "retrievedAt": "2026-11-14T19:49:06.410145Z"
+          "regionalRasterSha256": "899bdb1d3cb27dce64fcf1e3f90b9b8b616653167282e50af8c5b2376d806bb8",
+          "retrievedAt": "2026-11-14T20:21:42.731991Z"
         }
       ]
     }
   ],
   "inputProvenance": {
     "file": "site_inputs.json",
-    "sha256": "6a67c92e5946fcd7e4905971f42efc9b8c2e34d2308a4d80032ce1f102756b07"
+    "sha256": "70766a7582e15c5170a7cf1074427fd33bb123fcc659f584e3be6090246775c2"
   }
 }

@@ -1,0 +1,61 @@
+{
+  "configuration": {
+    "version": "mola-selection-1.0.0",
+    "referenceSiteId": "arcadia-sample-01",
+    "boundsDegrees": {
+      "west": 194.8,
+      "east": 195.2,
+      "south": 37.8,
+      "north": 38.2
+    },
+    "minimumSeparationMeters": 3000,
+    "minimumNeighborhoodCount": 1
+  },
+  "eligibleCellCount": 45,
+  "topographyProductId": "MEGT44N180HB",
+  "countsProductId": "MEGC44N180HB",
+  "topographyRasterSha256": "f7df8fd2f290643c1de29dd0200fa4f718740286befe86e100ca6bc166b5b9fb",
+  "countsRasterSha256": "899bdb1d3cb27dce64fcf1e3f90b9b8b616653167282e50af8c5b2376d806bb8",
+  "regionalBytesFetched": 8748,
+  "reference": {
+    "id": "arcadia-sample-01",
+    "name": "Arcadia sample 01",
+    "longitudeEastDeg": 194.83984375,
+    "latitudePlanetocentricDeg": 37.98828125
+  },
+  "selected": [
+    {
+      "id": "arcadia-mola-r793-c1903",
+      "coordinates": [
+        194.87109375097162,
+        37.800781258030625
+      ],
+      "elevationMeters": -3966.0,
+      "slopeDegrees": 0.12373338031488165,
+      "observationCount": 1,
+      "minimumNeighborhoodCount": 1,
+      "tileRow": 793,
+      "tileColumn": 1903
+    },
+    {
+      "id": "arcadia-mola-r746-c1895",
+      "coordinates": [
+        194.80859375096753,
+        38.16796875805461
+      ],
+      "elevationMeters": -3963.0,
+      "slopeDegrees": 0.16910413283654532,
+      "observationCount": 2,
+      "minimumNeighborhoodCount": 1,
+      "tileRow": 746,
+      "tileColumn": 1895
+    }
+  ],
+  "pairSeparationMeters": 21958.69087025668,
+  "referenceSeparationMeters": {
+    "arcadia-mola-r793-c1903": 11209.093639737897,
+    "arcadia-mola-r746-c1895": 10749.66431034198
+  },
+  "ordering": "ascending slope; descending minimum 3x3 count; descending center count; ascending tile row and column; first feasible pair",
+  "limitation": "Terrain-only discovery with regional MOLA data, not evidence of habitability or site safety."
+}

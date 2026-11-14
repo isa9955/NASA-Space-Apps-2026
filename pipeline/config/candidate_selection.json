@@ -1,0 +1,7 @@
+{
+  "version": "mola-selection-1.0.0",
+  "referenceSiteId": "arcadia-sample-01",
+  "boundsDegrees": {"west": 194.8, "east": 195.2, "south": 37.8, "north": 38.2},
+  "minimumSeparationMeters": 3000,
+  "minimumNeighborhoodCount": 1
+}
