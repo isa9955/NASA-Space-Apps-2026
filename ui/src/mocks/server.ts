@@ -33,6 +33,15 @@ const SOURCES = [
   { id: "rad", provider: "MOCK", product: "Radiation model anchored to MSL RAD (mock constants)", version: null, url: null }
 ];
 
+const MOCK_ICON: Record<string, RegionResponse["layers"][number]["icon"]> = {
+  habitat: "habitat",
+  landingpad: "landing",
+  ice: "ice",
+  greenhouse: "greenhouse",
+  datacenter: "datacenter",
+  solar: "solar"
+};
+
 const json = (status: number, body: unknown): MockResponse => ({
   status,
   contentType: "application/json",
@@ -70,6 +79,7 @@ export function regionResponse(): RegionResponse {
       color: z.rule.color,
       defaultOn: z.rule.defaultOn,
       rule: z.rule.rule,
+      icon: MOCK_ICON[z.rule.id],
       nominalKm2: Math.round(z.nominalKm2 * 100) / 100,
       robustKm2: Math.round(z.robustKm2 * 100) / 100,
       survivesPct: z.nominalKm2 ? Math.round((100 * z.robustKm2) / z.nominalKm2) : 0,
@@ -91,7 +101,7 @@ export function conditionsResponse(p: LonLat): ConditionsResponse {
     elevation: { value: Math.round(elev), unit: "m", qualifier: null },
     slope: { value: Math.round(g.slope[k] * 10) / 10, unit: "°", qualifier: null, uncertainty: Math.round(2 * g.sigma[k]) },
     soil: { value: g.soil[k], qualifier: "regional" },
-    ice: { value: Math.round(g.ice[k] * 100), unit: "%", qualifier: "estimated" },
+    ice: { kind: "consistency", value: Math.round(g.ice[k] * 100), unit: "%", qualifier: "estimated" },
     radiation: {
       value: Math.round(0.64 * Math.exp((0.35 * (elev + 4500)) / 11000) * 100) / 100,
       unit: "mSv/day",

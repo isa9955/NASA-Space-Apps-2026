@@ -1,619 +1,277 @@
-# Mars Habitat Finder — Technical Specification
+# Mars Site Planner — Technical Specification
 
-**Status:** implementation guide for the 24-hour MVP. This document describes
-both the current scaffold and planned work; a planned capability is not
-evidence that a service, dataset, or scientific result already exists.
-
-> **New frontend (`ui/`):** the current UI design, its data contract
-> (`contracts/`), and open integration questions are in
-> [`docs/FRONTEND_SPEC.md`](docs/FRONTEND_SPEC.md). This file continues to
-> document the backend phases below.
-
-### Current frontend handoff status (supersedes earlier UI snapshots)
-
-The temporary Phase 6 `web/` frontend has been removed from the checkout.
-Developer 1 will implement the frontend independently; no replacement UI or
-deployment workflow is included. The complete former UI is preserved in Git
-commit `5c3e283`. See `docs/FRONTEND_HANDOFF.md` for the authoritative handoff:
-current endpoints/contracts, coordinate conventions, intended workflow and
-acceptance criteria. Backend handlers, shared API contracts, datasets,
-scientific processing, assessments, route records and tests are unchanged.
-Earlier UI/build/browser results below are historical, not verification of a
-currently shipped frontend. Phase 7 deployment remains pending.
-
-Current structure: `api/` owns read-only HTTP transport and shared contracts;
-`pipeline/` owns offline science and versioned artifacts; `docs/` owns handoff,
-methodology and provenance. No frontend directory currently exists. React,
-TypeScript, Vite and OpenLayers remain the suggested stack; the future app
-directory/build settings must be agreed before configuring Azure deployment.
-
-### Phase 6 historical implementation snapshot
-
-The former React UI guided Start → Candidate → Science → Route → Habitat.
-`GET /api/starts` exposes only the existing packaged route starts and recorded
-destination/status pairs. The UI constrains selection to this manifest instead
-of presenting uncomputed origins. It compares candidates and reads full
-observations/source provenance from the existing detail endpoint. Terrain
-evidence confidence remains separate from overall evidence confidence.
-
-The selected-site habitat and greenhouse preview is illustrative vector art,
-explicitly unscaled and not engineering-validated. It adds no safety, shielding,
-climate or agricultural feasibility claims. Existing MOLA inputs, scores,
-scientific assessments, site coordinates and Phase 5.1 routes are unchanged.
-
-`GET /api/mission-context` serves a separate, optional packaged artifact with
-verified Mars Odyssey THEMIS historical product-label context. The observation
-is not geolocated to a candidate pixel; it does not modify scoring, confidence,
-or routing. See `docs/data-sources.md` for scope, provenance and reproduction.
-No runtime NASA downloads or scientific calculations were added.
-
-The context artifact is now `mission-context/1.1.0`, adding the official ODE
-footprint, its provenance/hash, explicit Mars coordinate conventions and
-approximate per-site coverage. The optional OpenLayers polygon uses the same
-MOLA display transform; its extent never changes the route/site camera fit.
-This is catalog-footprint alignment, not geolocated THEMIS pixel extraction.
-The API envelope stays v2; site and route contracts/records are unchanged.
-
-**IMPORTANT:** The only supported origin is still the preserved reference with
-two precomputed candidate pairs. Additional starts require actual offline route
-records and verification. **BLOCKER:** Water, radiation/shielding, local hazards
-and candidate-specific thermal evidence are unresolved. Azure deployment and
-operational validation remain outside this phase.
-
-### Phase 5.1 current implementation (supersedes Phase 5 coverage blocker)
-
-Both original candidates now have provisional routes from the preserved
-reference, using verified MOLA product elevations including product-supplied
-interpolation. Zero count means no direct shots; it does not automatically
-invalidate the gridded topography. Only ambiguous NoData, invalid values,
-incomplete neighborhoods, and slope/edge-grade exclusions are blocked.
-Interpolation incurs an explicit cost penalty; route coverage explains direct
-versus interpolated cells and slope-neighborhood support. See
-`docs/methodology.md` for the diagnosis, rules and actual results. Site IDs,
-coordinates and scientific assessment/scoring outputs remain unchanged.
-
-Route schema `phase5-routes/1.1.0` adds mean regional slope, evidence coverage
-and interpolation parameters under the existing API v2 envelope. Endpoint
-geometry exactly matches the requested site coordinates. The API packages and
-serves these artifacts without recomputing scientific results.
-
-The former minimal frontend used `web/` (React/TypeScript/Vite/OpenLayers), consuming
-the local API through Vite's `/api` proxy. It provides candidate markers,
-known-site start/destination selectors, route polylines, metrics, warnings,
-coverage and loading/error states. Map geometry uses the Mars MOLA display
-projection, with no Earth tiles or fabricated basemap. Only reference-to-original
-candidate pairs are precomputed; other requests produce explicit errors.
-That frontend and its README remain in commit `5c3e283`; use
-`docs/FRONTEND_HANDOFF.md` for current integration instructions.
-
-**IMPORTANT:** Interpolated topography is not a safety guarantee. Missing SWIM,
-radiation/shielding evidence and local hazard validation remain blockers to
-habitat or operational safety claims. No site is certified habitable; nothing
-was deployed.
-
-### Phase 5 implementation snapshot
-
-Offline Python A* now plans provisional terrain routes from
-`arcadia-sample-01` to the two discovered candidates, using the real,
-hash-verified MOLA regional topography and observation-count rasters. The
-planner penalizes slopes, excludes unsupported neighborhoods, and blocks
-diagonal corner cutting. `pipeline/routes.geojson` stores versioned Mars
-GeoJSON-shaped features, metrics or explicit unavailability, provenance and
-hazard warnings. Algorithms/limits are documented in `docs/methodology.md`.
-
-`GET /api/routes?startId=...&siteId=...` serves precomputed features, packaged
-and validated alongside site assessments. The site v2 contract remains
-unchanged; a separate route schema extends the API. No runtime scientific
-calculation, frontend change, deployment or habitat-preview implementation
-is part of Phase 5 here.
-
-**BLOCKER:** Both current candidate routes are unavailable: the bounded
-observed-terrain grid does not connect either candidate to the reference.
-Null geometry and null distance/gain/slope metrics are preserved. The planner
-does not invent lines across missing observations. Radiation, shielding, water
-and local traversability are still unresolved. No route is certified safe.
-
-### Phase 4 current implementation (supersedes earlier scaffold snapshots)
-
-**Current data update — deterministic candidate selection:** one predefined
-reference (`arcadia-sample-01`) is retained; two manual samples are replaced by
-offline MOLA terrain discoveries. The bounded Arcadia scan requires direct
-observations throughout each 3x3 slope neighborhood, orders by slope with count
-and grid-cell tie-breaks, and chooses a pair separated by at least 3 km from
-each other and the reference. See `docs/methodology.md` and
-`pipeline/candidate_selection.json` for assumptions and the reproducible report.
-The two new IDs encode MOLA grid cells; samples 02/03 are retired. API v2
-schema/routes are unchanged; clients discover IDs from `/api/sites`. Python
-scoring versions remain unchanged. **IMPORTANT:** these are terrain-selected
-exploration candidates; habitat suitability and overall confidence remain
-Unknown, with missing SWIM and unresolved radiation/shielding.
-
-`GET /api/sites` and `GET /api/sites/{id}` now serve the existing Phase 3
-assessments through TypeScript Azure Functions. The list returns summaries;
-detail retains the `{ site }` envelope and returns the unchanged assessment.
-Both add API `schemaVersion: "2.0.0"`, assessment schema/scoring versions and
-input provenance. Final request/response, error and migration details are in
-`api/README.md`; `api/src/contracts/site.schema.json` defines the wire schema.
-
-The API build validates and copies `pipeline/site_assessments.json` into
-`api/dist/data/`; runtime resolves this packaged artifact relative to compiled
-code, validates it and caches it per worker. Build/runtime failures never fall
-back to fixtures. Python remains the only scientific implementation. Production
-packaging must include the API root metadata, compiled schema/code/data and
-production dependencies. No Azure deployment workflow is implemented yet.
-
-**IMPORTANT:** This is a breaking contract evolution from the Phase 1 fixture:
-use `observations`, `suitability.factors`, `evidenceConfidence`, `radiationReview`
-and full source provenance. The placeholder ID and route are no longer served.
-The frontend must adopt v2; no frontend or routing changes occur in Phase 4.
-
-**BLOCKER:** SWIM has not been recovered. The packaged records preserve null
-overall suitability scores, Unknown overall evidence confidence, unavailable
-water observations, and unresolved radiation/shielding. No ingestion or
-scientific rescoring was performed. Neither endpoint ranks samples or implies
-site safety. Local Functions HTTP smoke checks and scientific integrity checks
-passed; deployed Azure behavior remains unverified.
+**Status:** the UI (`ui/`) and the API (`api/mars-blindspots/backend/`) run
+end to end on real HiRISE data for Deuteronilus Mensae. Azure deployment is
+not done yet. The earlier Arcadia Planitia work is archived, unused, in
+`archive/arcadia/`.
 
 ## 1. Project overview
 
-### Problem and proposed solution
+### What it is
 
-Exploring candidate Mars habitat locations requires comparing environmental
-evidence that comes from different datasets, has different coverage, and may
-have substantial uncertainty. Mars Habitat Finder will present a small set of
-candidate locations alongside source provenance, suitability reasoning,
-evidence confidence, and explicit review limitations. It is a decision-support
-and exploration tool, not a site certification system.
+A 2D web app for one walking-scale exploration site on Mars (a few km across,
+built from a high-resolution terrain model). It answers two questions and is
+honest about where the map can't be trusted ("blindspots"):
 
-### Core innovation
+1. **Where can we build?** Toggleable zones for six uses: Habitat / base,
+   Landing pad, Ice access, Greenhouse / crops, Data center / heavy
+   infrastructure, Solar array. Each zone shows the area that passes its rule
+   with nominal slope, and how much **survives** when slope is taken at its
+   worst case (slope + uncertainty). Robust ground is drawn solid; ground lost
+   to blindspots is drawn faint.
+2. **How do we get there safely?** The user places a start and an end. The app
+   plans two routes and compares them: a **Standard Route** (trusts the map)
+   and a **Safe Route** (plans on worst-case traversability and avoids
+   uncertain cells). Numbered **scout points** mark the biggest blindspots on
+   the standard route; **science targets** near either route are shown.
 
-The MVP combines map-based exploration with traceable evidence and separates
-**site suitability** (how well a site meets declared habitat criteria) from
-**evidence confidence** (how complete and reliable the supporting evidence is).
-Users can inspect the reasons and limitations before considering a provisional
-scouting route and conceptual habitat preview.
+Clicking anywhere on the site opens a **Conditions** card (elevation, slope ±
+uncertainty, soil, ice, radiation, temperature).
 
-### MVP goals
+### Demo story (5 minutes)
 
-- Let a user set a starting location and explore two or three candidate sites.
-- Show suitability factors, evidence confidence, source provenance, missing
-  data, and radiation-review state separately.
-- Support human review, optional comparison, a clearly provisional route, and a
-  conceptual habitat/greenhouse preview.
-- Keep all scientific outputs traceable to versioned input products and
-  processing/scoring versions.
+1. Open on the site: shaded relief with Habitat, Landing pad, and Ice zones on.
+2. "Solid survives our uncertainty; faint is what a naive map would promise."
+   Point at a zone's nominal → robust area and survival %.
+3. Try the demo traverse: two routes appear. The Safe Route is a little longer
+   but cuts critical-blindspot exposure. Read the one-line comparison.
+4. Hover a scout point: "this is where to send a scout before walking."
+5. Click the ground: the Conditions card, with estimated/regional labels.
+
+### Principles
+
+- **Uncertainty is the product.** Every zone and route is shown under nominal
+  and worst-case assumptions. Percentages are sensitivities under stated
+  assumptions, not probabilities.
+- **Honest labels.** Modeled values are *estimated*; coarse orbital values are
+  *regional*; ice-rich ground is a *draft interpretation*; routes are
+  exploration aids, not certified paths.
+- **Null means unknown, never zero.**
+- **Less on screen.** Map + one side panel; the Conditions card appears only on click.
 
 ### Non-goals
 
-- Certifying a site, astronaut safety, landing feasibility, or a route as safe.
-- Real-time scientific raster processing in the Functions API.
-- A general-purpose GIS, mission planner, or planetary terrain renderer.
-- Accounts, authentication, database, microservices, or a custom data platform.
-- Detailed habitat engineering, construction plans, or physically validated
-  greenhouse design.
+- Certifying a site or route as safe. Whole-planet analysis. 3D rendering.
+- Accounts, authentication, databases, microservices, Docker.
+- Hex grids, build/route mode switching, oxygen estimates, escape routes.
 
-### User workflow
-
-1. Select a starting point on the Mars map or choose a supplied start location.
-2. Explore two or three candidate sites; inspect each marker and its data
-   coverage.
-3. Review suitability by factor and its explanation, separately review
-   evidence confidence and radiation-review status, and inspect sources.
-4. Human-review the evidence and optionally compare candidate sites.
-5. Request/view a provisional scouting route from the start to a candidate;
-   inspect warnings and route provenance.
-6. Preview a conceptual habitat and greenhouse at the selected site, with a
-   visible conceptual-only label.
-
-## 2. System architecture
+## 2. Architecture
 
 ```mermaid
 flowchart LR
-  N[NASA products and metadata] --> P[Offline Python pipeline\nvalidate, project, derive, score]
-  P --> A[Versioned compact JSON/GeoJSON artifacts]
-  A --> F[TypeScript Azure Functions\nread and serve artifacts]
-  F --> W[React + TypeScript + Vite\nOpenLayers map and review UI]
-  N -->|approved basemap/tiles, if available| W
-  W --> U[User selects start, reviews sites, route, preview]
+  N[HiRISE DTM\nDTEEC_041222_2210] --> P[Offline processing\napi/mars-blindspots: process_terrain.py, zones.py]
+  P --> A[data/deuteronilus/\ndata_grid.json, zones.json, hillshade.png, metadata.json]
+  A --> F[API service\nbackend/api_service.py\n/api/region, /api/conditions, /api/route]
+  F --> W[React + Leaflet UI\nui/]
+  T[Mars Trek tiles\ncontext only] --> W
 ```
 
-**Runtime boundary:** The Python pipeline runs locally or in a build job,
-outside the deployed request path. It ingests verified NASA products, performs
-geospatial preparation, and emits small versioned JSON/GeoJSON artifacts for
-the API deployment. It does not expose an online service. Azure Functions
-serves precomputed records, validates request parameters, and returns
-consistent HTTP responses. It does not download rasters or calculate scores,
-confidence, radiation, or routes during requests. The browser renders the map,
-displays API results, and owns transient user selections; it does not become a
-second implementation of scientific scoring.
+- **Offline processing** (Allison, `api/mars-blindspots/`): slope, slope
+  uncertainty, traversability, zones and sunlight from the HiRISE DTM, written
+  to `data/deuteronilus/`. Runs once; the outputs are committed.
+- **API service** (`backend/api_service.py`): loads those files once, then
+  serves the three endpoints. Zones are read from `zones.json` as-is (never
+  recomputed). Routes run Allison's `backend/routing.py` per request. No web
+  framework: `handle(path, query)` returns status, type and bytes, so it can be
+  wrapped by Azure Functions later. Locally, `backend/dev_server.py` serves it.
+- **Frontend** (`ui/`): validates every response against the contract and never
+  re-implements zones or routing.
+- **Hosting (not done):** Azure Static Web Apps for `ui/`; the API as Python
+  Azure Functions wrapping `api_service.handle`.
 
-Use JSON for API resources and GeoJSON-shaped geometry for spatial features.
-Deploy the Vite build and Functions API through Azure Static Web Apps (SWA),
-using the SWA `/api` path. The actual SWA workflow, supported Functions runtime,
-and artifact packaging are not configured yet and must be verified before
-relying on deployment behavior. Do not package large source rasters with the
-Functions app.
+## 3. Site and coordinates
 
-## 3. Subsystems and boundaries
+- **Site: Deuteronilus Mensae** (decided): mesas, ice-rich debris aprons,
+  scarps and plains within a few km, so every zone type and the safe-vs-standard
+  route have something to show.
+- **Data:** HiRISE DTM DTEEC_041222_2210_040787_2210_A01 (NASA/JPL/University of
+  Arizona), 1 m/px. A 4.0 × 8.0 km crop, bounds 40.678–40.814°N,
+  30.140–30.229°E, analysed on a 10 m grid (400 × 800 cells). Relief 1,207 m.
+- Body: Mars, IAU 2000 sphere. Planetocentric latitude, east-positive longitude
+  in −180…180. GeoJSON order `[lon, lat]`.
+- Cell ↔ lon/lat is linear in `metadata.bounds`, row 0 = north. Images
+  (basemap, masks) cover `region.bounds` exactly, row 0 = north.
+- Leaflet uses its `EPSG4326` CRS object because Mars Trek tiles use the same
+  2×1 tiling. The data is Mars; never label it EPSG:4326 in data files.
 
-| Subsystem | Responsibilities and inputs | Outputs | Dependencies / boundary |
-|---|---|---|---|
-| NASA ingestion and geospatial processing | Select verified NASA products; inspect metadata, units, coverage, nodata, resolution, and coordinate reference; use Rasterio/NumPy/PyProj to normalize and derive per-site observations. | Versioned observations, coverage/quality metadata, provenance, compact artifacts. | Offline Python pipeline; selected datasets, licenses, CRS decisions. No API-time raster work. |
-| Habitat suitability scoring | Apply one declared, versioned set of criteria/weights to eligible environmental observations; report per-factor contributions and missing inputs. | Numeric score on a published scale, status, explanation, algorithm version. | Implement once in Python pipeline; criteria and weights require agreement. Never infer missing values. |
-| Evidence-confidence evaluation | Evaluate evidence coverage, age, resolution, quality flags, uncertainty, and source traceability. | Qualitative level and factorized rationale, with an insufficient-evidence state. | Python pipeline; independent from suitability score. No fabricated probability. |
-| Radiation and environmental safety review | Summarize available radiation and other safety-relevant observations, coverage, and applicable review criteria. | Review status, evidence, caveats, and explicit human-review requirement. | Pipeline prepares evidence; no safety certification or unsupported pass/fail. Threshold authority is unresolved. |
-| Scouting route generation | If time and valid terrain/obstacle data permit, create a route from user start to candidate using declared constraints and costs. | GeoJSON LineString, distance/assumptions, warnings, status `provisional`. | Pipeline/offline route computation preferred; never describe as safe or navigationally certified. Exact execution boundary TBD. |
-| Mars map and site-analysis UI | Show Mars basemap, start selection, candidate markers, comparison, factor evidence, source links, review status, and route warnings. | User selections and map/review views; API requests. | React, TypeScript, Vite, OpenLayers; consumes contract only. No scientific calculations. |
-| Habitat visualization | Place a conceptual habitat/greenhouse illustration or simple overlay at selected site. | Clearly labeled conceptual preview. | Frontend assets/geometry; no engineering or environmental validation implied. |
-| Azure API and deployment | Serve candidate/site/route JSON, validate inputs, expose errors, bundle the current precomputed artifact set, publish UI and API. | Same-origin SWA application and `/api` responses. | TypeScript Azure Functions and SWA; no database, auth, microservices, or scientific runtime. |
+## 4. Data and equations
 
-## 4. Shared data contracts
+Implemented in `api/mars-blindspots/` (details: its `docs/ARCHITECTURE.md`):
 
-### Current contract and target evolution
+- Slope θ = arctan‖∇z‖. Slope uncertainty σθ = (√2·σz / 2Δ)/(1 + ‖∇z‖²), with
+  σz = 0.3 m (Sutton et al. 2022), treated as independent per pixel (likely an
+  overestimate). Worst-case slope θw = θ + σθ.
+- Two labelled scales: **walking** (Δ = 1 m, σθ ≈ ±11°) for routes, scouts and
+  the Conditions card; **footprint** (Δ = 10 m, σθ ≈ ±1.2°) for zones.
+- Traversability T = logistic((20° − θ)/3°) · logistic((2 m − roughness)/0.5)
+  · rock factor; Tw = T at θw. Blindspot gap = T − Tw; **critical** if > 0.5
+  (shown as "more than 50 pts").
+- Ice-rich ground: hand-digitized flow lobes, a **draft interpretation pending
+  team review**, not a measurement.
 
-The repository currently has `api/src/contracts/site.schema.json` and matching
-TypeScript types. Its `GET /api/sites/{id}` response contains one placeholder
-site, five factor records, nullable suitability/confidence, source entries, and
-a placeholder route. It does **not** yet model scientific observation details,
-uncertainty, coordinate reference metadata, algorithm versions, radiation
-review, or source-product provenance. Extend this contract deliberately before
-publishing scientific data; do not silently change fixture semantics. Add a
-`schemaVersion` in the first scientific-data contract release and keep the
-JSON Schema as the wire contract source of truth. TypeScript interfaces and
-Python serialization must conform to it. Additive optional fields are
-backward-compatible; renaming/removing fields or changing units/meaning
-requires a versioned breaking change and coordinated frontend update.
+| Conditions card value | Source | Label |
+|---|---|---|
+| Elevation | DTM, 10 m cell mean | — |
+| Slope ± σθ | walking scale, 10 m cell mean | — |
+| Ice | distance to the nearest draft ice-rich lobe (0 = on it) | *est.* |
+| Soil, radiation, temperature | **not available yet** (shown as "—") | — |
 
-### Coordinate conventions
+## 5. Zones
 
-- Geometry is GeoJSON-shaped; coordinate order is `[longitude, latitude]`.
-- The existing `[0, 0]` fixture coordinate is synthetic and must never be
-  displayed as an actual Mars observation.
-- Mars is not Earth WGS84. Every scientific location and route must carry an
-  explicit Mars body, longitude direction/range, latitude convention,
-  coordinate reference/datum, and angular or linear units. Do not label Mars
-  values as EPSG:4326 or apply Earth transformations by assumption.
-- Reproject only through a documented Mars CRS definition and tested
-  transformation. The exact datum, longitude convention, and map projection
-  remain open decisions (see Open Questions).
+Read from `zones.json` (rules in `zones.py ZONE_CONFIG`; thresholds are
+assumptions). A cell is **nominal** if its footprint passes with θ and
+**robust** if it also passes with θw. Area numbers are `nominal → robust km²`;
+`survivesPct = robust / nominal`, a sensitivity, not a probability.
 
-### Shared target record
+| Zone | Nominal → robust km² | Main criteria |
+|---|---|---|
+| Habitat / base | 4.18 → 1.27 | slope ≤ 5°, roughness ≤ 0.3 m, Tw ≥ 0.8, ≥ 200 m from scarps |
+| Landing pad | 1.98 → 0.39 | slope ≤ 5°, roughness ≤ 0.2 m, ≥ 1 km from the chosen base |
+| Ice access | 2.65 → 2.37 | within 200 m of ice-rich ground, slope ≤ 15° |
+| Greenhouse / crops | 3.38 → 1.35 | slope ≤ 5°, winter sun ≥ 90%, near habitat and ice access |
+| Data center / heavy infrastructure | 4.66 → 1.63 | slope ≤ 5°, ≥ 100 m from ice, ≥ 200 m from scarps |
+| Solar array | 2.43 → 1.85 | slope ≤ 10°, top-quartile annual sunlight |
 
-The following is a shape example, not scientific data. Null means unknown or
-unavailable; it never means zero. Any `placeholder` record must be visibly
-identified in the UI and excluded from scientific ranking.
+Mask PNG encoding: grayscale; 0 = fails, 100 = nominal only (lost to
+blindspots), 255 = robust. The UI tints each mask with the layer color.
 
-```json
-{
-  "schemaVersion": "1.0.0",
-  "id": "candidate-example",
-  "name": "Candidate example",
-  "dataStatus": "placeholder",
-  "location": {
-    "type": "Point",
-    "coordinates": [0, 0],
-    "coordinateReference": {
-      "body": "Mars",
-      "datum": "TBD",
-      "longitudeDirection": "TBD",
-      "latitudeType": "TBD",
-      "units": "degrees"
-    }
-  },
-  "observations": [
-    {
-      "id": "observation-example",
-      "factor": "water",
-      "variable": "TBD",
-      "value": null,
-      "unit": null,
-      "uncertainty": null,
-      "status": "not-assessed",
-      "sourceIds": []
-    }
-  ],
-  "suitability": {
-    "status": "not-assessed",
-    "score": null,
-    "scale": "0-100",
-    "explanation": [],
-    "algorithmVersion": null
-  },
-  "evidenceConfidence": {
-    "status": "not-assessed",
-    "level": null,
-    "rationale": [],
-    "probability": null
-  },
-  "radiationReview": {
-    "status": "not-assessed",
-    "observationIds": [],
-    "summary": "No radiation safety conclusion is available."
-  },
-  "sources": [
-    {
-      "id": "source-example",
-      "provider": "TBD",
-      "product": "TBD",
-      "productVersion": null,
-      "uri": null,
-      "accessedAt": null,
-      "processingVersion": null
-    }
-  ]
-}
-```
+**Known data issue (solar):** the robust solar mask recomputes its sunlight
+threshold on worst-case ground (1.098 vs 1.106), so 4,324 cells (0.43 km²) are
+robust without being nominal and solar's 76% survival is inflated. Needs a fix
+in `zones.py` (tracked by an expected-failure test).
 
-Contract rules:
+## 6. Routes
 
-- Observation `factor` identifies a domain (water, terrain, solar, thermal,
-  radiation); `variable` names the actual measured/derived quantity. Store a
-  numeric value only when backed by a source; include its unit (prefer a
-  consistent machine-readable unit vocabulary) and uncertainty when provided
-  by the product or derivation. Keep quality flags, spatial/temporal support,
-  and source IDs with observations as the selected dataset requires.
-- Observation status: `observed`, `derived`, `not-assessed`,
-  `insufficient-evidence`, or `placeholder`. Null value/unit is permitted only
-  for non-observed statuses; a real zero is numeric zero with provenance.
-- Suitability score is nullable until assessed. If populated, use the agreed
-  0–100 normalized scale, publish the algorithm version, factor breakdown,
-  weights/criteria summary, and missing-input treatment. Do not compare scores
-  across algorithm versions without an explicit compatibility rule.
-- Confidence is a qualitative `low`, `medium`, or `high` level, or null with a
-  status/reason. It represents evidence support, not probability, suitability,
-  or safety. `probability` remains null unless a calibrated probabilistic model
-  is later explicitly approved and validated.
-- Radiation review status is one of `not-assessed`, `insufficient-evidence`,
-  `review-required`, or `reviewed`. `reviewed` means evidence was reviewed; it
-  does not mean safe or certified.
-- Each source ID resolves to provider, product name/identifier, product
-  version, URI/catalog identifier, access date, and pipeline processing
-  version. Preserve license/attribution terms and source-specific quality
-  metadata when available.
-- Route geometry is GeoJSON LineString using the same explicit Mars coordinate
-  reference as site points. Include route status, start/site IDs, length and
-  unit if computed, assumptions, warnings, source/artifact version, and
-  generation version. Empty geometry is allowed only with an explanatory
-  unavailable status.
+Allison's `backend/routing.py`, both A* searches 8-connected on the 10 m grid:
 
-## 5. API contract
+- **Standard:** step cost = move / (T + 0.01); walls where T < 0.05.
+- **Safe:** same, on SAFE = max(0.01, Tw / (1 + 5·gap)).
+- Metrics: distance, walk time at 50 m/min, % of path cells with a critical
+  blindspot, mean worst-case traversability.
+- Scout points: 3–5 largest-gap cells (gap > 0.1) on the standard route, spaced
+  along it. Science candidates: geometric (outcrop, knob, depression, rough
+  patch) within 200 m of either route, at most 6.
+- Reference (demo traverse, cell 600,100 → 150,300): standard 5,383 m, 7.7%
+  critical; safe 5,634 m, 3.0%.
+- Speed: about 5 s per request in pure Python (see Open Questions).
 
-All endpoints return `application/json`; successful resources include a
-`schemaVersion`. The Functions app uses the standard `/api` prefix. Candidate
-data is a read-only snapshot of packaged pipeline artifacts. No request should
-trigger ingestion or scientific computation.
+## 7. API contract
 
-| Method and path | Status | Request | Success response |
-|---|---|---|---|
-| `GET /api/sites` | Planned | Optional `limit` and opaque `cursor` only if pagination is needed; MVP may return all 2–3 sites. | `{ "schemaVersion": "1.0.0", "sites": [CandidateSite...] }` |
-| `GET /api/sites/{id}` | **Implemented scaffold** | Path `id`. | Current response `{ "site": CandidateSite }` from one in-memory placeholder fixture; future scientific contract adds `schemaVersion`. |
-| `GET /api/routes?startId=...&siteId=...` | Planned | Required `startId`, `siteId`; identifiers resolve against known starts/sites. | `{ "schemaVersion": "1.0.0", "route": Route }`; provisional only, or an explicit unavailable response. |
+**Source of truth:** `ui/src/api/schema.ts` (zod). `npm run contracts` (in
+`ui/`) exports JSON Schema and example responses to `contracts/`. The Python
+API validates its output against `contracts/*.schema.json` in
+`backend/tests/test_api_service.py`. To change the contract: edit `schema.ts`,
+run `npm run contracts`, then update the API.
 
-For the MVP, route requests should resolve only to known, precomputed
-start/site pairs. If no matching route artifact exists, return the documented
-unavailable route state. Arbitrary on-demand pathfinding is outside the API
-runtime boundary and should be cut under deadline pressure.
+| Method and path | Query | Returns |
+|---|---|---|
+| `GET /api/region` | — | Site metadata, bounds, data badge, basemap URL, zone layers (areas, survival, mask URL), demo traverse, sources |
+| `GET /api/conditions` | `lon`, `lat` | Elevation, slope (+ uncertainty), soil, ice (consistency % or distance m), radiation, temperature, each with a qualifier (`regional`, `estimated`, or null) |
+| `GET /api/route` | `from=lon,lat`, `to=lon,lat` | `computeMs`, standard and safe routes, scout points, science targets |
+| `GET <asset URLs>` | — | PNGs referenced by `region` (same origin, or CORS-enabled) |
 
-Current `GET /api/sites/{id}` is an Azure Functions Node.js v4 anonymous HTTP
-trigger (`route: sites/{id}`). It returns HTTP 200 for
-`placeholder-site-001`, and HTTP 404 for an unknown ID using
-`{ "error": { "code": "SITE_NOT_FOUND", "message": "..." } }`. The existing
-smoke test calls the handler directly; it does not verify the live Functions
-host. The other endpoints, CORS configuration, SWA hosting, and real artifact
-loading are not implemented.
+Errors: `{ "error": { "code": "...", "message": "..." } }`. 400 for missing or
+invalid parameters and `OUT_OF_REGION`; 500 for unexpected failures. A valid
+route request with no path returns 200 with `status: "unavailable"`.
 
-For all endpoints, use consistent errors:
+The UI shows the backend's error message directly, and reports a contract
+mismatch with the failing field path (e.g. `layers.0.color`).
 
-```json
-{ "error": { "code": "INVALID_ARGUMENT", "message": "Human-readable explanation." } }
-```
+## 8. Frontend
 
-Use HTTP 400 for invalid/missing required query parameters, 404 for unknown
-site/start IDs, and 500 for unexpected server/artifact failures. Do not expose
-stack traces. If route data is unavailable, return a documented 200 route
-resource with `status: "unavailable"` when the request is valid; use 404 only
-when a referenced site/start does not exist. Add CORS only if local development
-uses different origins; deployed SWA should use same-origin `/api` paths.
+- **Header:** name, site subtitle, data badge (`real` green / `mock` orange).
+- **Map (left):** shaded relief, zone overlays, routes (standard solid blue,
+  safe dashed green), START/END, numbered scout points, science targets,
+  legend bottom-left, Conditions card top-right on click.
+- **Zone symbols:** each use has one symbol (habitat = house, landing pad =
+  rocket, ice access = droplet, greenhouse/crops = sprout, data center =
+  server, solar = sun), set by the API's `layers[].icon`. Symbols appear on the
+  toggles, the map legend, the "Suitable for" row of the Conditions card, and
+  on the map inside each enabled zone's two largest robust patches (pins that
+  land together are spread in a row).
+- **Side panel (right):** Buildable zones (toggles + areas + survival),
+  Route planner (Start → End → Compare steps, Place start / Place end / Clear,
+  Try a demo traverse, status line, two route cards, one-line comparison).
+  Hovering a route card highlights its line.
+- **Phone:** map on top, panel below.
+- **Development:** `npm run dev:live` proxies `/api` to the Python API on
+  port 7071 (real data). `npm run dev` uses the built-in mock backend
+  (`ui/src/mocks/`, synthetic terrain at the same location), useful for UI work
+  without Python. Either way the UI uses its real fetch + validation path.
 
-## 6. Repository structure
-
-### Current repository (observed)
+## 9. Repository structure
 
 ```text
-README.md
-.gitignore
-api/
-  host.json
-  package.json
-  package-lock.json
-  tsconfig.json
-  README.md
-  src/
-    index.ts
-    contracts/site.ts
-    contracts/site.schema.json
-    fixtures/sites.ts
-    functions/get-site.ts
-  test/get-site.test.ts
-pipeline/
-  README.md
-  requirements.txt
-```
-
-The tree above is the historical Phase 1 snapshot. The current repository
-contains the implemented NASA pipeline, assessments, routes, mission context
-and five API endpoints. The frontend has been removed for independent
-implementation; deployment configuration remains pending.
-
-### Minimal target structure
-
-```text
-ui/                         # React/Vite app; owned by Developer 1
-  src/{app,map,sites,contracts}/
-pipeline/                   # Python offline processing; owned by Developer 2
-  src/{ingest,geospatial,observations,suitability,confidence,routing}/
-  config/                   # dataset and algorithm configuration
-api/                        # TypeScript Functions; owned by Developer 2
-  src/{functions,contracts,data}/
-  test/
+ui/                          # React + Vite + Leaflet
+  src/api/                   # schema.ts (contract), client.ts
+  src/map/ src/panels/       # UI
+  src/mocks/                 # dev-only mock backend (not in the production bundle)
+contracts/                   # generated JSON Schema + example responses
+api/mars-blindspots/         # Allison's processing, zones, routing, data
+  backend/api_service.py     # the three endpoints
+  backend/dev_server.py      # local server on :7071
+archive/arcadia/             # archived Arcadia Planitia work, unused
 TECHNICAL_SPEC.md
 ```
 
-The pipeline emits a compact versioned artifact set into a deployment/build
-staging location consumed read-only by the API. Keep large raw rasters outside
-the repository and API bundle. The frontend owns view state and presentation;
-the pipeline owns scientific derivations; the API owns transport and
-validation. Maintain one JSON Schema and generate or validate language types
-from it where practical.
+## 10. Running locally
 
-## 7. Developer responsibilities and integration
+```powershell
+# Terminal 1: API (numpy, scipy, pillow: see api/mars-blindspots/requirements.txt)
+cd api/mars-blindspots
+python -m backend.dev_server
 
-**Developer 1 — Frontend, UI, map, Azure deployment:** build React/TypeScript/
-Vite shell; OpenLayers Mars map; start selection; candidate list/detail and
-comparison; provenance/confidence/radiation presentation; route and conceptual
-preview states; consume only the agreed API contract; configure SWA UI/API
-deployment and environment URLs. Do not duplicate scoring logic.
+# Terminal 2: UI
+cd ui
+npm install
+npm run dev:live            # http://localhost:5173 with real data
+```
 
-**Developer 2 — NASA data, science, API, routing:** select and verify a small
-number of NASA products; build offline Python ingestion/geospatial processing;
-own the authoritative suitability and confidence implementation; prepare
-radiation evidence/review states; create route only if valid inputs and time
-permit; evolve the TypeScript Azure Functions API to serve versioned artifacts
-and the specified endpoints.
+Tests: `python -m pytest -q tests backend/tests` in `api/mars-blindspots/`;
+`npm test` in `ui/`.
 
-**Shared checkpoints:**
+## 11. Remaining work
 
-1. Agree on coordinate reference and JSON Schema before map/API integration.
-2. Agree on candidate IDs, factor names/units/statuses, score scale, null
-   semantics, and error shape; commit one representative schema-valid fixture.
-3. Developer 2 publishes a versioned artifact and endpoint responses; Developer
-   1 renders that artifact without local scientific calculations.
-4. Jointly verify the integrated UI labels placeholders, uncertainty, missing
-   data, radiation-review caveats, and route provisional status honestly.
-5. Developer 1 completes SWA deployment and live smoke checks; Developer 2
-   confirms the deployed API artifact/version matches the tested science output.
+| Item | Notes |
+|---|---|
+| Azure deployment | Wrap `api_service.handle` in Python Azure Functions; SWA for `ui/` |
+| Route speed | ~5 s per request; precompute the demo traverse or speed up A* |
+| Conditions gaps | Soil, radiation, temperature not yet available (Allison's `site_conditions` task) |
+| Solar mask | Fix the robust threshold in `zones.py` |
+| Basemap imagery | `imagery.png` does not line up with the DTM; the hillshade is used |
+| Label review | Ice = draft interpretation; σθ = modeled bound; not a safety assessment |
 
-## 8. Development roadmap (24-hour scope)
+**Stretch:** Azure OpenAI "site pitch" summarizing a clicked point from its
+conditions; key stays server-side, no new numbers invented.
 
-| Phase | Priority and dependency | Deliverable / exit check |
-|---|---|---|
-| 1. Foundation | P0; current scaffold exists. | Contract, module boundaries, runnable API smoke/build, local instructions. |
-| 2. NASA dataset ingestion | P0; requires agreed CRS and product choice. | One or two verified products read offline; metadata, units, coverage, quality, and source provenance captured; small reproducible site observations. |
-| 3. Suitability and confidence | P0; depends on phase 2 and declared criteria. | One authoritative implementation; nullable outputs for insufficient evidence; rationale and algorithm version; unit/scientific checks. |
-| 4. Frontend/API integration | P0; can begin with fixture while phase 2 proceeds, then switch to validated artifact. | Map, select start/site, detail evidence panels, human review, robust loading/empty/error states. |
-| 5. Routing and habitat preview | P1; route requires usable terrain/constraints; preview can use a static conceptual asset. | Provisional route with warnings if feasible; otherwise honest unavailable state. Conceptual preview labeled clearly. |
-| 6. Testing, Azure deployment, submission | P0; depends on integrated MVP. | Unit/integration/science checks, deployed SWA UI/API smoke test, source attribution, demo path and known limitations. |
+## 12. Scientific and engineering rules
 
-Start the map and contract-driven UI in parallel with dataset validation. Reserve
-time for integrated browser testing and deployment. Cut features in this order
-if time slips: animation/3D detail, site comparison, route calculation (show an
-unavailable/provisional explanation), then dynamic habitat placement (show a
-static labeled concept). Do not cut provenance, missing-data states, caveats,
-or the distinction between suitability and confidence. Limit the scientific
-scope to a few candidate sites and a small validated set of products.
+- Every displayed value traces to the DTM, a documented computation, or a
+  citation, and appears in `sources`.
+- Never invent measurements or turn missing values into zero; unknown shows "—".
+- Survival percentages and blindspot shares are sensitivities, not probabilities.
+- σθ is a modeled bound (constant σz, independent errors). Label it.
+- Ice-rich ground is a draft interpretation. Routes are exploration aids, not
+  certified paths. This is decision support, not a NASA safety assessment.
+- One implementation of zones (`zones.py`) and routing (`routing.py`).
 
-## 9. Scientific and engineering constraints
+## 13. Testing
 
-- Use only verified NASA observations/products for scientific claims; record
-  product IDs, versions, units, coverage, quality, and attribution.
-- Never invent measurements, interpolate silently, turn missing values into
-  zero, or fabricate confidence probabilities. Show missing/insufficient
-  evidence explicitly.
-- Suitability and evidence confidence are separate outputs with separate
-  explanations and validation. Neither is a safety judgment.
-- Radiation must be reviewed where evidence exists. A missing dataset or
-  review never implies low radiation or a safe site. Thresholds require an
-  authoritative source and explicit approval.
-- Routes are provisional exploration aids, not certified safe, traversable, or
-  operational navigation paths. Display assumptions and warnings.
-- Keep one authoritative implementation of scoring and confidence logic in
-  the offline Python pipeline. The API serializes results; the UI explains
-  them.
-- Version datasets, pipeline, algorithm, and contract. Preserve enough
-  provenance to reproduce each derived result.
-- No database, authentication, microservices, Docker, or additional
-  infrastructure in the MVP. Keep the API read-only and artifact-backed.
-- Do not expose synthetic fixture coordinates or fixture values as real Mars
-  observations.
+- `ui/`: contract tests run the mock backend through the schemas; client tests
+  cover validation errors, error envelopes and network failure.
+- `api/mars-blindspots/`: Allison's zone and routing tests, plus
+  `backend/tests/test_api_service.py`: every response validates against
+  `contracts/`, zone areas and the demo route match the handoff reference
+  values, masks are valid PNGs, robust ⊆ nominal (solar expected to fail), and
+  errors use the envelope.
 
-## 10. Testing and definition of done
+## Open questions
 
-### Minimum tests
-
-- **Unit:** Python tests for nodata/units/coordinate transforms, observation
-  extraction, missing-input behavior, score explanations/weight handling,
-  confidence status, radiation-review status, and route constraints if routed.
-  TypeScript tests for query/path validation, response/error mapping, and
-  artifact lookups. Frontend tests for selecting a site and displaying
-  placeholder, missing, and review caveats.
-- **Contract/integration:** validate every pipeline artifact against the shared
-  JSON Schema; test each endpoint for valid records, unknown IDs, invalid
-  parameters, empty/unavailable route, and stable error envelopes; exercise
-  frontend against a local Functions host or recorded schema-valid fixture.
-- **Scientific validation:** verify input provenance and transformations;
-  hand-check selected site observations against source metadata/known product
-  values; test explicit nodata and uncertainty cases; review score sensitivity
-  and confidence rationale; ensure no result is emitted as assessed without
-  required inputs. Document limitations instead of claiming validation beyond
-  tested evidence.
-- **Deployment:** build UI/API, deploy to SWA, smoke-test UI and `/api` from the
-  deployed origin, verify artifact/schema version and source attribution, and
-  inspect browser console/network failures.
-
-### Definition of done
-
-The demo can follow the complete workflow with a small, schema-valid candidate
-set; every scientific value is sourced or visibly unavailable; score,
-confidence, and radiation review are distinct; users can inspect human-readable
-reasoning and provenance; route/preview are either honestly provisional and
-conceptual or explicitly unavailable; local tests pass; and the deployed SWA
-experience has been smoke-tested. If verified scientific input is unavailable,
-ship a clearly labeled non-scientific UI/API fixture and do not claim scientific
-site assessment.
-
-## Open Questions
-
-### Phase 3 implementation snapshot
-
-The offline assessment engine now reads the Phase 2 artifact and writes
-`pipeline/site_assessments.json`. Its single scoring implementation is
-`pipeline/src/mars_pipeline/assessment.py`, configured by
-`pipeline/config/assessment_model.json`. See `docs/methodology.md` for formulas,
-assumptions, qualitative confidence rules, limitations and reproduction.
-
-**BLOCKER:** SWIM remains unavailable in the input snapshot. All three sites
-have partial terrain screens, Unknown overall suitability/evidence confidence,
-and unresolved radiation/shielding review. Configurable screening weights and
-normalization anchors are project assumptions requiring scientific review.
-
-**IMPORTANT:** The export follows planned scientific field names but introduces
-an explicitly versioned offline artifact. The existing API schema remains
-placeholder-only; coordinated API/frontend contract evolution is still needed
-before serving assessments. No Functions or frontend implementation changed.
-
-### Decisions still needed
-
-Resolve these at the first shared checkpoint; they affect both developers and
-must be settled before real scientific locations are rendered:
-
-1. Which Mars coordinate reference, datum, longitude direction/range, latitude
-   convention, and map projection will the pipeline and OpenLayers use? How
-   will it be represented alongside GeoJSON coordinates?
-2. Which small set of NASA products will be used, what are their exact product
-   identifiers/licenses/units/coverage, and which 2–3 candidate locations can
-   they support?
-3. What habitat criteria, weights, score scale, and missing-data policy define
-   suitability? This document proposes a 0–100 scale but no formula.
-4. What evidence-quality rules define low/medium/high confidence? It must
-   remain qualitative unless calibration data supports probabilities.
-5. Which authoritative radiation evidence and review thresholds are in scope,
-   and who can approve the wording? No site-safety cutoff is assumed here.
-6. Is route generation feasible with available terrain/obstacle data, what
-   start constraints/costs apply, and should it run offline or be computed on
-   request from precomputed inputs?
-7. What UI basemap source/projection and deployment origin/configuration are
-   available, and does the chosen SWA setup support the intended Functions
-   runtime and artifact packaging?
-8. Will the target scientific contract be version 1.0.0 as shown, and will
-   TypeScript types be generated from the JSON Schema or validated against it
-   in CI?
+1. **Route speed:** precompute popular traverses, or optimize A* (e.g.
+   scikit-image `route_through_array`)? It must stay identical to `routing.py`.
+2. **Two slope scales:** the Conditions card shows the walking-scale slope
+   (±11°). Also show the 10 m footprint slope that zones use?
+3. **Missing conditions:** source for soil, radiation and temperature at this
+   site, or drop those tiles for the demo?
+4. **Azure:** SWA managed Python functions vs. a standalone Function App (route
+   time and package size with numpy/scipy).

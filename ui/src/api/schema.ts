@@ -1,4 +1,4 @@
-// THE data contract between the UI and the backend (docs/FRONTEND_SPEC.md §7).
+// THE data contract between the UI and the backend (TECHNICAL_SPEC.md §7).
 // Every API response is validated against these schemas before the UI uses it.
 // `npm run contracts` exports them as JSON Schema to /contracts for the
 // Python API to validate against.
@@ -28,6 +28,8 @@ export const ZoneLayer = z.object({
   id: z.string(),
   label: z.string(),
   color: HexColor,
+  /** Symbol shown for this use on the map, toggles, legend and conditions card. */
+  icon: z.enum(["habitat", "landing", "ice", "greenhouse", "datacenter", "solar"]),
   defaultOn: z.boolean(),
   /** One-line rule shown as a tooltip, e.g. "Slope < 6°, within 1.2 km of ice". */
   rule: z.string(),
@@ -85,8 +87,16 @@ export const ConditionsResponse = z.object({
   elevation: NumValue,
   slope: NumValue,
   soil: z.object({ value: z.enum(["bedrock", "mixed", "loose-sand"]).nullable(), qualifier: Qualifier }),
-  /** Ice consistency in percent (0–100). */
-  ice: NumValue,
+  /**
+   * kind "consistency": ice consistency in % (0–100).
+   * kind "distance": metres to the nearest mapped ice-rich ground (0 = on it).
+   */
+  ice: z.object({
+    kind: z.enum(["consistency", "distance"]),
+    value: z.number().nonnegative().nullable(),
+    unit: z.string(),
+    qualifier: Qualifier
+  }),
   radiation: NumValue,
   temperature: NumValue,
   sources: z.array(Source)
@@ -99,7 +109,7 @@ export const RouteVariant = z.object({
   geometry: z.object({ type: z.literal("LineString"), coordinates: z.array(LonLat).min(2) }),
   distanceKm: z.number().nonnegative(),
   walkMin: z.number().nonnegative(),
-  /** % of path length where traversability could drop by more than 50 points. */
+  /** % of the path (cells along it) where traversability could drop by more than 50 points. */
   criticalBlindspotPct: z.number().min(0).max(100),
   /** Length-weighted mean worst-case traversability along the path (0–100). */
   worstCaseTravPct: z.number().min(0).max(100)

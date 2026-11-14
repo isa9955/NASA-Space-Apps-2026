@@ -1,8 +1,8 @@
 {
   "schemaVersion": "1.0.0",
   "location": [
-    -165.2,
-    42.1
+    30.184378817492487,
+    40.74612779060319
   ],
   "elevation": {
     "value": -3769,
@@ -20,6 +20,7 @@
     "qualifier": "regional"
   },
   "ice": {
+    "kind": "consistency",
     "value": 69,
     "unit": "%",
     "qualifier": "estimated"

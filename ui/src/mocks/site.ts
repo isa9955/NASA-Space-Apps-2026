@@ -9,10 +9,11 @@ import { encodePng } from "./png";
 const DEG = Math.PI / 180;
 
 export const SITE = {
-  id: "arcadia-dtm-mock",
-  name: "Arcadia Planitia",
-  subtitle: "Exploration zone (mock DTM)",
-  center: [-165.2, 42.1] as LonLat,
+  id: "deuteronilus-dtm-mock",
+  name: "Deuteronilus Mensae",
+  subtitle: "Uncertainty-aware exploration zone (mock DTM)",
+  // Same center and size as the real HiRISE DTM crop in api/mars-blindspots.
+  center: [30.184378817492487, 40.74612779060319] as LonLat,
   widthM: 4000,
   heightM: 8000
 };

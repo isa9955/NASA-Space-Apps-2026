@@ -1,24 +1,44 @@
-# NASA-Space-Apps-2026
+# Mars Site Planner (NASA Space Apps 2026)
 
-Offline NASA MOLA ingestion, terrain candidate selection, scientific assessment,
-and provisional route planning live under `pipeline/`. See
-[`pipeline/README.md`](pipeline/README.md) and
-[`docs/methodology.md`](docs/methodology.md) for reproduction and limitations.
-The Azure Functions API serves precomputed sites and route records; see
-[`api/README.md`](api/README.md) for local setup and contracts.
+Where can we build on Mars, and how do we get there, when the terrain map has
+blindspots? A 2D web app for one walking-scale site, **Deuteronilus Mensae**,
+built from a real HiRISE terrain model (1 m/px).
 
-**IMPORTANT:** SWIM and site-specific radiation evidence remain unavailable.
-Both original candidates now have provisional MOLA routes, with interpolation
-coverage explicitly reported; no site or route is certified safe.
+- **Buildable zones:** six uses (habitat, landing pad, ice access, greenhouse,
+  data center, solar), each shown as nominal ground and the part that survives
+  worst-case slope uncertainty.
+- **Routes:** a standard route and a safe route that avoids blindspots,
+  compared side by side, with scout points and science candidates.
+- **Conditions:** click the terrain for elevation, slope ± uncertainty and
+  distance to ice-rich ground.
 
-The frontend will be implemented independently by our teammate. The temporary
-Phase 6 `web/` implementation has been removed from the checkout and remains
-available in Git commit `5c3e283`. No replacement UI is included.
-See [`docs/FRONTEND_HANDOFF.md`](docs/FRONTEND_HANDOFF.md) for the intended
-Start → Candidate → Science → Route → Habitat workflow, API contracts, Mars
-map requirements, local integration and acceptance criteria.
+## Run it
 
-Phase 6 backend discovery and historical Mars Odyssey THEMIS context remain
-available. See [`docs/data-sources.md`](docs/data-sources.md); THEMIS context
-is not a candidate-site temperature or scoring input. Azure deployment
-configuration and production verification remain pending Phase 7.
+```powershell
+# Terminal 1: API on http://localhost:7071
+cd api/mars-blindspots
+pip install -r requirements.txt
+python -m backend.dev_server
+
+# Terminal 2: UI on http://localhost:5173
+cd ui
+npm install
+npm run dev:live
+```
+
+`npm run dev` (without `:live`) runs the UI on built-in mock data, no Python
+needed.
+
+## Where things are
+
+| Path | What |
+|---|---|
+| [`TECHNICAL_SPEC.md`](TECHNICAL_SPEC.md) | Design, data, equations, API contract, open questions |
+| [`ui/`](ui/) | React + Vite + Leaflet frontend |
+| [`api/mars-blindspots/`](api/mars-blindspots/) | Terrain processing, zones, routing and the API (`backend/api_service.py`) |
+| [`contracts/`](contracts/) | JSON Schema + examples for the three endpoints |
+| [`archive/arcadia/`](archive/arcadia/) | Earlier Arcadia Planitia work, archived and unused |
+
+Decision support only: slope uncertainty is a modeled bound, ice-rich ground is
+a draft interpretation, and nothing here is a NASA safety assessment. HiRISE
+data: NASA/JPL/University of Arizona.

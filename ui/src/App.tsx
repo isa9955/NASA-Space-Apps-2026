@@ -2,9 +2,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { assetUrl, getConditions, getRegion, getRoute } from "./api/client";
 import type { ConditionsResponse, LonLat, RegionResponse, RouteResponse } from "./api/schema";
 import { inBounds } from "./lib/geo";
-import { tintMask } from "./lib/mask";
-import { SiteMap, type RouteKind } from "./map/SiteMap";
-import { ConditionsCard } from "./panels/ConditionsCard";
+import { fitAt, loadMask, pixelToLonLat, robustPatches, type DecodedMask } from "./lib/mask";
+import { SiteMap, type RouteKind, type ZoneMarker } from "./map/SiteMap";
+import { ConditionsCard, type ZoneFit } from "./panels/ConditionsCard";
 import { Header } from "./panels/Header";
 import type { Loadable } from "./panels/loadable";
 import { MapLegend } from "./panels/MapLegend";
@@ -35,7 +35,7 @@ function useLatest<T>() {
 export default function App() {
   const [region, loadRegion] = useLatest<RegionResponse>();
   const [layersOn, setLayersOn] = useState<Record<string, boolean>>({});
-  const [tinted, setTinted] = useState<Record<string, string>>({});
+  const [masks, setMasks] = useState<Record<string, DecodedMask>>({});
   const [maskFailed, setMaskFailed] = useState<Record<string, boolean>>({});
 
   const [placing, setPlacing] = useState<"start" | "end" | null>(null);
@@ -57,8 +57,8 @@ export default function App() {
     setLayersOn(Object.fromEntries(r.layers.map((l) => [l.id, l.defaultOn])));
     let cancelled = false;
     for (const l of r.layers) {
-      tintMask(assetUrl(l.mask.url), l.color).then(
-        (url) => !cancelled && setTinted((t) => ({ ...t, [l.id]: url })),
+      loadMask(assetUrl(l.mask.url), l.color).then(
+        (m) => !cancelled && setMasks((t) => ({ ...t, [l.id]: m })),
         (e) => {
           console.error(`[zones] mask ${l.id} failed`, e);
           if (!cancelled) setMaskFailed((f) => ({ ...f, [l.id]: true }));
@@ -71,9 +71,54 @@ export default function App() {
   }, [r]);
 
   const zoneImages = useMemo(
-    () => (r ? r.layers.filter((l) => layersOn[l.id] && tinted[l.id]).map((l) => ({ id: l.id, url: tinted[l.id] })) : []),
-    [r, layersOn, tinted]
+    () => (r ? r.layers.filter((l) => layersOn[l.id] && masks[l.id]).map((l) => ({ id: l.id, url: masks[l.id].url })) : []),
+    [r, layersOn, masks]
   );
+
+  // Symbols on the map: the two largest robust patches of each zone (computed once per mask).
+  const patchMarkers = useMemo(() => {
+    const out: Record<string, ZoneMarker[]> = {};
+    if (!r) return out;
+    const [kmW, kmH] = r.region.dataset.sizeKm;
+    for (const l of r.layers) {
+      const m = masks[l.id];
+      if (!m) continue;
+      const km2PerPx = (kmW * kmH) / (m.width * m.height);
+      const minPx = Math.ceil(0.02 / km2PerPx); // ignore patches under 0.02 km²
+      out[l.id] = robustPatches(m.values, m.width, m.height, minPx, 2).map((p, i) => ({
+        key: `${l.id}-${i}`,
+        layer: l,
+        location: pixelToLonLat(p.x, p.y, m.width, m.height, r.region.bounds),
+        areaKm2: p.pixels * km2PerPx,
+        rank: i + 1
+      }));
+    }
+    return out;
+  }, [r, masks]);
+  const zoneMarkers = useMemo(() => {
+    if (!r) return [];
+    const list = r.layers.filter((l) => layersOn[l.id]).flatMap((l) => patchMarkers[l.id] ?? []);
+    // Zones overlap on flat ground, so pins often land together: group close pins and spread them in a row.
+    const near = (r.region.bounds[2] - r.region.bounds[0]) * 0.06;
+    const groups: ZoneMarker[][] = [];
+    for (const m of list) {
+      const g = groups.find((gr) => Math.hypot(gr[0].location[0] - m.location[0], gr[0].location[1] - m.location[1]) < near);
+      if (g) g.push(m);
+      else groups.push([m]);
+    }
+    return groups.flatMap((g) => g.map((m, i) => ({ ...m, location: g[0].location, slot: i - (g.length - 1) / 2 })));
+  }, [r, layersOn, patchMarkers]);
+
+  // Which zones the inspected point falls in (from the same masks as the map).
+  const fits = useMemo<ZoneFit[] | null>(() => {
+    if (!r || !inspect) return null;
+    if (r.layers.some((l) => !masks[l.id] && !maskFailed[l.id])) return null; // still loading
+    return r.layers.flatMap((l) => {
+      const m = masks[l.id];
+      const f = m ? fitAt(inspect, m, r.region.bounds) : null;
+      return f ? [{ layer: l, fit: f }] : [];
+    });
+  }, [r, inspect, masks, maskFailed]);
 
   const plan = useCallback(
     (a: LonLat, b: LonLat) => {
@@ -173,6 +218,7 @@ export default function App() {
               region={r}
               basemapUrl={assetUrl(r.basemap.url)}
               zoneImages={zoneImages}
+              zoneMarkers={zoneMarkers}
               placing={placing}
               start={start}
               end={end}
@@ -181,8 +227,8 @@ export default function App() {
               inspect={inspect}
               onMapClick={onMapClick}
             />
-            <MapLegend region={r} />
-            {inspect && conditions && <ConditionsCard point={inspect} state={conditions} onClose={closeConditions} />}
+            <MapLegend region={r} activeLayers={r.layers.filter((l) => layersOn[l.id])} />
+            {inspect && conditions && <ConditionsCard point={inspect} state={conditions} fits={fits} onClose={closeConditions} />}
             {notice && <div className="toast">{notice}</div>}
           </>
         )}

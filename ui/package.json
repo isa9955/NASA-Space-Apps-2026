@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "test": "vitest run",
     "typecheck": "tsc -p tsconfig.json",
-    "contracts": "vite-node scripts/export-contracts.ts"
+    "contracts": "vite-node scripts/export-contracts.ts",
+    "dev:live": "vite --mode live"
   },
   "dependencies": {
     "@turf/turf": "^7.2.0",

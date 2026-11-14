@@ -3,3 +3,5 @@ scipy
 matplotlib
 rasterio
 pytest
+pillow
+jsonschema

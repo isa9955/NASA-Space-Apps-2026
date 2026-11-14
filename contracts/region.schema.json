@@ -134,6 +134,17 @@
                 "type": "string",
                 "pattern": "^#[0-9a-fA-F]{6}$"
               },
+              "icon": {
+                "type": "string",
+                "enum": [
+                  "habitat",
+                  "landing",
+                  "ice",
+                  "greenhouse",
+                  "datacenter",
+                  "solar"
+                ]
+              },
               "defaultOn": {
                 "type": "boolean"
               },
@@ -181,6 +192,7 @@
               "id",
               "label",
               "color",
+              "icon",
               "defaultOn",
               "rule",
               "nominalKm2",

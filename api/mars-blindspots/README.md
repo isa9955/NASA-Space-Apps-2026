@@ -36,6 +36,14 @@ This folder is a self-contained Python project. It is **not** part of the Azure 
 In code: `routing.plan("data/deuteronilus", (600,100), (150,300))` → dict with standard/safe routes + metrics, scouts, science.
 Cell ↔ lat/lon: `routing.cell_to_latlon(meta, grid, r, c)` (linear in `metadata.bounds`, row 0 = north).
 
+## Web API for the Mars Site Planner UI
+`backend/api_service.py` serves this data to the UI in the shapes defined by `/contracts` (repo root):
+`/api/region`, `/api/conditions?lon=&lat=`, `/api/route?from=lon,lat&to=lon,lat`, plus the basemap and zone-mask PNGs.
+It reads `data/deuteronilus/` as-is (zones are never recomputed) and calls `backend/routing.py` for routes.
+
+    python -m backend.dev_server        # http://localhost:7071/api/region  (then `npm run dev:live` in ui/)
+    python -m pytest -q backend/tests/test_api_service.py
+
 ## Regenerate `data/deuteronilus/` (needs the raw data, see `data/RAW_DATA.md`)
     scripts/fetch_deuteronilus.sh
     python3 process_terrain.py --input data_raw/deut_041222_dtm.IMG \

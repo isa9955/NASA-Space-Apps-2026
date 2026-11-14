@@ -1,17 +1,17 @@
 {
   "schemaVersion": "1.0.0",
   "region": {
-    "id": "arcadia-dtm-mock",
-    "name": "Arcadia Planitia",
-    "subtitle": "Exploration zone (mock DTM)",
+    "id": "deuteronilus-dtm-mock",
+    "name": "Deuteronilus Mensae",
+    "subtitle": "Uncertainty-aware exploration zone (mock DTM)",
     "bounds": [
-      -165.24556456464856,
-      42.03238438765236,
-      -165.15443543535142,
-      42.167615612347646
+      30.139754477230987,
+      40.678512178255545,
+      30.229003157753986,
+      40.813743402950834
     ],
     "dataset": {
-      "label": "Mock DTM · Arcadia Planitia",
+      "label": "Mock DTM · Deuteronilus Mensae",
       "sizeKm": [
         4,
         8
@@ -34,6 +34,7 @@
       "color": "#f7d046",
       "defaultOn": true,
       "rule": "Slope < 6°, within 1.2 km of ice, off the mesas, not loose sand",
+      "icon": "habitat",
       "nominalKm2": 4.22,
       "robustKm2": 2.24,
       "survivesPct": 53,
@@ -49,6 +50,7 @@
       "color": "#f472b6",
       "defaultOn": true,
       "rule": "Slope < 3°, at least 600 m from mesas, not on ice",
+      "icon": "landing",
       "nominalKm2": 1.94,
       "robustKm2": 0.41,
       "survivesPct": 21,
@@ -64,6 +66,7 @@
       "color": "#38d1f0",
       "defaultOn": true,
       "rule": "Ice-rich ground (draft interpretation), slope < 15°",
+      "icon": "ice",
       "nominalKm2": 5.64,
       "robustKm2": 3.6,
       "survivesPct": 64,
@@ -79,6 +82,7 @@
       "color": "#6fe08a",
       "defaultOn": false,
       "rule": "Slope < 8°, within 800 m of ice",
+      "icon": "greenhouse",
       "nominalKm2": 8.38,
       "robustKm2": 4.28,
       "survivesPct": 51,
@@ -94,6 +98,7 @@
       "color": "#c4a7ff",
       "defaultOn": false,
       "rule": "Slope < 5°, firm ground, within 2 km of ice for cooling",
+      "icon": "datacenter",
       "nominalKm2": 3.56,
       "robustKm2": 1.67,
       "survivesPct": 47,
@@ -109,6 +114,7 @@
       "color": "#ff9f4a",
       "defaultOn": false,
       "rule": "Slope < 10°, flat or facing south",
+      "icon": "solar",
       "nominalKm2": 5.17,
       "robustKm2": 2.13,
       "survivesPct": 41,
@@ -121,12 +127,12 @@
   ],
   "demoTraverse": {
     "from": [
-      -165.21936493997563,
-      42.14056936740858
+      30.16541347288135,
+      40.78669715801177
     ],
     "to": [
-      -165.17380037532703,
-      42.098309609691306
+      30.21003781314285,
+      40.744437400294494
     ]
   },
   "algorithmVersion": "mock-zones-1",

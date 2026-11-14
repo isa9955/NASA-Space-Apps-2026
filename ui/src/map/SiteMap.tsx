@@ -3,7 +3,8 @@ import L from "leaflet";
 import { renderToStaticMarkup } from "react-dom/server";
 import { Microscope } from "lucide-react";
 import { CircleMarker, ImageOverlay, MapContainer, Marker, Pane, Polyline, TileLayer, Tooltip, useMap, useMapEvents } from "react-leaflet";
-import type { LonLat, RegionResponse, RouteResponse, RouteVariant } from "../api/schema";
+import type { LonLat, RegionResponse, RouteResponse, RouteVariant, ZoneLayer } from "../api/schema";
+import { zoneIconSvg } from "../lib/zoneIcons";
 import { toLeafletBounds } from "../lib/geo";
 
 // NASA Mars Trek: 2x1 equirectangular tiles at zoom 0 = Leaflet's EPSG4326
@@ -13,10 +14,39 @@ const TREK_URL =
 
 export type RouteKind = "standard" | "safe";
 
+/** A zone symbol placed inside one of the zone's largest robust patches. */
+export interface ZoneMarker {
+  key: string;
+  layer: ZoneLayer;
+  location: LonLat;
+  areaKm2: number;
+  rank: number;
+  /** Horizontal offset in pin widths when several pins share a spot (0 = centered). */
+  slot?: number;
+}
+
+const zonePinCache = new Map<string, L.DivIcon>();
+function zonePin(layer: ZoneLayer, rank: number, slot = 0) {
+  const k = `${layer.icon}-${layer.color}-${rank}-${slot}`;
+  let icon = zonePinCache.get(k);
+  if (!icon) {
+    const size = rank === 1 ? 30 : 24;
+    icon = L.divIcon({
+      className: "",
+      html: `<div class="zone-pin" style="--c:${layer.color};width:${size}px;height:${size}px">${zoneIconSvg(layer.icon, Math.round(size * 0.55))}</div>`,
+      iconSize: [size, size],
+      iconAnchor: [size / 2 - slot * 30, size / 2]
+    });
+    zonePinCache.set(k, icon);
+  }
+  return icon;
+}
+
 interface Props {
   region: RegionResponse;
   basemapUrl: string;
   zoneImages: Array<{ id: string; url: string }>;
+  zoneMarkers: ZoneMarker[];
   placing: "start" | "end" | null;
   start: LonLat | null;
   end: LonLat | null;
@@ -138,6 +168,21 @@ export function SiteMap(p: Props) {
         {ok?.standard && <RouteLine v={ok.standard} focus={p.focus} />}
       </Pane>
 
+      {p.zoneMarkers.map((z) => (
+        <Marker
+          key={z.key}
+          position={ll(z.location)}
+          icon={zonePin(z.layer, z.rank, z.slot)}
+          zIndexOffset={-200}
+          eventHandlers={{ click: () => p.onMapClick(z.location) }}
+        >
+          <Tooltip direction="top" offset={[0, -14]}>
+            <strong>{z.layer.label}</strong>
+            <br />
+            {z.rank === 1 ? "Largest" : "Second-largest"} robust patch · {z.areaKm2.toFixed(2)} km²
+          </Tooltip>
+        </Marker>
+      ))}
       {ok?.scienceTargets.map((t) => (
         <Marker key={t.id} position={ll(t.location)} icon={SCI_ICON}>
           <Tooltip direction="top" offset={[0, -12]}>

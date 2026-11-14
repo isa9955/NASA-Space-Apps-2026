@@ -1,5 +1,6 @@
 import type { ZoneLayer } from "../api/schema";
 import { fmtNum } from "../lib/format";
+import { ZoneBadge } from "../lib/zoneIcons";
 
 interface Props {
   layers: ZoneLayer[];
@@ -14,7 +15,8 @@ export function ZonesPanel({ layers, on, failed, onToggle }: Props) {
       <h2 className="section-title">Buildable zones</h2>
       <p className="intro">
         Showing <strong>robust</strong> zones: ground that still passes with worst-case slope. Faint = lost to
-        blindspots. Click the map to inspect conditions.
+        blindspots. Symbols on the map mark each zone&apos;s largest robust patches. Click the map to inspect
+        conditions.
       </p>
       <ul className="zones">
         {layers.map((l) => (
@@ -28,7 +30,7 @@ export function ZonesPanel({ layers, on, failed, onToggle }: Props) {
             >
               <span />
             </button>
-            <span className="swatch" style={{ background: l.color }} />
+            <ZoneBadge layer={l} />
             <span className="zone-label" title={l.rule}>
               {l.label}
               {failed[l.id] && <span className="zone-error"> · overlay failed to load</span>}

@@ -156,10 +156,22 @@
         "ice": {
           "type": "object",
           "properties": {
+            "kind": {
+              "type": "string",
+              "enum": [
+                "consistency",
+                "distance"
+              ]
+            },
             "value": {
-              "type": [
-                "number",
-                "null"
+              "anyOf": [
+                {
+                  "type": "number",
+                  "minimum": 0
+                },
+                {
+                  "type": "null"
+                }
               ]
             },
             "unit": {
@@ -178,20 +190,10 @@
                   "type": "null"
                 }
               ]
-            },
-            "uncertainty": {
-              "anyOf": [
-                {
-                  "type": "number",
-                  "minimum": 0
-                },
-                {
-                  "type": "null"
-                }
-              ]
             }
           },
           "required": [
+            "kind",
             "value",
             "unit",
             "qualifier"
