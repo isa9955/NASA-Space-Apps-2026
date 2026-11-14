@@ -1,5 +1,12 @@
 # Phase 2: NASA raster ingestion
 
+Phase 3 now consumes this artifact offline. Run
+`pipeline/.venv/Scripts/python.exe pipeline/src/build_site_assessments.py` from
+the repository root to produce `pipeline/site_assessments.json`. See
+[`docs/methodology.md`](../docs/methodology.md) for scoring assumptions,
+confidence rules, limitations and essential checks. The ingestion described
+below remains unchanged.
+
 This offline pipeline extracts source observations only. It does not calculate
 suitability or evidence confidence, and it does not calculate radiation, routes,
 or pathfinding.

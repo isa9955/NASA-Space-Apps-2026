@@ -1,0 +1,832 @@
+{
+  "schemaVersion": "phase3-site-assessments/1.0.0",
+  "scoringVersion": "screening-1.0.0",
+  "model": {
+    "version": "screening-1.0.0",
+    "confidenceVersion": "evidence-rules-1.0.0",
+    "weights": {
+      "terrain": 0.5,
+      "water": 0.5
+    },
+    "terrainZeroScoreSlopeDeg": 10.0,
+    "confidence": {
+      "highCountMinimum": 10,
+      "highResolutionMaximumMeters": 100,
+      "mediumResolutionMaximumMeters": 1000
+    },
+    "assumption": "Exploratory project screening parameters; not NASA safety limits or validated habitat requirements."
+  },
+  "region": {
+    "id": "arcadia-small-overlap",
+    "name": "Arcadia Planitia sample window",
+    "description": "Three MOLA count-supported sampling points within the published Arcadia SWIM study region; points are inputs for data extraction, not ranked candidate sites.",
+    "coordinateReference": {
+      "body": "Mars",
+      "latitudeType": "planetocentric",
+      "longitudeDirection": "positive east",
+      "longitudeRange": "0 to 360 degrees",
+      "datum": "IAU2000 body-fixed sphere, radius 3396000 m"
+    }
+  },
+  "sources": [
+    {
+      "id": "swim4imim-combined-ci-0-1m",
+      "provider": "NASA-supported Subsurface Water Ice Mapping (SWIM) project",
+      "productId": "SWIM4IMIM Combined Ice Consistency Map (0-1 m)",
+      "productUrl": "https://swim.psi.edu/SWIM4MIMProducts.php",
+      "regionalStudyUrl": "https://swim.psi.edu/",
+      "release": "SWIM4IMIM product page, last updated 2025-08-04",
+      "variable": "combined ice-consistency index for the 0-1 m sensing-depth product",
+      "valueUnit": "1 (dimensionless index; not water abundance or depth)",
+      "publishedProjection": "simple cylindrical, spherical Mars",
+      "publishedPixelSizeMeters": 3000,
+      "publishedLongitude": "0 to 360 degrees east",
+      "publishedLatitude": "60 degrees south to 60 degrees north",
+      "publishedNoData": -30,
+      "availability": "not-retrieved",
+      "retrievalNote": "Official SWIM product host returned HTTP 523 or timed out during the 2026-11-14 retrieval attempt; no raster values were synthesized."
+    },
+    {
+      "id": "mola-megdr-128ppd",
+      "provider": "NASA Planetary Data System Geosciences Node",
+      "productId": "MEGT44N180HB",
+      "productUrl": "https://pds-geosciences.wustl.edu/mgs/urn-nasa-pds-mgs_mola_topography_derived/meg128/megt44n180hb.img",
+      "labelUrl": "https://pds-geosciences.wustl.edu/mgs/urn-nasa-pds-mgs_mola_topography_derived/meg128/megt44n180hb.xml",
+      "catalogUrl": "https://pds-geosciences.wustl.edu/missions/mgs/megdr.html",
+      "instrument": "Mars Orbiter Laser Altimeter (MOLA), Mars Global Surveyor",
+      "productType": "MEGDR topography",
+      "productVersion": "2.0 (PDS label: hb tile)",
+      "observationsPeriod": "1999-02 through 2001-06",
+      "coordinateReference": {
+        "body": "Mars",
+        "datum": "IAU2000 body-fixed rotating sphere",
+        "latitudeType": "planetocentric",
+        "longitudeDirection": "positive east",
+        "longitudeRange": "0 to 360 degrees",
+        "projection": "equirectangular, central meridian 180 degrees",
+        "radiusMeters": 3396000
+      },
+      "valueUnit": "meter relative to MOLA areoid",
+      "pixelSizeMeters": 463.0576672,
+      "nodata": {
+        "headerIgnoreValue": 0,
+        "countsProductId": "MEGC44N180HB",
+        "interpretation": "The PDS4 topography label describes interpolation where bins have no observations and does not declare a special constant. The supplied ENVI header marks zero as ignore; the companion count raster is used to distinguish zero-observation bins from observed zero elevation."
+      },
+      "availability": "available",
+      "regionalBytesFetched": 225,
+      "regionalRasterSha256": "c7b61636f2d141796e94bbf52ce48e36e863f57f333535ba2ccaa5013670c87b",
+      "countsProduct": {
+        "productId": "MEGC44N180HB",
+        "productUrl": "https://pds-geosciences.wustl.edu/mgs/urn-nasa-pds-mgs_mola_topography_derived/meg128/megc44n180hb.img",
+        "valueUnit": "observations per grid cell",
+        "dataType": "unsigned 8-bit integer",
+        "zeroMeaning": "No MOLA observations in the bin; a topography value in this cell may be interpolated."
+      },
+      "retrievedAt": "2026-11-14T19:49:06.410145Z"
+    },
+    {
+      "id": "mola-megdr-128ppd-counts",
+      "provider": "NASA Planetary Data System Geosciences Node",
+      "productId": "MEGC44N180HB",
+      "productUrl": "https://pds-geosciences.wustl.edu/mgs/urn-nasa-pds-mgs_mola_topography_derived/meg128/megc44n180hb.img",
+      "labelUrl": "https://pds-geosciences.wustl.edu/mgs/urn-nasa-pds-mgs_mola_topography_derived/meg128/megc44n180hb.xml",
+      "catalogUrl": "https://pds-geosciences.wustl.edu/missions/mgs/megdr.html",
+      "instrument": "Mars Orbiter Laser Altimeter (MOLA), Mars Global Surveyor",
+      "productType": "MEGDR observation counts",
+      "productVersion": "2.0 (PDS label: hb tile)",
+      "valueUnit": "observations per grid cell",
+      "dataType": "unsigned 8-bit integer",
+      "zeroMeaning": "No observations in that pixel; zero is a valid count, not a missing count.",
+      "availability": "available",
+      "regionalRasterSha256": "7d3c5b2c3e697a0b597870e58bf14e3278105b61b403b9314a855aa00d7c6a1f",
+      "retrievedAt": "2026-11-14T19:49:06.410145Z"
+    }
+  ],
+  "sites": [
+    {
+      "id": "arcadia-sample-01",
+      "name": "Arcadia sample 01",
+      "location": {
+        "type": "Point",
+        "coordinates": [
+          194.83984375,
+          37.98828125
+        ],
+        "coordinateReference": {
+          "body": "Mars",
+          "latitudeType": "planetocentric",
+          "longitudeDirection": "positive east",
+          "longitudeRange": "0 to 360 degrees",
+          "datum": "IAU2000 body-fixed sphere, radius 3396000 m"
+        }
+      },
+      "dataStatus": "nasa-derived-partial-assessment",
+      "observations": {
+        "swimCombinedIceConsistency": {
+          "value": null,
+          "unit": null,
+          "status": "unavailable",
+          "sourceId": "swim4imim-combined-ci-0-1m",
+          "unavailableReason": "swim_raster_not_retrieved"
+        },
+        "molaTopography": {
+          "value": -3973.0,
+          "unit": "meter relative to MOLA areoid",
+          "status": "sampled_product_value",
+          "sourceId": "mola-megdr-128ppd"
+        },
+        "molaObservationCount": {
+          "value": 4.0,
+          "unit": "observations per 128 ppd cell",
+          "status": "observed",
+          "sourceId": "mola-megdr-128ppd-counts"
+        },
+        "molaRegionalSlope": {
+          "value": 0.1569946805721398,
+          "unit": "degree",
+          "status": "derived",
+          "sourceId": "mola-megdr-128ppd",
+          "method": "3x3-neighborhood central differences on the MOLA 128 ppd grid",
+          "dataBasis": "all_3x3_cells_have_direct_observations"
+        }
+      },
+      "suitability": {
+        "status": "partial",
+        "overallStatus": "unknown",
+        "score": null,
+        "scale": "0-100",
+        "algorithmVersion": "screening-1.0.0",
+        "factors": {
+          "terrain": {
+            "status": "assessed",
+            "score": 98.4300531942786,
+            "weight": 0.5,
+            "weightedContribution": 49.2150265971393,
+            "observation": {
+              "value": 0.1569946805721398,
+              "unit": "degree",
+              "status": "derived",
+              "sourceId": "mola-megdr-128ppd",
+              "method": "3x3-neighborhood central differences on the MOLA 128 ppd grid",
+              "dataBasis": "all_3x3_cells_have_direct_observations"
+            },
+            "explanation": "Regional slope screen: 100 * max(0, 1 - slope / configured limit)."
+          },
+          "water": {
+            "status": "insufficient-evidence",
+            "score": null,
+            "weight": 0.5,
+            "weightedContribution": null,
+            "observation": {
+              "value": null,
+              "unit": null,
+              "status": "unavailable",
+              "sourceId": "swim4imim-combined-ci-0-1m",
+              "unavailableReason": "swim_raster_not_retrieved"
+            },
+            "explanation": "Nonzero SWIM consistency mapped from [-1, 1] to [0, 100]; no abundance or accessibility inference."
+          }
+        },
+        "modelStatus": "incomplete",
+        "modelScore": null,
+        "availableWeight": 0.5,
+        "explanation": [
+          "Missing weights are never redistributed. A factor score is not an overall suitability score.",
+          "Even a complete terrain/water screening model excludes critical safety and environmental domains."
+        ]
+      },
+      "evidenceConfidence": {
+        "status": "insufficient-evidence",
+        "level": "unknown",
+        "probability": null,
+        "algorithmVersion": "evidence-rules-1.0.0",
+        "coverage": {
+          "supportedFactors": [
+            "terrain"
+          ],
+          "requiredFactors": [
+            "terrain",
+            "water"
+          ],
+          "missingFactors": [
+            "water"
+          ]
+        },
+        "factors": {
+          "terrain": {
+            "level": "medium",
+            "rationale": [
+              "Confidence describes support for regional terrain evidence only.",
+              "Projected pixel size: 463.058 m; center-cell count: 4.",
+              "Neighborhood basis: all_3x3_cells_have_direct_observations.",
+              "Product and count raster references and hashes are recorded.",
+              "Source observation period: 1999-02 through 2001-06; current surface conditions are unverified.",
+              "Measurement uncertainty, fine-scale hazards and independent local validation are unavailable."
+            ],
+            "pixelSizeMeters": 463.0576672,
+            "observationCount": 4.0,
+            "countsSourceId": "mola-megdr-128ppd-counts"
+          },
+          "water": {
+            "level": "unknown",
+            "rationale": [
+              "SWIM is missing, invalid, or zero/inconclusive; water evidence support is Unknown."
+            ]
+          }
+        },
+        "rationale": [
+          "Overall evidence support is the weakest required factor; independent of factor scores."
+        ]
+      },
+      "radiationReview": {
+        "status": "insufficient-evidence",
+        "risk": "unknown",
+        "shieldingRequirements": "unresolved",
+        "dose": null,
+        "observationIds": [],
+        "summary": "No site-specific radiation or shielding evidence exists in the Phase 2 input; specialist review required."
+      },
+      "strengths": [
+        "Regional slope measured as 0.1570 degrees supports an explicit terrain screen."
+      ],
+      "limitations": [
+        "Screening thresholds and weights are project assumptions, not NASA habitat standards.",
+        "Orbital grid evidence does not resolve habitat-scale conditions or seasonal resource access."
+      ],
+      "missingInformation": [
+        "water",
+        "solar",
+        "thermal",
+        "radiation",
+        "shielding",
+        "geotechnical properties",
+        "local validation"
+      ],
+      "humanReviewWarnings": [
+        "IMPORTANT: Sampling points are not ranked habitat recommendations.",
+        "IMPORTANT: Regional slope cannot resolve rocks, small craters, soil bearing capacity or construction hazards.",
+        "BLOCKER: Radiation risk and shielding requirements are unresolved; no site is certified safe."
+      ],
+      "sources": [
+        {
+          "id": "swim4imim-combined-ci-0-1m",
+          "provider": "NASA-supported Subsurface Water Ice Mapping (SWIM) project",
+          "productId": "SWIM4IMIM Combined Ice Consistency Map (0-1 m)",
+          "productUrl": "https://swim.psi.edu/SWIM4MIMProducts.php",
+          "regionalStudyUrl": "https://swim.psi.edu/",
+          "release": "SWIM4IMIM product page, last updated 2025-08-04",
+          "variable": "combined ice-consistency index for the 0-1 m sensing-depth product",
+          "valueUnit": "1 (dimensionless index; not water abundance or depth)",
+          "publishedProjection": "simple cylindrical, spherical Mars",
+          "publishedPixelSizeMeters": 3000,
+          "publishedLongitude": "0 to 360 degrees east",
+          "publishedLatitude": "60 degrees south to 60 degrees north",
+          "publishedNoData": -30,
+          "availability": "not-retrieved",
+          "retrievalNote": "Official SWIM product host returned HTTP 523 or timed out during the 2026-11-14 retrieval attempt; no raster values were synthesized."
+        },
+        {
+          "id": "mola-megdr-128ppd",
+          "provider": "NASA Planetary Data System Geosciences Node",
+          "productId": "MEGT44N180HB",
+          "productUrl": "https://pds-geosciences.wustl.edu/mgs/urn-nasa-pds-mgs_mola_topography_derived/meg128/megt44n180hb.img",
+          "labelUrl": "https://pds-geosciences.wustl.edu/mgs/urn-nasa-pds-mgs_mola_topography_derived/meg128/megt44n180hb.xml",
+          "catalogUrl": "https://pds-geosciences.wustl.edu/missions/mgs/megdr.html",
+          "instrument": "Mars Orbiter Laser Altimeter (MOLA), Mars Global Surveyor",
+          "productType": "MEGDR topography",
+          "productVersion": "2.0 (PDS label: hb tile)",
+          "observationsPeriod": "1999-02 through 2001-06",
+          "coordinateReference": {
+            "body": "Mars",
+            "datum": "IAU2000 body-fixed rotating sphere",
+            "latitudeType": "planetocentric",
+            "longitudeDirection": "positive east",
+            "longitudeRange": "0 to 360 degrees",
+            "projection": "equirectangular, central meridian 180 degrees",
+            "radiusMeters": 3396000
+          },
+          "valueUnit": "meter relative to MOLA areoid",
+          "pixelSizeMeters": 463.0576672,
+          "nodata": {
+            "headerIgnoreValue": 0,
+            "countsProductId": "MEGC44N180HB",
+            "interpretation": "The PDS4 topography label describes interpolation where bins have no observations and does not declare a special constant. The supplied ENVI header marks zero as ignore; the companion count raster is used to distinguish zero-observation bins from observed zero elevation."
+          },
+          "availability": "available",
+          "regionalBytesFetched": 225,
+          "regionalRasterSha256": "c7b61636f2d141796e94bbf52ce48e36e863f57f333535ba2ccaa5013670c87b",
+          "countsProduct": {
+            "productId": "MEGC44N180HB",
+            "productUrl": "https://pds-geosciences.wustl.edu/mgs/urn-nasa-pds-mgs_mola_topography_derived/meg128/megc44n180hb.img",
+            "valueUnit": "observations per grid cell",
+            "dataType": "unsigned 8-bit integer",
+            "zeroMeaning": "No MOLA observations in the bin; a topography value in this cell may be interpolated."
+          },
+          "retrievedAt": "2026-11-14T19:49:06.410145Z"
+        },
+        {
+          "id": "mola-megdr-128ppd-counts",
+          "provider": "NASA Planetary Data System Geosciences Node",
+          "productId": "MEGC44N180HB",
+          "productUrl": "https://pds-geosciences.wustl.edu/mgs/urn-nasa-pds-mgs_mola_topography_derived/meg128/megc44n180hb.img",
+          "labelUrl": "https://pds-geosciences.wustl.edu/mgs/urn-nasa-pds-mgs_mola_topography_derived/meg128/megc44n180hb.xml",
+          "catalogUrl": "https://pds-geosciences.wustl.edu/missions/mgs/megdr.html",
+          "instrument": "Mars Orbiter Laser Altimeter (MOLA), Mars Global Surveyor",
+          "productType": "MEGDR observation counts",
+          "productVersion": "2.0 (PDS label: hb tile)",
+          "valueUnit": "observations per grid cell",
+          "dataType": "unsigned 8-bit integer",
+          "zeroMeaning": "No observations in that pixel; zero is a valid count, not a missing count.",
+          "availability": "available",
+          "regionalRasterSha256": "7d3c5b2c3e697a0b597870e58bf14e3278105b61b403b9314a855aa00d7c6a1f",
+          "retrievedAt": "2026-11-14T19:49:06.410145Z"
+        }
+      ]
+    },
+    {
+      "id": "arcadia-sample-02",
+      "name": "Arcadia sample 02",
+      "location": {
+        "type": "Point",
+        "coordinates": [
+          194.83203125,
+          38.05078125
+        ],
+        "coordinateReference": {
+          "body": "Mars",
+          "latitudeType": "planetocentric",
+          "longitudeDirection": "positive east",
+          "longitudeRange": "0 to 360 degrees",
+          "datum": "IAU2000 body-fixed sphere, radius 3396000 m"
+        }
+      },
+      "dataStatus": "nasa-derived-partial-assessment",
+      "observations": {
+        "swimCombinedIceConsistency": {
+          "value": null,
+          "unit": null,
+          "status": "unavailable",
+          "sourceId": "swim4imim-combined-ci-0-1m",
+          "unavailableReason": "swim_raster_not_retrieved"
+        },
+        "molaTopography": {
+          "value": -3980.0,
+          "unit": "meter relative to MOLA areoid",
+          "status": "sampled_product_value",
+          "sourceId": "mola-megdr-128ppd"
+        },
+        "molaObservationCount": {
+          "value": 4.0,
+          "unit": "observations per 128 ppd cell",
+          "status": "observed",
+          "sourceId": "mola-megdr-128ppd-counts"
+        },
+        "molaRegionalSlope": {
+          "value": 0.5404463066168825,
+          "unit": "degree",
+          "status": "derived",
+          "sourceId": "mola-megdr-128ppd",
+          "method": "3x3-neighborhood central differences on the MOLA 128 ppd grid",
+          "dataBasis": "all_3x3_cells_have_direct_observations"
+        }
+      },
+      "suitability": {
+        "status": "partial",
+        "overallStatus": "unknown",
+        "score": null,
+        "scale": "0-100",
+        "algorithmVersion": "screening-1.0.0",
+        "factors": {
+          "terrain": {
+            "status": "assessed",
+            "score": 94.59553693383117,
+            "weight": 0.5,
+            "weightedContribution": 47.297768466915585,
+            "observation": {
+              "value": 0.5404463066168825,
+              "unit": "degree",
+              "status": "derived",
+              "sourceId": "mola-megdr-128ppd",
+              "method": "3x3-neighborhood central differences on the MOLA 128 ppd grid",
+              "dataBasis": "all_3x3_cells_have_direct_observations"
+            },
+            "explanation": "Regional slope screen: 100 * max(0, 1 - slope / configured limit)."
+          },
+          "water": {
+            "status": "insufficient-evidence",
+            "score": null,
+            "weight": 0.5,
+            "weightedContribution": null,
+            "observation": {
+              "value": null,
+              "unit": null,
+              "status": "unavailable",
+              "sourceId": "swim4imim-combined-ci-0-1m",
+              "unavailableReason": "swim_raster_not_retrieved"
+            },
+            "explanation": "Nonzero SWIM consistency mapped from [-1, 1] to [0, 100]; no abundance or accessibility inference."
+          }
+        },
+        "modelStatus": "incomplete",
+        "modelScore": null,
+        "availableWeight": 0.5,
+        "explanation": [
+          "Missing weights are never redistributed. A factor score is not an overall suitability score.",
+          "Even a complete terrain/water screening model excludes critical safety and environmental domains."
+        ]
+      },
+      "evidenceConfidence": {
+        "status": "insufficient-evidence",
+        "level": "unknown",
+        "probability": null,
+        "algorithmVersion": "evidence-rules-1.0.0",
+        "coverage": {
+          "supportedFactors": [
+            "terrain"
+          ],
+          "requiredFactors": [
+            "terrain",
+            "water"
+          ],
+          "missingFactors": [
+            "water"
+          ]
+        },
+        "factors": {
+          "terrain": {
+            "level": "medium",
+            "rationale": [
+              "Confidence describes support for regional terrain evidence only.",
+              "Projected pixel size: 463.058 m; center-cell count: 4.",
+              "Neighborhood basis: all_3x3_cells_have_direct_observations.",
+              "Product and count raster references and hashes are recorded.",
+              "Source observation period: 1999-02 through 2001-06; current surface conditions are unverified.",
+              "Measurement uncertainty, fine-scale hazards and independent local validation are unavailable."
+            ],
+            "pixelSizeMeters": 463.0576672,
+            "observationCount": 4.0,
+            "countsSourceId": "mola-megdr-128ppd-counts"
+          },
+          "water": {
+            "level": "unknown",
+            "rationale": [
+              "SWIM is missing, invalid, or zero/inconclusive; water evidence support is Unknown."
+            ]
+          }
+        },
+        "rationale": [
+          "Overall evidence support is the weakest required factor; independent of factor scores."
+        ]
+      },
+      "radiationReview": {
+        "status": "insufficient-evidence",
+        "risk": "unknown",
+        "shieldingRequirements": "unresolved",
+        "dose": null,
+        "observationIds": [],
+        "summary": "No site-specific radiation or shielding evidence exists in the Phase 2 input; specialist review required."
+      },
+      "strengths": [
+        "Regional slope measured as 0.5404 degrees supports an explicit terrain screen."
+      ],
+      "limitations": [
+        "Screening thresholds and weights are project assumptions, not NASA habitat standards.",
+        "Orbital grid evidence does not resolve habitat-scale conditions or seasonal resource access."
+      ],
+      "missingInformation": [
+        "water",
+        "solar",
+        "thermal",
+        "radiation",
+        "shielding",
+        "geotechnical properties",
+        "local validation"
+      ],
+      "humanReviewWarnings": [
+        "IMPORTANT: Sampling points are not ranked habitat recommendations.",
+        "IMPORTANT: Regional slope cannot resolve rocks, small craters, soil bearing capacity or construction hazards.",
+        "BLOCKER: Radiation risk and shielding requirements are unresolved; no site is certified safe."
+      ],
+      "sources": [
+        {
+          "id": "swim4imim-combined-ci-0-1m",
+          "provider": "NASA-supported Subsurface Water Ice Mapping (SWIM) project",
+          "productId": "SWIM4IMIM Combined Ice Consistency Map (0-1 m)",
+          "productUrl": "https://swim.psi.edu/SWIM4MIMProducts.php",
+          "regionalStudyUrl": "https://swim.psi.edu/",
+          "release": "SWIM4IMIM product page, last updated 2025-08-04",
+          "variable": "combined ice-consistency index for the 0-1 m sensing-depth product",
+          "valueUnit": "1 (dimensionless index; not water abundance or depth)",
+          "publishedProjection": "simple cylindrical, spherical Mars",
+          "publishedPixelSizeMeters": 3000,
+          "publishedLongitude": "0 to 360 degrees east",
+          "publishedLatitude": "60 degrees south to 60 degrees north",
+          "publishedNoData": -30,
+          "availability": "not-retrieved",
+          "retrievalNote": "Official SWIM product host returned HTTP 523 or timed out during the 2026-11-14 retrieval attempt; no raster values were synthesized."
+        },
+        {
+          "id": "mola-megdr-128ppd",
+          "provider": "NASA Planetary Data System Geosciences Node",
+          "productId": "MEGT44N180HB",
+          "productUrl": "https://pds-geosciences.wustl.edu/mgs/urn-nasa-pds-mgs_mola_topography_derived/meg128/megt44n180hb.img",
+          "labelUrl": "https://pds-geosciences.wustl.edu/mgs/urn-nasa-pds-mgs_mola_topography_derived/meg128/megt44n180hb.xml",
+          "catalogUrl": "https://pds-geosciences.wustl.edu/missions/mgs/megdr.html",
+          "instrument": "Mars Orbiter Laser Altimeter (MOLA), Mars Global Surveyor",
+          "productType": "MEGDR topography",
+          "productVersion": "2.0 (PDS label: hb tile)",
+          "observationsPeriod": "1999-02 through 2001-06",
+          "coordinateReference": {
+            "body": "Mars",
+            "datum": "IAU2000 body-fixed rotating sphere",
+            "latitudeType": "planetocentric",
+            "longitudeDirection": "positive east",
+            "longitudeRange": "0 to 360 degrees",
+            "projection": "equirectangular, central meridian 180 degrees",
+            "radiusMeters": 3396000
+          },
+          "valueUnit": "meter relative to MOLA areoid",
+          "pixelSizeMeters": 463.0576672,
+          "nodata": {
+            "headerIgnoreValue": 0,
+            "countsProductId": "MEGC44N180HB",
+            "interpretation": "The PDS4 topography label describes interpolation where bins have no observations and does not declare a special constant. The supplied ENVI header marks zero as ignore; the companion count raster is used to distinguish zero-observation bins from observed zero elevation."
+          },
+          "availability": "available",
+          "regionalBytesFetched": 225,
+          "regionalRasterSha256": "c7b61636f2d141796e94bbf52ce48e36e863f57f333535ba2ccaa5013670c87b",
+          "countsProduct": {
+            "productId": "MEGC44N180HB",
+            "productUrl": "https://pds-geosciences.wustl.edu/mgs/urn-nasa-pds-mgs_mola_topography_derived/meg128/megc44n180hb.img",
+            "valueUnit": "observations per grid cell",
+            "dataType": "unsigned 8-bit integer",
+            "zeroMeaning": "No MOLA observations in the bin; a topography value in this cell may be interpolated."
+          },
+          "retrievedAt": "2026-11-14T19:49:06.410145Z"
+        },
+        {
+          "id": "mola-megdr-128ppd-counts",
+          "provider": "NASA Planetary Data System Geosciences Node",
+          "productId": "MEGC44N180HB",
+          "productUrl": "https://pds-geosciences.wustl.edu/mgs/urn-nasa-pds-mgs_mola_topography_derived/meg128/megc44n180hb.img",
+          "labelUrl": "https://pds-geosciences.wustl.edu/mgs/urn-nasa-pds-mgs_mola_topography_derived/meg128/megc44n180hb.xml",
+          "catalogUrl": "https://pds-geosciences.wustl.edu/missions/mgs/megdr.html",
+          "instrument": "Mars Orbiter Laser Altimeter (MOLA), Mars Global Surveyor",
+          "productType": "MEGDR observation counts",
+          "productVersion": "2.0 (PDS label: hb tile)",
+          "valueUnit": "observations per grid cell",
+          "dataType": "unsigned 8-bit integer",
+          "zeroMeaning": "No observations in that pixel; zero is a valid count, not a missing count.",
+          "availability": "available",
+          "regionalRasterSha256": "7d3c5b2c3e697a0b597870e58bf14e3278105b61b403b9314a855aa00d7c6a1f",
+          "retrievedAt": "2026-11-14T19:49:06.410145Z"
+        }
+      ]
+    },
+    {
+      "id": "arcadia-sample-03",
+      "name": "Arcadia sample 03",
+      "location": {
+        "type": "Point",
+        "coordinates": [
+          194.82421875,
+          38.08203125
+        ],
+        "coordinateReference": {
+          "body": "Mars",
+          "latitudeType": "planetocentric",
+          "longitudeDirection": "positive east",
+          "longitudeRange": "0 to 360 degrees",
+          "datum": "IAU2000 body-fixed sphere, radius 3396000 m"
+        }
+      },
+      "dataStatus": "nasa-derived-partial-assessment",
+      "observations": {
+        "swimCombinedIceConsistency": {
+          "value": null,
+          "unit": null,
+          "status": "unavailable",
+          "sourceId": "swim4imim-combined-ci-0-1m",
+          "unavailableReason": "swim_raster_not_retrieved"
+        },
+        "molaTopography": {
+          "value": -3974.0,
+          "unit": "meter relative to MOLA areoid",
+          "status": "sampled_product_value",
+          "sourceId": "mola-megdr-128ppd"
+        },
+        "molaObservationCount": {
+          "value": 3.0,
+          "unit": "observations per 128 ppd cell",
+          "status": "observed",
+          "sourceId": "mola-megdr-128ppd-counts"
+        },
+        "molaRegionalSlope": {
+          "value": 0.6382999636020613,
+          "unit": "degree",
+          "status": "derived",
+          "sourceId": "mola-megdr-128ppd",
+          "method": "3x3-neighborhood central differences on the MOLA 128 ppd grid",
+          "dataBasis": "all_3x3_cells_have_direct_observations"
+        }
+      },
+      "suitability": {
+        "status": "partial",
+        "overallStatus": "unknown",
+        "score": null,
+        "scale": "0-100",
+        "algorithmVersion": "screening-1.0.0",
+        "factors": {
+          "terrain": {
+            "status": "assessed",
+            "score": 93.61700036397939,
+            "weight": 0.5,
+            "weightedContribution": 46.80850018198969,
+            "observation": {
+              "value": 0.6382999636020613,
+              "unit": "degree",
+              "status": "derived",
+              "sourceId": "mola-megdr-128ppd",
+              "method": "3x3-neighborhood central differences on the MOLA 128 ppd grid",
+              "dataBasis": "all_3x3_cells_have_direct_observations"
+            },
+            "explanation": "Regional slope screen: 100 * max(0, 1 - slope / configured limit)."
+          },
+          "water": {
+            "status": "insufficient-evidence",
+            "score": null,
+            "weight": 0.5,
+            "weightedContribution": null,
+            "observation": {
+              "value": null,
+              "unit": null,
+              "status": "unavailable",
+              "sourceId": "swim4imim-combined-ci-0-1m",
+              "unavailableReason": "swim_raster_not_retrieved"
+            },
+            "explanation": "Nonzero SWIM consistency mapped from [-1, 1] to [0, 100]; no abundance or accessibility inference."
+          }
+        },
+        "modelStatus": "incomplete",
+        "modelScore": null,
+        "availableWeight": 0.5,
+        "explanation": [
+          "Missing weights are never redistributed. A factor score is not an overall suitability score.",
+          "Even a complete terrain/water screening model excludes critical safety and environmental domains."
+        ]
+      },
+      "evidenceConfidence": {
+        "status": "insufficient-evidence",
+        "level": "unknown",
+        "probability": null,
+        "algorithmVersion": "evidence-rules-1.0.0",
+        "coverage": {
+          "supportedFactors": [
+            "terrain"
+          ],
+          "requiredFactors": [
+            "terrain",
+            "water"
+          ],
+          "missingFactors": [
+            "water"
+          ]
+        },
+        "factors": {
+          "terrain": {
+            "level": "medium",
+            "rationale": [
+              "Confidence describes support for regional terrain evidence only.",
+              "Projected pixel size: 463.058 m; center-cell count: 3.",
+              "Neighborhood basis: all_3x3_cells_have_direct_observations.",
+              "Product and count raster references and hashes are recorded.",
+              "Source observation period: 1999-02 through 2001-06; current surface conditions are unverified.",
+              "Measurement uncertainty, fine-scale hazards and independent local validation are unavailable."
+            ],
+            "pixelSizeMeters": 463.0576672,
+            "observationCount": 3.0,
+            "countsSourceId": "mola-megdr-128ppd-counts"
+          },
+          "water": {
+            "level": "unknown",
+            "rationale": [
+              "SWIM is missing, invalid, or zero/inconclusive; water evidence support is Unknown."
+            ]
+          }
+        },
+        "rationale": [
+          "Overall evidence support is the weakest required factor; independent of factor scores."
+        ]
+      },
+      "radiationReview": {
+        "status": "insufficient-evidence",
+        "risk": "unknown",
+        "shieldingRequirements": "unresolved",
+        "dose": null,
+        "observationIds": [],
+        "summary": "No site-specific radiation or shielding evidence exists in the Phase 2 input; specialist review required."
+      },
+      "strengths": [
+        "Regional slope measured as 0.6383 degrees supports an explicit terrain screen."
+      ],
+      "limitations": [
+        "Screening thresholds and weights are project assumptions, not NASA habitat standards.",
+        "Orbital grid evidence does not resolve habitat-scale conditions or seasonal resource access."
+      ],
+      "missingInformation": [
+        "water",
+        "solar",
+        "thermal",
+        "radiation",
+        "shielding",
+        "geotechnical properties",
+        "local validation"
+      ],
+      "humanReviewWarnings": [
+        "IMPORTANT: Sampling points are not ranked habitat recommendations.",
+        "IMPORTANT: Regional slope cannot resolve rocks, small craters, soil bearing capacity or construction hazards.",
+        "BLOCKER: Radiation risk and shielding requirements are unresolved; no site is certified safe."
+      ],
+      "sources": [
+        {
+          "id": "swim4imim-combined-ci-0-1m",
+          "provider": "NASA-supported Subsurface Water Ice Mapping (SWIM) project",
+          "productId": "SWIM4IMIM Combined Ice Consistency Map (0-1 m)",
+          "productUrl": "https://swim.psi.edu/SWIM4MIMProducts.php",
+          "regionalStudyUrl": "https://swim.psi.edu/",
+          "release": "SWIM4IMIM product page, last updated 2025-08-04",
+          "variable": "combined ice-consistency index for the 0-1 m sensing-depth product",
+          "valueUnit": "1 (dimensionless index; not water abundance or depth)",
+          "publishedProjection": "simple cylindrical, spherical Mars",
+          "publishedPixelSizeMeters": 3000,
+          "publishedLongitude": "0 to 360 degrees east",
+          "publishedLatitude": "60 degrees south to 60 degrees north",
+          "publishedNoData": -30,
+          "availability": "not-retrieved",
+          "retrievalNote": "Official SWIM product host returned HTTP 523 or timed out during the 2026-11-14 retrieval attempt; no raster values were synthesized."
+        },
+        {
+          "id": "mola-megdr-128ppd",
+          "provider": "NASA Planetary Data System Geosciences Node",
+          "productId": "MEGT44N180HB",
+          "productUrl": "https://pds-geosciences.wustl.edu/mgs/urn-nasa-pds-mgs_mola_topography_derived/meg128/megt44n180hb.img",
+          "labelUrl": "https://pds-geosciences.wustl.edu/mgs/urn-nasa-pds-mgs_mola_topography_derived/meg128/megt44n180hb.xml",
+          "catalogUrl": "https://pds-geosciences.wustl.edu/missions/mgs/megdr.html",
+          "instrument": "Mars Orbiter Laser Altimeter (MOLA), Mars Global Surveyor",
+          "productType": "MEGDR topography",
+          "productVersion": "2.0 (PDS label: hb tile)",
+          "observationsPeriod": "1999-02 through 2001-06",
+          "coordinateReference": {
+            "body": "Mars",
+            "datum": "IAU2000 body-fixed rotating sphere",
+            "latitudeType": "planetocentric",
+            "longitudeDirection": "positive east",
+            "longitudeRange": "0 to 360 degrees",
+            "projection": "equirectangular, central meridian 180 degrees",
+            "radiusMeters": 3396000
+          },
+          "valueUnit": "meter relative to MOLA areoid",
+          "pixelSizeMeters": 463.0576672,
+          "nodata": {
+            "headerIgnoreValue": 0,
+            "countsProductId": "MEGC44N180HB",
+            "interpretation": "The PDS4 topography label describes interpolation where bins have no observations and does not declare a special constant. The supplied ENVI header marks zero as ignore; the companion count raster is used to distinguish zero-observation bins from observed zero elevation."
+          },
+          "availability": "available",
+          "regionalBytesFetched": 225,
+          "regionalRasterSha256": "c7b61636f2d141796e94bbf52ce48e36e863f57f333535ba2ccaa5013670c87b",
+          "countsProduct": {
+            "productId": "MEGC44N180HB",
+            "productUrl": "https://pds-geosciences.wustl.edu/mgs/urn-nasa-pds-mgs_mola_topography_derived/meg128/megc44n180hb.img",
+            "valueUnit": "observations per grid cell",
+            "dataType": "unsigned 8-bit integer",
+            "zeroMeaning": "No MOLA observations in the bin; a topography value in this cell may be interpolated."
+          },
+          "retrievedAt": "2026-11-14T19:49:06.410145Z"
+        },
+        {
+          "id": "mola-megdr-128ppd-counts",
+          "provider": "NASA Planetary Data System Geosciences Node",
+          "productId": "MEGC44N180HB",
+          "productUrl": "https://pds-geosciences.wustl.edu/mgs/urn-nasa-pds-mgs_mola_topography_derived/meg128/megc44n180hb.img",
+          "labelUrl": "https://pds-geosciences.wustl.edu/mgs/urn-nasa-pds-mgs_mola_topography_derived/meg128/megc44n180hb.xml",
+          "catalogUrl": "https://pds-geosciences.wustl.edu/missions/mgs/megdr.html",
+          "instrument": "Mars Orbiter Laser Altimeter (MOLA), Mars Global Surveyor",
+          "productType": "MEGDR observation counts",
+          "productVersion": "2.0 (PDS label: hb tile)",
+          "valueUnit": "observations per grid cell",
+          "dataType": "unsigned 8-bit integer",
+          "zeroMeaning": "No observations in that pixel; zero is a valid count, not a missing count.",
+          "availability": "available",
+          "regionalRasterSha256": "7d3c5b2c3e697a0b597870e58bf14e3278105b61b403b9314a855aa00d7c6a1f",
+          "retrievedAt": "2026-11-14T19:49:06.410145Z"
+        }
+      ]
+    }
+  ],
+  "inputProvenance": {
+    "file": "site_inputs.json",
+    "sha256": "6a67c92e5946fcd7e4905971f42efc9b8c2e34d2308a4d80032ce1f102756b07"
+  }
+}

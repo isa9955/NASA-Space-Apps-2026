@@ -422,6 +422,26 @@ site assessment.
 
 ## Open Questions
 
+### Phase 3 implementation snapshot
+
+The offline assessment engine now reads the Phase 2 artifact and writes
+`pipeline/site_assessments.json`. Its single scoring implementation is
+`pipeline/src/mars_pipeline/assessment.py`, configured by
+`pipeline/config/assessment_model.json`. See `docs/methodology.md` for formulas,
+assumptions, qualitative confidence rules, limitations and reproduction.
+
+**BLOCKER:** SWIM remains unavailable in the input snapshot. All three sites
+have partial terrain screens, Unknown overall suitability/evidence confidence,
+and unresolved radiation/shielding review. Configurable screening weights and
+normalization anchors are project assumptions requiring scientific review.
+
+**IMPORTANT:** The export follows planned scientific field names but introduces
+an explicitly versioned offline artifact. The existing API schema remains
+placeholder-only; coordinated API/frontend contract evolution is still needed
+before serving assessments. No Functions or frontend implementation changed.
+
+### Decisions still needed
+
 Resolve these at the first shared checkpoint; they affect both developers and
 must be settled before real scientific locations are rendered:
 
