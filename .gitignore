@@ -1,0 +1,18 @@
+# Node / Azure Functions
+node_modules/
+api/dist/
+api/coverage/
+api/.func/
+api/local.settings.json
+
+# Python pipeline
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+
+# Editors / OS
+.DS_Store
+Thumbs.db
+.vscode/

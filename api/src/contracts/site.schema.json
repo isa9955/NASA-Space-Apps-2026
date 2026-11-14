@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mars-habitat-finder.example/contracts/site.schema.json",
+  "title": "Mars Habitat Finder site response",
+  "type": "object",
+  "required": ["site"],
+  "properties": {
+    "site": {
+      "type": "object",
+      "required": ["id", "name", "dataStatus", "location", "environmentalFactors", "suitability", "confidence", "sources", "route"],
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "dataStatus": { "const": "placeholder" },
+        "location": {
+          "type": "object",
+          "required": ["type", "coordinates"],
+          "properties": {
+            "type": { "const": "Point" },
+            "coordinates": { "$ref": "#/$defs/coordinates" }
+          },
+          "additionalProperties": false
+        },
+        "environmentalFactors": {
+          "type": "object",
+          "required": ["water", "terrain", "solar", "thermal", "radiation"],
+          "properties": {
+            "water": { "$ref": "#/$defs/factor" },
+            "terrain": { "$ref": "#/$defs/factor" },
+            "solar": { "$ref": "#/$defs/factor" },
+            "thermal": { "$ref": "#/$defs/factor" },
+            "radiation": { "$ref": "#/$defs/factor" }
+          },
+          "additionalProperties": false
+        },
+        "suitability": {
+          "type": "object",
+          "required": ["status", "score", "summary"],
+          "properties": {
+            "status": { "$ref": "#/$defs/assessmentStatus" },
+            "score": { "type": ["number", "null"] },
+            "summary": { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        "confidence": {
+          "type": "object",
+          "required": ["status", "level", "summary"],
+          "properties": {
+            "status": { "$ref": "#/$defs/assessmentStatus" },
+            "level": { "enum": ["low", "medium", "high", null] },
+            "summary": { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["label", "status", "url"],
+            "properties": {
+              "label": { "type": "string" },
+              "status": { "enum": ["placeholder", "available"] },
+              "url": { "type": ["string", "null"], "format": "uri" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "route": {
+          "type": "object",
+          "required": ["status", "summary", "waypoints"],
+          "properties": {
+            "status": { "enum": ["placeholder", "provisional", "unavailable"] },
+            "summary": { "type": "string" },
+            "waypoints": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["label", "coordinates"],
+                "properties": {
+                  "label": { "type": "string" },
+                  "coordinates": { "$ref": "#/$defs/coordinates" }
+                },
+                "additionalProperties": false
+              }
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "assessmentStatus": { "enum": ["placeholder", "not-assessed", "assessed"] },
+    "coordinates": {
+      "type": "array",
+      "prefixItems": [{ "type": "number" }, { "type": "number" }],
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "factor": {
+      "type": "object",
+      "required": ["status", "value", "unit", "summary"],
+      "properties": {
+        "status": { "$ref": "#/$defs/assessmentStatus" },
+        "value": { "type": ["number", "null"] },
+        "unit": { "type": ["string", "null"] },
+        "summary": { "type": "string" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
