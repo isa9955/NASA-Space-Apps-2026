@@ -1,0 +1,166 @@
+{
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "mission",
+    "instrument",
+    "productId",
+    "dataSetId",
+    "productVersion",
+    "sourceUrl",
+    "sourceSha256",
+    "observationStartUtc",
+    "centerCoordinates",
+    "sampleResolutionMeters",
+    "lineResolutionMeters",
+    "band",
+    "bandCenterMicrometers",
+    "labelBrightnessTemperatureRange",
+    "catalogUrl",
+    "unitsReference",
+    "limitations",
+    "discoveryUrl",
+    "footprint"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "mission-context/1.1.0"
+    },
+    "mission": {
+      "type": "string"
+    },
+    "instrument": {
+      "type": "string"
+    },
+    "productId": {
+      "type": "string"
+    },
+    "dataSetId": {
+      "type": "string"
+    },
+    "productVersion": {
+      "type": "string"
+    },
+    "sourceUrl": {
+      "type": "string"
+    },
+    "sourceSha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "observationStartUtc": {
+      "type": "string"
+    },
+    "centerCoordinates": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      }
+    },
+    "sampleResolutionMeters": {
+      "type": "number"
+    },
+    "lineResolutionMeters": {
+      "type": "number"
+    },
+    "band": {
+      "type": "number"
+    },
+    "bandCenterMicrometers": {
+      "type": "number"
+    },
+    "labelBrightnessTemperatureRange": {
+      "type": "object",
+      "required": [
+        "minimum",
+        "maximum",
+        "unit",
+        "scope"
+      ],
+      "properties": {
+        "minimum": {
+          "type": "number"
+        },
+        "maximum": {
+          "type": "number"
+        },
+        "unit": {
+          "const": "K"
+        },
+        "scope": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "catalogUrl": {
+      "type": "string"
+    },
+    "unitsReference": {
+      "type": "string"
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "discoveryUrl": {
+      "type": "string"
+    },
+    "footprint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sourceUrl", "sourceSha256", "coordinateReference", "geometry", "coverageScope", "siteCoverage"],
+      "properties": {
+        "sourceUrl": {"type": "string"},
+        "sourceSha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "coverageScope": {"type": "string"},
+        "coordinateReference": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["body", "latitudeType", "longitudeDirection", "longitudeRange", "datum"],
+          "properties": {
+            "body": {"const": "Mars"},
+            "latitudeType": {"const": "planetocentric"},
+            "longitudeDirection": {"const": "positive east"},
+            "longitudeRange": {"const": "0 to 360 degrees"},
+            "datum": {"const": "IAU2000 body-fixed sphere, radius 3396000 m"}
+          }
+        },
+        "geometry": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "coordinates"],
+          "properties": {
+            "type": {"const": "Polygon"},
+            "coordinates": {
+              "type": "array", "minItems": 1, "maxItems": 1,
+              "items": {
+                "type": "array", "minItems": 4,
+                "items": {
+                  "type": "array", "minItems": 2, "maxItems": 2,
+                  "prefixItems": [{"type": "number", "minimum": 0, "maximum": 360}, {"type": "number", "minimum": -90, "maximum": 90}],
+                  "items": false
+                }
+              }
+            }
+          }
+        },
+        "siteCoverage": {
+          "type": "array", "minItems": 1,
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["siteId", "insideApproximateFootprint"],
+            "properties": {
+              "siteId": {"type": "string"},
+              "insideApproximateFootprint": {"type": "boolean"}
+            }
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

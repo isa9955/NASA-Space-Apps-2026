@@ -1,0 +1,614 @@
+{
+  "type": "FeatureCollection",
+  "schemaVersion": "phase5-routes/1.1.0",
+  "planningVersion": "mola-astar-1.1.0",
+  "configuration": {
+    "version": "mola-astar-1.1.0",
+    "startId": "arcadia-sample-01",
+    "maximumSlopeDegrees": 10,
+    "slopePenalty": 10,
+    "minimumNeighborhoodCount": 1,
+    "allowProductInterpolation": true,
+    "interpolationPenalty": 2
+  },
+  "coordinateReference": {
+    "body": "Mars",
+    "latitudeType": "planetocentric",
+    "longitudeDirection": "positive east",
+    "longitudeRange": "0 to 360 degrees",
+    "datum": "IAU2000 body-fixed sphere, radius 3396000 m"
+  },
+  "inputProvenance": {
+    "assessmentSha256": "2408c811262927ee6189a0591b2bbd97646e25eba09d06ffa85fe793cb6fa57b",
+    "topographyRasterSha256": "f7df8fd2f290643c1de29dd0200fa4f718740286befe86e100ca6bc166b5b9fb",
+    "countsRasterSha256": "899bdb1d3cb27dce64fcf1e3f90b9b8b616653167282e50af8c5b2376d806bb8"
+  },
+  "starts": [
+    {
+      "id": "arcadia-sample-01",
+      "location": {
+        "type": "Point",
+        "coordinates": [
+          194.83984375,
+          37.98828125
+        ],
+        "coordinateReference": {
+          "body": "Mars",
+          "latitudeType": "planetocentric",
+          "longitudeDirection": "positive east",
+          "longitudeRange": "0 to 360 degrees",
+          "datum": "IAU2000 body-fixed sphere, radius 3396000 m"
+        }
+      }
+    }
+  ],
+  "coverage": {
+    "boundsDegrees": {
+      "west": 194.8,
+      "east": 195.2,
+      "south": 37.8,
+      "north": 38.2
+    },
+    "gridCellCount": 2916,
+    "supportedCellCount": 2704,
+    "directCellCount": 893,
+    "interpolatedCellCount": 2023,
+    "invalidElevationCellCount": 0
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            194.83984375,
+            37.98828125
+          ],
+          [
+            194.83984375096958,
+            37.98046875804238
+          ],
+          [
+            194.83984375096958,
+            37.97265625804186
+          ],
+          [
+            194.83984375096958,
+            37.96484375804135
+          ],
+          [
+            194.83984375096958,
+            37.95703125804084
+          ],
+          [
+            194.8476562509701,
+            37.94921875804033
+          ],
+          [
+            194.8476562509701,
+            37.94140625803982
+          ],
+          [
+            194.8476562509701,
+            37.93359375803931
+          ],
+          [
+            194.8476562509701,
+            37.925781258038796
+          ],
+          [
+            194.8476562509701,
+            37.91796875803829
+          ],
+          [
+            194.8476562509701,
+            37.91015625803778
+          ],
+          [
+            194.8554687509706,
+            37.90234375803726
+          ],
+          [
+            194.8554687509706,
+            37.89453125803675
+          ],
+          [
+            194.8554687509706,
+            37.886718758036245
+          ],
+          [
+            194.8554687509706,
+            37.878906258035734
+          ],
+          [
+            194.8554687509706,
+            37.87109375803522
+          ],
+          [
+            194.8554687509706,
+            37.86328125803471
+          ],
+          [
+            194.8632812509711,
+            37.855468758034206
+          ],
+          [
+            194.8632812509711,
+            37.847656258033695
+          ],
+          [
+            194.8632812509711,
+            37.83984375803318
+          ],
+          [
+            194.8632812509711,
+            37.83203125803267
+          ],
+          [
+            194.8632812509711,
+            37.82421875803216
+          ],
+          [
+            194.8632812509711,
+            37.81640625803165
+          ],
+          [
+            194.87109375097162,
+            37.80859375803114
+          ],
+          [
+            194.87109375097162,
+            37.800781258030625
+          ]
+        ]
+      },
+      "properties": {
+        "id": "arcadia-sample-01-to-arcadia-mola-r793-c1903",
+        "startId": "arcadia-sample-01",
+        "siteId": "arcadia-mola-r793-c1903",
+        "status": "provisional",
+        "unavailableReason": null,
+        "distanceMeters": 11620.798893575855,
+        "elevationGainMeters": 25.0,
+        "maximumSlopeDegrees": 0.5521256992675262,
+        "meanRegionalSlopeDegrees": 0.28480441288984365,
+        "evidenceCoverage": {
+          "pathCellCount": 25,
+          "directCellCount": 24,
+          "interpolatedCellCount": 1,
+          "interpolatedDistanceMeters": 1053.0412821058221,
+          "interpolatedDistanceFraction": 0.09061694395967548,
+          "meanNeighborhoodInterpolationFraction": 0.13333333333333333
+        },
+        "requestedStart": [
+          194.83984375,
+          37.98828125
+        ],
+        "requestedDestination": [
+          194.87109375097162,
+          37.800781258030625
+        ],
+        "warnings": [
+          "PROVISIONAL: Regional terrain route only; not certified safe or operational navigation.",
+          "MOLA resolution cannot resolve boulders, small craters, loose soil or vehicle-scale hazards.",
+          "A positive observation count does not establish measurement accuracy or traversability.",
+          "Routes may cross interpolated elevations supplied by the official MOLA product; no local gap filling is performed.",
+          "Reported uncertainty coverage is a data-support description, not a probability of safety.",
+          "Radiation, shielding, weather, water and resource access remain unresolved.",
+          "A missing route means no supported connection in this bounded grid, not that travel is globally impossible."
+        ],
+        "sources": [
+          {
+            "id": "mola-megdr-128ppd",
+            "provider": "NASA Planetary Data System Geosciences Node",
+            "productId": "MEGT44N180HB",
+            "productUrl": "https://pds-geosciences.wustl.edu/mgs/urn-nasa-pds-mgs_mola_topography_derived/meg128/megt44n180hb.img",
+            "labelUrl": "https://pds-geosciences.wustl.edu/mgs/urn-nasa-pds-mgs_mola_topography_derived/meg128/megt44n180hb.xml",
+            "catalogUrl": "https://pds-geosciences.wustl.edu/missions/mgs/megdr.html",
+            "instrument": "Mars Orbiter Laser Altimeter (MOLA), Mars Global Surveyor",
+            "productType": "MEGDR topography",
+            "productVersion": "2.0 (PDS label: hb tile)",
+            "observationsPeriod": "1999-02 through 2001-06",
+            "coordinateReference": {
+              "body": "Mars",
+              "datum": "IAU2000 body-fixed rotating sphere",
+              "latitudeType": "planetocentric",
+              "longitudeDirection": "positive east",
+              "longitudeRange": "0 to 360 degrees",
+              "projection": "equirectangular, central meridian 180 degrees",
+              "radiusMeters": 3396000
+            },
+            "valueUnit": "meter relative to MOLA areoid",
+            "pixelSizeMeters": 463.0576672,
+            "nodata": {
+              "headerIgnoreValue": 0,
+              "countsProductId": "MEGC44N180HB",
+              "interpretation": "The PDS4 topography label describes interpolation where bins have no observations and does not declare a special constant. The supplied ENVI header marks zero as ignore; the companion count raster is used to distinguish zero-observation bins from observed zero elevation."
+            },
+            "availability": "available",
+            "regionalBytesFetched": 8748,
+            "regionalRasterSha256": "f7df8fd2f290643c1de29dd0200fa4f718740286befe86e100ca6bc166b5b9fb",
+            "countsProduct": {
+              "productId": "MEGC44N180HB",
+              "productUrl": "https://pds-geosciences.wustl.edu/mgs/urn-nasa-pds-mgs_mola_topography_derived/meg128/megc44n180hb.img",
+              "valueUnit": "observations per grid cell",
+              "dataType": "unsigned 8-bit integer",
+              "zeroMeaning": "No MOLA observations in the bin; a topography value in this cell may be interpolated."
+            },
+            "retrievedAt": "2026-11-14T20:21:42.731991Z",
+            "candidateSelection": {
+              "configuration": {
+                "version": "mola-selection-1.0.0",
+                "referenceSiteId": "arcadia-sample-01",
+                "boundsDegrees": {
+                  "west": 194.8,
+                  "east": 195.2,
+                  "south": 37.8,
+                  "north": 38.2
+                },
+                "minimumSeparationMeters": 3000,
+                "minimumNeighborhoodCount": 1
+              },
+              "eligibleCellCount": 45,
+              "topographyProductId": "MEGT44N180HB",
+              "countsProductId": "MEGC44N180HB",
+              "topographyRasterSha256": "f7df8fd2f290643c1de29dd0200fa4f718740286befe86e100ca6bc166b5b9fb",
+              "countsRasterSha256": "899bdb1d3cb27dce64fcf1e3f90b9b8b616653167282e50af8c5b2376d806bb8",
+              "regionalBytesFetched": 8748,
+              "reference": {
+                "id": "arcadia-sample-01",
+                "name": "Arcadia sample 01",
+                "longitudeEastDeg": 194.83984375,
+                "latitudePlanetocentricDeg": 37.98828125
+              },
+              "selected": [
+                {
+                  "id": "arcadia-mola-r793-c1903",
+                  "coordinates": [
+                    194.87109375097162,
+                    37.800781258030625
+                  ],
+                  "elevationMeters": -3966.0,
+                  "slopeDegrees": 0.12373338031488165,
+                  "observationCount": 1,
+                  "minimumNeighborhoodCount": 1,
+                  "tileRow": 793,
+                  "tileColumn": 1903
+                },
+                {
+                  "id": "arcadia-mola-r746-c1895",
+                  "coordinates": [
+                    194.80859375096753,
+                    38.16796875805461
+                  ],
+                  "elevationMeters": -3963.0,
+                  "slopeDegrees": 0.16910413283654532,
+                  "observationCount": 2,
+                  "minimumNeighborhoodCount": 1,
+                  "tileRow": 746,
+                  "tileColumn": 1895
+                }
+              ],
+              "pairSeparationMeters": 21958.69087025668,
+              "referenceSeparationMeters": {
+                "arcadia-mola-r793-c1903": 11209.093639737897,
+                "arcadia-mola-r746-c1895": 10749.66431034198
+              },
+              "ordering": "ascending slope; descending minimum 3x3 count; descending center count; ascending tile row and column; first feasible pair",
+              "limitation": "Terrain-only discovery with regional MOLA data, not evidence of habitability or site safety."
+            }
+          },
+          {
+            "id": "mola-megdr-128ppd-counts",
+            "provider": "NASA Planetary Data System Geosciences Node",
+            "productId": "MEGC44N180HB",
+            "productUrl": "https://pds-geosciences.wustl.edu/mgs/urn-nasa-pds-mgs_mola_topography_derived/meg128/megc44n180hb.img",
+            "labelUrl": "https://pds-geosciences.wustl.edu/mgs/urn-nasa-pds-mgs_mola_topography_derived/meg128/megc44n180hb.xml",
+            "catalogUrl": "https://pds-geosciences.wustl.edu/missions/mgs/megdr.html",
+            "instrument": "Mars Orbiter Laser Altimeter (MOLA), Mars Global Surveyor",
+            "productType": "MEGDR observation counts",
+            "productVersion": "2.0 (PDS label: hb tile)",
+            "valueUnit": "observations per grid cell",
+            "dataType": "unsigned 8-bit integer",
+            "zeroMeaning": "No observations in that pixel; zero is a valid count, not a missing count.",
+            "availability": "available",
+            "regionalRasterSha256": "899bdb1d3cb27dce64fcf1e3f90b9b8b616653167282e50af8c5b2376d806bb8",
+            "retrievedAt": "2026-11-14T20:21:42.731991Z"
+          }
+        ],
+        "endpointCells": {
+          "start": {
+            "coordinates": [
+              194.83984375096958,
+              37.98828125804289
+            ],
+            "offsetMeters": 0.00047886027907027
+          },
+          "destination": {
+            "coordinates": [
+              194.87109375097162,
+              37.800781258030625
+            ],
+            "offsetMeters": 0.0
+          }
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            194.83984375,
+            37.98828125
+          ],
+          [
+            194.83203125096907,
+            37.99609375804339
+          ],
+          [
+            194.83203125096907,
+            38.003906258043905
+          ],
+          [
+            194.83203125096907,
+            38.01171875804442
+          ],
+          [
+            194.83203125096907,
+            38.01953125804493
+          ],
+          [
+            194.83203125096907,
+            38.02734375804543
+          ],
+          [
+            194.83203125096907,
+            38.035156258045944
+          ],
+          [
+            194.83203125096907,
+            38.042968758046456
+          ],
+          [
+            194.83203125096907,
+            38.05078125804697
+          ],
+          [
+            194.83203125096907,
+            38.05859375804748
+          ],
+          [
+            194.83203125096907,
+            38.066406258047984
+          ],
+          [
+            194.82421875096856,
+            38.074218758048495
+          ],
+          [
+            194.82421875096856,
+            38.08203125804901
+          ],
+          [
+            194.82421875096856,
+            38.08984375804952
+          ],
+          [
+            194.82421875096856,
+            38.09765625805002
+          ],
+          [
+            194.81640625096807,
+            38.105468758050534
+          ],
+          [
+            194.81640625096807,
+            38.113281258051046
+          ],
+          [
+            194.81640625096807,
+            38.12109375805156
+          ],
+          [
+            194.81640625096807,
+            38.12890625805207
+          ],
+          [
+            194.81640625096807,
+            38.136718758052574
+          ],
+          [
+            194.81640625096807,
+            38.144531258053085
+          ],
+          [
+            194.80859375096753,
+            38.1523437580536
+          ],
+          [
+            194.80859375096753,
+            38.16015625805411
+          ],
+          [
+            194.80859375096753,
+            38.16796875805461
+          ]
+        ]
+      },
+      "properties": {
+        "id": "arcadia-sample-01-to-arcadia-mola-r746-c1895",
+        "startId": "arcadia-sample-01",
+        "siteId": "arcadia-mola-r746-c1895",
+        "status": "provisional",
+        "unavailableReason": null,
+        "distanceMeters": 11155.336699065258,
+        "elevationGainMeters": 40.0,
+        "maximumSlopeDegrees": 0.8660690410570843,
+        "meanRegionalSlopeDegrees": 0.32641222493572025,
+        "evidenceCoverage": {
+          "pathCellCount": 24,
+          "directCellCount": 24,
+          "interpolatedCellCount": 0,
+          "interpolatedDistanceMeters": 0,
+          "interpolatedDistanceFraction": 0.0,
+          "meanNeighborhoodInterpolationFraction": 0.06944444444444443
+        },
+        "requestedStart": [
+          194.83984375,
+          37.98828125
+        ],
+        "requestedDestination": [
+          194.80859375096753,
+          38.16796875805461
+        ],
+        "warnings": [
+          "PROVISIONAL: Regional terrain route only; not certified safe or operational navigation.",
+          "MOLA resolution cannot resolve boulders, small craters, loose soil or vehicle-scale hazards.",
+          "A positive observation count does not establish measurement accuracy or traversability.",
+          "Routes may cross interpolated elevations supplied by the official MOLA product; no local gap filling is performed.",
+          "Reported uncertainty coverage is a data-support description, not a probability of safety.",
+          "Radiation, shielding, weather, water and resource access remain unresolved.",
+          "A missing route means no supported connection in this bounded grid, not that travel is globally impossible."
+        ],
+        "sources": [
+          {
+            "id": "mola-megdr-128ppd",
+            "provider": "NASA Planetary Data System Geosciences Node",
+            "productId": "MEGT44N180HB",
+            "productUrl": "https://pds-geosciences.wustl.edu/mgs/urn-nasa-pds-mgs_mola_topography_derived/meg128/megt44n180hb.img",
+            "labelUrl": "https://pds-geosciences.wustl.edu/mgs/urn-nasa-pds-mgs_mola_topography_derived/meg128/megt44n180hb.xml",
+            "catalogUrl": "https://pds-geosciences.wustl.edu/missions/mgs/megdr.html",
+            "instrument": "Mars Orbiter Laser Altimeter (MOLA), Mars Global Surveyor",
+            "productType": "MEGDR topography",
+            "productVersion": "2.0 (PDS label: hb tile)",
+            "observationsPeriod": "1999-02 through 2001-06",
+            "coordinateReference": {
+              "body": "Mars",
+              "datum": "IAU2000 body-fixed rotating sphere",
+              "latitudeType": "planetocentric",
+              "longitudeDirection": "positive east",
+              "longitudeRange": "0 to 360 degrees",
+              "projection": "equirectangular, central meridian 180 degrees",
+              "radiusMeters": 3396000
+            },
+            "valueUnit": "meter relative to MOLA areoid",
+            "pixelSizeMeters": 463.0576672,
+            "nodata": {
+              "headerIgnoreValue": 0,
+              "countsProductId": "MEGC44N180HB",
+              "interpretation": "The PDS4 topography label describes interpolation where bins have no observations and does not declare a special constant. The supplied ENVI header marks zero as ignore; the companion count raster is used to distinguish zero-observation bins from observed zero elevation."
+            },
+            "availability": "available",
+            "regionalBytesFetched": 8748,
+            "regionalRasterSha256": "f7df8fd2f290643c1de29dd0200fa4f718740286befe86e100ca6bc166b5b9fb",
+            "countsProduct": {
+              "productId": "MEGC44N180HB",
+              "productUrl": "https://pds-geosciences.wustl.edu/mgs/urn-nasa-pds-mgs_mola_topography_derived/meg128/megc44n180hb.img",
+              "valueUnit": "observations per grid cell",
+              "dataType": "unsigned 8-bit integer",
+              "zeroMeaning": "No MOLA observations in the bin; a topography value in this cell may be interpolated."
+            },
+            "retrievedAt": "2026-11-14T20:21:42.731991Z",
+            "candidateSelection": {
+              "configuration": {
+                "version": "mola-selection-1.0.0",
+                "referenceSiteId": "arcadia-sample-01",
+                "boundsDegrees": {
+                  "west": 194.8,
+                  "east": 195.2,
+                  "south": 37.8,
+                  "north": 38.2
+                },
+                "minimumSeparationMeters": 3000,
+                "minimumNeighborhoodCount": 1
+              },
+              "eligibleCellCount": 45,
+              "topographyProductId": "MEGT44N180HB",
+              "countsProductId": "MEGC44N180HB",
+              "topographyRasterSha256": "f7df8fd2f290643c1de29dd0200fa4f718740286befe86e100ca6bc166b5b9fb",
+              "countsRasterSha256": "899bdb1d3cb27dce64fcf1e3f90b9b8b616653167282e50af8c5b2376d806bb8",
+              "regionalBytesFetched": 8748,
+              "reference": {
+                "id": "arcadia-sample-01",
+                "name": "Arcadia sample 01",
+                "longitudeEastDeg": 194.83984375,
+                "latitudePlanetocentricDeg": 37.98828125
+              },
+              "selected": [
+                {
+                  "id": "arcadia-mola-r793-c1903",
+                  "coordinates": [
+                    194.87109375097162,
+                    37.800781258030625
+                  ],
+                  "elevationMeters": -3966.0,
+                  "slopeDegrees": 0.12373338031488165,
+                  "observationCount": 1,
+                  "minimumNeighborhoodCount": 1,
+                  "tileRow": 793,
+                  "tileColumn": 1903
+                },
+                {
+                  "id": "arcadia-mola-r746-c1895",
+                  "coordinates": [
+                    194.80859375096753,
+                    38.16796875805461
+                  ],
+                  "elevationMeters": -3963.0,
+                  "slopeDegrees": 0.16910413283654532,
+                  "observationCount": 2,
+                  "minimumNeighborhoodCount": 1,
+                  "tileRow": 746,
+                  "tileColumn": 1895
+                }
+              ],
+              "pairSeparationMeters": 21958.69087025668,
+              "referenceSeparationMeters": {
+                "arcadia-mola-r793-c1903": 11209.093639737897,
+                "arcadia-mola-r746-c1895": 10749.66431034198
+              },
+              "ordering": "ascending slope; descending minimum 3x3 count; descending center count; ascending tile row and column; first feasible pair",
+              "limitation": "Terrain-only discovery with regional MOLA data, not evidence of habitability or site safety."
+            }
+          },
+          {
+            "id": "mola-megdr-128ppd-counts",
+            "provider": "NASA Planetary Data System Geosciences Node",
+            "productId": "MEGC44N180HB",
+            "productUrl": "https://pds-geosciences.wustl.edu/mgs/urn-nasa-pds-mgs_mola_topography_derived/meg128/megc44n180hb.img",
+            "labelUrl": "https://pds-geosciences.wustl.edu/mgs/urn-nasa-pds-mgs_mola_topography_derived/meg128/megc44n180hb.xml",
+            "catalogUrl": "https://pds-geosciences.wustl.edu/missions/mgs/megdr.html",
+            "instrument": "Mars Orbiter Laser Altimeter (MOLA), Mars Global Surveyor",
+            "productType": "MEGDR observation counts",
+            "productVersion": "2.0 (PDS label: hb tile)",
+            "valueUnit": "observations per grid cell",
+            "dataType": "unsigned 8-bit integer",
+            "zeroMeaning": "No observations in that pixel; zero is a valid count, not a missing count.",
+            "availability": "available",
+            "regionalRasterSha256": "899bdb1d3cb27dce64fcf1e3f90b9b8b616653167282e50af8c5b2376d806bb8",
+            "retrievedAt": "2026-11-14T20:21:42.731991Z"
+          }
+        ],
+        "endpointCells": {
+          "start": {
+            "coordinates": [
+              194.83984375096958,
+              37.98828125804289
+            ],
+            "offsetMeters": 0.00047886027907027
+          },
+          "destination": {
+            "coordinates": [
+              194.80859375096753,
+              38.16796875805461
+            ],
+            "offsetMeters": 0.0
+          }
+        }
+      }
+    }
+  ]
+}

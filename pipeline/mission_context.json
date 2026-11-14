@@ -1,0 +1,88 @@
+{
+  "schemaVersion": "mission-context/1.1.0",
+  "mission": "2001 Mars Odyssey",
+  "instrument": "THEMIS",
+  "productId": "I03114002BTR",
+  "dataSetId": "ODY-M-THM-3-IRBTR-V1.0",
+  "productVersion": "1.5",
+  "sourceUrl": "https://static.mars.asu.edu/pds/ODTSDP_v1/data/odtib1_0003/i031xxbtr/I03114002BTR.IMG",
+  "discoveryUrl": "https://oderest.rsl.wustl.edu/live2/?query=product&target=mars&ihid=ody&iid=themis&pt=IRBTR&minlat=37.8&maxlat=38.2&westernlon=194.8&easternlon=195.2&results=fp&output=json&limit=2",
+  "sourceSha256": "34b4897fd059cdccf297b75a46699abbbacd3bd5396c690d5b33bff93fc0afe3",
+  "observationStartUtc": "2002-08-27T23:03:45.626Z",
+  "centerCoordinates": [
+    194.409,
+    36.6823
+  ],
+  "sampleResolutionMeters": 105.106,
+  "lineResolutionMeters": 99.151,
+  "band": 9,
+  "bandCenterMicrometers": 12.57,
+  "labelBrightnessTemperatureRange": {
+    "minimum": 235.9,
+    "maximum": 242.383,
+    "unit": "K",
+    "scope": "whole observation, from product label"
+  },
+  "catalogUrl": "https://ode.rsl.wustl.edu/mars/indexproductpage.aspx?product_id=I03114002BTR",
+  "unitsReference": "https://ode.rsl.wustl.edu/mars/pagehelp/Content/Missions_Instruments/Mars_Odyssey/THEMIS/ODTSDP/IR/IRBTR.htm",
+  "footprint": {
+    "sourceUrl": "https://ode.rsl.wustl.edu/mars/datafile/kmlfiles/ody-m-thm-3-irbtr-v1/odtsdp_v1/data/odtib1_0003/i031xxbtr/i03114002btr_img.kml",
+    "sourceSha256": "c995bff8f0e02b12957ca352b0e9049180ba14c0d2a7edba4148d21b6d57c466",
+    "coordinateReference": {
+      "body": "Mars",
+      "latitudeType": "planetocentric",
+      "longitudeDirection": "positive east",
+      "longitudeRange": "0 to 360 degrees",
+      "datum": "IAU2000 body-fixed sphere, radius 3396000 m"
+    },
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [
+            193.586,
+            33.706
+          ],
+          [
+            194.546,
+            39.69
+          ],
+          [
+            195.285,
+            39.652
+          ],
+          [
+            194.262,
+            33.672
+          ],
+          [
+            193.586,
+            33.706
+          ]
+        ]
+      ]
+    },
+    "coverageScope": "Approximate ODE catalog footprint, coordinates published to 0.001 degree; not pixel geolocation. KML display altitude discarded.",
+    "siteCoverage": [
+      {
+        "siteId": "arcadia-sample-01",
+        "insideApproximateFootprint": true
+      },
+      {
+        "siteId": "arcadia-mola-r793-c1903",
+        "insideApproximateFootprint": true
+      },
+      {
+        "siteId": "arcadia-mola-r746-c1895",
+        "insideApproximateFootprint": true
+      }
+    ]
+  },
+  "limitations": [
+    "Historical whole-frame brightness temperature range, not a measurement at a candidate site or air temperature.",
+    "Located using the official ODE Arcadia footprint search. Frame center is outside the small MOLA window; the image strip intersects the search region.",
+    "Unprojected observation: no candidate pixel extraction or geolocation model is implemented.",
+    "Brightness temperature assumes emissivity 1 and atmospheric opacity 0; do not infer current climate or greenhouse performance.",
+    "Context only. Not used in suitability, confidence or routing; site-specific thermal evidence remains missing."
+  ]
+}

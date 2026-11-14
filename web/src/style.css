@@ -1,0 +1,681 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600&display=swap");
+:root {
+  font-family: "DM Sans", sans-serif;
+  color: #ece8df;
+  background: #10191e;
+  font-synthesis: none;
+  color-scheme: dark;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+}
+main {
+  max-width: 1500px;
+  margin: auto;
+  padding: 0 5%;
+}
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 28px 0;
+  border-bottom: 1px solid #354148;
+  gap: 20px;
+}
+.brand {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 25px;
+  font-weight: 600;
+  color: #f1c296;
+}
+.brand span {
+  font:
+    11px "DM Sans",
+    sans-serif;
+  letter-spacing: 2px;
+  margin-left: 12px;
+  color: #e1e0d9;
+}
+.badge {
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  border: 1px solid #435054;
+  padding: 9px 12px;
+  border-radius: 4px;
+}
+.intro {
+  padding: 42px 0 30px;
+}
+.eyebrow {
+  font-size: 10px;
+  letter-spacing: 2.5px;
+  color: #f1b28b;
+  font-weight: 700;
+}
+h1 {
+  font:
+    500 clamp(32px, 4vw, 52px)/1.14 "Space Grotesk",
+    sans-serif;
+  letter-spacing: -1.5px;
+  margin: 16px 0;
+}
+h1 span {
+  color: #97aaa9;
+}
+.intro > p:last-child {
+  color: #a7b5b7;
+  max-width: 580px;
+  font-size: 14px;
+  line-height: 1.7;
+}
+.workspace {
+  display: grid;
+  grid-template-columns: 330px minmax(0, 1fr);
+  border: 1px solid #38454b;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.panel {
+  padding: 25px;
+  background: #162229;
+  border-right: 1px solid #38454b;
+}
+label {
+  display: block;
+  font-size: 12px;
+  margin-top: 20px;
+  color: #c6cfcc;
+}
+select {
+  width: 100%;
+  margin-top: 9px;
+  padding: 12px;
+  background: #101a20;
+  border: 1px solid #546267;
+  border-radius: 5px;
+  color: #f4eee5;
+  font: inherit;
+}
+select:focus-visible,
+button:focus-visible,
+.map:focus-visible,
+a:focus-visible {
+  outline: 2px solid #79dbc7;
+  outline-offset: 4px;
+}
+.hint {
+  font-size: 11px;
+  line-height: 1.6;
+  color: #a0afaf;
+}
+.route-status {
+  font-size: 10px;
+  letter-spacing: 1.7px;
+  color: #83d8c8;
+  margin-top: 25px;
+}
+.metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 23px 12px;
+  margin: 23px 0;
+}
+.metrics dt {
+  font-size: 11px;
+  color: #9bb0b2;
+}
+.metrics dd {
+  font:
+    500 25px "Space Grotesk",
+    sans-serif;
+  margin: 5px 0;
+}
+.metrics small {
+  font:
+    12px "DM Sans",
+    sans-serif;
+  color: #a4b7b6;
+}
+.coverage {
+  border: 1px solid #415753;
+  border-left: 3px solid #82d4c3;
+  border-radius: 4px;
+  padding: 13px;
+  font-size: 12px;
+}
+.coverage p {
+  font-size: 11px;
+  line-height: 1.6;
+  margin-bottom: 0;
+  color: #bdccca;
+}
+.site-evidence {
+  border-top: 1px solid #38474b;
+  margin-top: 24px;
+  padding-top: 10px;
+}
+.site-evidence h2 {
+  font-size: 14px;
+}
+.site-evidence p {
+  font-size: 11px;
+  line-height: 1.7;
+  color: #b5c4c2;
+}
+.map-panel {
+  min-width: 0;
+  background:
+    radial-gradient(ellipse at 20% 70%, #4a332b44, transparent 65%), #142127;
+}
+.map-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 19px;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  color: #c3cfcb;
+  border-bottom: 1px solid #35474b;
+}
+.map {
+  height: 540px;
+  width: 100%;
+  position: relative;
+}
+.ol-control {
+  background: #26373bdd;
+}
+.ol-control button {
+  background: #142127;
+  color: #eee;
+}
+.legend {
+  display: flex;
+  gap: 22px;
+  padding: 15px 22px;
+  border-top: 1px solid #35474b;
+  font-size: 11px;
+  color: #c2cfca;
+}
+.start-dot {
+  color: #f9ce91;
+}
+.site-dot {
+  color: #dc9270;
+}
+.line {
+  color: #78d6c7;
+}
+.map-caption {
+  font-size: 11px;
+  line-height: 1.7;
+  color: #9bb0b2;
+  padding: 0 22px 16px;
+  max-width: 650px;
+}
+.warnings {
+  padding: 32px 0;
+  max-width: 950px;
+}
+.warnings h2 {
+  font:
+    500 23px "Space Grotesk",
+    sans-serif;
+}
+.warnings ul {
+  padding-left: 20px;
+  color: #b1bfbd;
+  font-size: 12px;
+  line-height: 1.9;
+}
+footer {
+  border-top: 1px solid #36464b;
+  padding: 20px 0 30px;
+  color: #97aaa9;
+  font-size: 10px;
+  line-height: 1.8;
+}
+footer span {
+  float: right;
+}
+a {
+  color: #cbb18f;
+}
+button {
+  color: #eaf7f1;
+  border: 1px solid #839b94;
+  border-radius: 4px;
+  background: #233e3c;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+.error {
+  padding: 13px;
+  border-left: 3px solid #eea276;
+  background: #553e3233;
+  color: #ffcdb0;
+  font-size: 13px;
+  line-height: 1.7;
+}
+@media (max-width: 850px) {
+  main {
+    padding: 0 20px;
+  }
+  .workspace {
+    grid-template-columns: 1fr;
+  }
+  .panel {
+    border-right: none;
+  }
+  .map-panel {
+    border-top: 1px solid #38454b;
+  }
+  .map {
+    height: 420px;
+  }
+  .map-heading {
+    flex-wrap: wrap;
+  }
+  .badge {
+    display: none;
+  }
+  footer span {
+    float: none;
+    display: block;
+  }
+  .intro {
+    padding-top: 22px;
+  }
+  .metrics {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+@media (max-width: 480px) {
+  .brand span {
+    letter-spacing: 1px;
+    font-size: 9px;
+  }
+  .metrics {
+    grid-template-columns: 1fr 1fr;
+  }
+  .legend {
+    gap: 12px;
+    font-size: 10px;
+  }
+}
+/* Phase 6 guided journey */
+.journey {
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+  margin: 8px 0 26px;
+  padding: 10px;
+  border: 1px solid #35474b;
+  border-radius: 9px;
+  background: #142127;
+}
+.journey button {
+  flex: 1;
+  border: 0;
+  background: transparent;
+  color: #acbdb8;
+  text-align: left;
+  padding: 13px;
+  font-size: 13px;
+}
+.journey button span {
+  margin-right: 12px;
+  color: #82958f;
+  font:
+    12px "Space Grotesk",
+    sans-serif;
+}
+.journey button[aria-current="step"] {
+  background: #29433e;
+  color: #fff0d9;
+  border-radius: 5px;
+}
+.journey button[aria-current="step"] span {
+  color: #8ee0cb;
+}
+button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.panel h2 {
+  font:
+    500 24px/1.2 "Space Grotesk",
+    sans-serif;
+  margin: 18px 0;
+}
+.panel-copy {
+  font-size: 13px;
+  line-height: 1.75;
+  color: #b5c6c1;
+}
+.guided-workspace {
+  grid-template-columns: 350px minmax(0, 1fr);
+}
+.guided-workspace .map {
+  height: 500px;
+}
+.evidence-note {
+  border-left: 2px solid #e2b58a;
+  background: #b58e5910;
+  padding: 16px;
+  margin: 22px 0;
+  font-size: 12px;
+  line-height: 1.7;
+}
+.evidence-note p {
+  margin: 8px 0 0;
+  color: #b6c7c2;
+}
+.step-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  margin-top: 30px;
+}
+.step-actions .primary {
+  background: #94d3c1;
+  color: #10201d;
+  border-color: #94d3c1;
+  font-size: 12px;
+  font-weight: 700;
+}
+.candidate-cards {
+  display: grid;
+  gap: 13px;
+  margin: 22px 0;
+}
+.candidate-card {
+  display: grid;
+  gap: 9px;
+  text-align: left;
+  background: #132026;
+  border: 1px solid #40534f;
+  border-radius: 6px;
+  padding: 17px;
+  color: #c1cfca;
+}
+.candidate-card strong {
+  font-size: 15px;
+  color: #f2e7d9;
+}
+.candidate-card span:not(.eyebrow) {
+  font-size: 11px;
+}
+.candidate-card.selected {
+  border-color: #93d9c5;
+  background: #29423b;
+}
+.science-review,
+.habitat-preview {
+  margin: 35px 0 45px;
+}
+.science-review > h2,
+.preview-heading h2 {
+  font:
+    500 32px/1.2 "Space Grotesk",
+    sans-serif;
+  letter-spacing: -0.7px;
+}
+.section-copy {
+  font-size: 14px;
+  line-height: 1.8;
+  color: #afc1ba;
+  max-width: 800px;
+}
+.comparison-scroll {
+  overflow-x: auto;
+  margin: 26px 0;
+  border: 1px solid #384d47;
+  border-radius: 8px;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 600px;
+  font-size: 13px;
+}
+caption {
+  text-align: left;
+  padding: 17px;
+  color: #d2bd9e;
+  background: #182a2b;
+}
+th,
+td {
+  padding: 15px 20px;
+  border-bottom: 1px solid #344744;
+  text-align: left;
+}
+thead th {
+  background: #203431;
+  font-weight: 500;
+}
+tbody th {
+  font-weight: 400;
+  color: #b8c9bf;
+}
+th small {
+  display: block;
+  font-size: 10px;
+  color: #97aaa0;
+  margin-top: 5px;
+}
+.critical-row {
+  background: #c9a56a0b;
+}
+.critical-row td {
+  color: #f0c995;
+}
+.science-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 26px;
+}
+.science-columns article,
+.provenance,
+.mission-context {
+  border: 1px solid #3b4b45;
+  border-radius: 8px;
+  padding: 25px;
+  background: #152326;
+}
+.science-review h3,
+.concept-notes h3 {
+  font:
+    500 18px "Space Grotesk",
+    sans-serif;
+}
+.science-review p,
+.science-review li,
+.science-review dd {
+  font-size: 12px;
+  line-height: 1.8;
+  color: #bbcac1;
+}
+.science-review ul {
+  padding-left: 18px;
+}
+.observation-list > div {
+  padding: 12px 0;
+  border-bottom: 1px solid #35443f;
+}
+.observation-list dt {
+  font-size: 12px;
+  color: #e0ddcc;
+}
+.observation-list dd {
+  margin: 5px 0;
+}
+.observation-list small {
+  display: block;
+  color: #8daba0;
+  font-size: 10px;
+  overflow-wrap: anywhere;
+}
+.missing-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+.missing-tags span {
+  font-size: 11px;
+  border: 1px solid #8b705653;
+  padding: 5px 9px;
+  border-radius: 20px;
+  color: #e0b88d;
+}
+.science-review details {
+  margin-top: 14px;
+  border-top: 1px solid #3c5047;
+  padding: 12px 0;
+  overflow-wrap: anywhere;
+}
+.science-review summary {
+  cursor: pointer;
+  font-size: 12px;
+  color: #c9d6c8;
+}
+.science-review summary:focus-visible {
+  outline: 2px solid #8de1ca;
+  outline-offset: 5px;
+}
+.provenance,
+.mission-context {
+  margin-top: 24px;
+}
+.hash {
+  font-family: monospace;
+  overflow-wrap: anywhere;
+}
+.mission-context {
+  border-left: 3px solid #c4a47b;
+}
+.preview-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 25px;
+}
+.preview-heading h2 span {
+  color: #9eb9aa;
+}
+.concept-badge {
+  font-size: 10px;
+  letter-spacing: 1.6px;
+  line-height: 1.8;
+  border: 1px solid #c6aa74;
+  padding: 14px;
+  color: #e8c69b;
+}
+.habitat-art {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 10px;
+  margin: 25px 0;
+}
+.concept-notes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+}
+.concept-notes article {
+  border-top: 1px solid #4c5e50;
+}
+.concept-notes p {
+  font-size: 12px;
+  line-height: 1.8;
+  color: #acbeb2;
+}
+@media (max-width: 850px) {
+  .guided-workspace {
+    grid-template-columns: 1fr;
+  }
+  .journey {
+    gap: 0;
+    padding: 5px;
+  }
+  .journey button {
+    font-size: 11px;
+    padding: 12px 6px;
+    text-align: center;
+  }
+  .journey button span {
+    display: block;
+    margin: 0 0 6px;
+  }
+  .science-columns {
+    grid-template-columns: 1fr;
+  }
+  .guided-workspace .map {
+    height: 400px;
+  }
+  .concept-notes {
+    grid-template-columns: 1fr;
+  }
+  .preview-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  * {
+    scroll-behavior: auto !important;
+  }
+}
+.map-panel > .habitat-preview,
+.map-panel > .science-review {
+  padding: 24px;
+  margin: 0;
+}
+.map-panel .preview-heading {
+  gap: 15px;
+  flex-wrap: wrap;
+}
+.map-panel .preview-heading h2 {
+  font-size: 28px;
+  margin: 10px 0;
+}
+.map-panel .concept-badge {
+  font-size: 8px;
+  padding: 10px;
+}
+.map-panel .science-columns {
+  grid-template-columns: 1fr;
+}
+.map-panel .concept-notes {
+  gap: 16px;
+}
+.map-panel .concept-notes h3 {
+  font-size: 15px;
+}
+.map-panel .concept-notes p {
+  font-size: 11px;
+}
+.map-panel .section-copy {
+  font-size: 12px;
+}
+.map-panel .comparison-scroll table {
+  min-width: 540px;
+}
+.map-panel .science-review > h2 {
+  font-size: 26px;
+}
+@media (min-width: 851px) {
+  .guided-workspace > .panel {
+    align-self: start;
+    position: sticky;
+    top: 0;
+  }
+}
+
+.footprint-toggle { display: flex; align-items: center; gap: .6rem; padding: .7rem 1rem; font-size: .8rem; color: #d5c8ff; }
+.footprint-toggle input { width: auto; margin: 0; accent-color: #baabed; }

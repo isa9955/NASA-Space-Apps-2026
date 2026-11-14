@@ -104,7 +104,7 @@ export interface SitesResponse extends ResponseMetadata { sites: SiteSummary[] }
 export interface ErrorResponse {
   schemaVersion: typeof API_SCHEMA_VERSION;
   error: {
-    code: "INVALID_ARGUMENT" | "SITE_NOT_FOUND" | "ASSESSMENTS_UNAVAILABLE";
+    code: "INVALID_ARGUMENT" | "SITE_NOT_FOUND" | "ASSESSMENTS_UNAVAILABLE" | "ROUTES_UNAVAILABLE" | "START_NOT_FOUND" | "ROUTE_NOT_FOUND" | "MISSION_CONTEXT_UNAVAILABLE";
     message: string;
   };
 }

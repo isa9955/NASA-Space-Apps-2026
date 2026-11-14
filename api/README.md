@@ -1,4 +1,62 @@
-# Mars Habitat Finder API — Phase 4
+# Mars Habitat Finder API — Phase 6
+
+## Guided-journey discovery and context
+
+- `GET /api/starts` returns `{ schemaVersion: "2.0.0", starts: [{ id, name,
+  location, validationScope, destinations: [{ siteId, status }] }] }`.
+  Starts/pairs are derived only from the validated precomputed route artifact.
+  The current response has one terrain reference and two destination records.
+  `validationScope` explicitly excludes safe-landing/habitat certification.
+- `GET /api/mission-context` returns `{ schemaVersion: "2.0.0", context }`,
+  where context follows `mission-context/1.1.0` and
+  `src/contracts/mission-context.schema.json`. It contains historical THEMIS
+  product-label metadata, source URL/hash and whole-observation limitations.
+  It is not a site-specific temperature observation or scoring input.
+  `context.footprint` includes an ODE Polygon, Mars coordinate reference,
+  source URL/hash and `siteCoverage[{siteId,insideApproximateFootprint}]`.
+  Coordinates use `[east longitude 0–360, planetocentric latitude]` degrees.
+  Coverage is approximate; it does not establish a valid temperature pixel.
+- Both accept no query parameters (400 otherwise). Start-discovery failure
+  returns 503 `ROUTES_UNAVAILABLE`. Missing optional mission context returns
+  503 `MISSION_CONTEXT_UNAVAILABLE`; other endpoints still work.
+- Existing sites/routes v2 response structures are preserved. See
+  `src/contracts/journey.ts` for new response types. Builds validate and package
+  `pipeline/mission_context.json` if present; no live NASA request is made.
+
+## Phase 5 precomputed route endpoint
+
+`GET /api/routes?startId=arcadia-sample-01&siteId=arcadia-mola-r793-c1903`
+(or `siteId=arcadia-mola-r746-c1895`) returns:
+
+Both existing candidate pairs now return `status: "provisional"` with a
+nonempty GeoJSON-shaped LineString. The response envelope includes
+`schemaVersion: "2.0.0"`, `routeSchemaVersion: "phase5-routes/1.1.0"`,
+`planningVersion: "mola-astar-1.1.0"`, coordinate reference, provenance and
+`route`. Route properties include distanceMeters, elevationGainMeters,
+maximumSlopeDegrees, meanRegionalSlopeDegrees, evidenceCoverage and warnings.
+The first and last geometry coordinates match the actual requested sites.
+
+Candidate 1: 11620.799 m distance, 25 m gain, 0.552126 degrees maximum slope,
+24 direct and 1 interpolated path cells. Candidate 2: 11155.337 m, 40 m gain,
+0.866069 degrees, 24 direct and 0 interpolated path cells. Both still depend
+partly on interpolated neighboring cells for slope estimates.
+
+Full schema/types are `src/contracts/route.schema.json` and `route.ts`. No
+safety claim is implied. Unavailable records still use null geometry/metrics;
+check status before drawing. The new `web/` client consumes these endpoints
+through the Vite development proxy. Site assessments remain unchanged.
+
+Provide exactly one `startId` and `siteId`, using valid site-ID syntax. Missing,
+duplicate or unknown query keys yield 400 `INVALID_ARGUMENT`; unknown start/site
+IDs yield 404 `START_NOT_FOUND`/`SITE_NOT_FOUND`; a known pair with no packaged
+record yields 404 `ROUTE_NOT_FOUND`. Missing, stale or invalid route artifacts
+yield 503 `ROUTES_UNAVAILABLE`. Errors use the existing v2 JSON envelope.
+
+The API build now also validates/copies `pipeline/routes.geojson` into
+`dist/data/`. It verifies assessment SHA-256 and endpoint/source consistency;
+regenerate routes after changing the assessment artifact. Runtime loads only
+packaged data and caches per worker. Restart after rebuilding. No A*, metric
+calculation or NASA fetch occurs in TypeScript. Site v2 responses are unchanged.
 
 Read-only TypeScript Azure Functions serving the existing Phase 3 scientific
 artifact. Python remains the only scoring implementation. No NASA downloads
@@ -99,7 +157,8 @@ The `{ site }` detail envelope and `/api/sites/{id}` path remain. Placeholder ID
 `environmentalFactors` becomes the `observations` map and
 `suitability.factors`. `confidence` becomes `evidenceConfidence` with an explicit
 `unknown` level. Sources carry full product provenance. A fabricated placeholder
-route is no longer part of the scientific record. No routing endpoint is added.
+route is no longer part of the scientific site record. Phase 5 adds the separate
+precomputed route endpoint documented above.
 Consumers must adopt v2 and must not label a terrain score as overall suitability.
 
 ## Build and eventual Azure packaging

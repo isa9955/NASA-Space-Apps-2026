@@ -723,7 +723,11 @@
               "enum": [
                 "INVALID_ARGUMENT",
                 "SITE_NOT_FOUND",
-                "ASSESSMENTS_UNAVAILABLE"
+                "ASSESSMENTS_UNAVAILABLE",
+                "ROUTES_UNAVAILABLE",
+                "START_NOT_FOUND",
+                "ROUTE_NOT_FOUND",
+                "MISSION_CONTEXT_UNAVAILABLE"
               ]
             },
             "message": {

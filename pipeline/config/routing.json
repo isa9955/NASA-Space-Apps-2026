@@ -1,0 +1,9 @@
+{
+  "version": "mola-astar-1.1.0",
+  "startId": "arcadia-sample-01",
+  "maximumSlopeDegrees": 10,
+  "slopePenalty": 10,
+  "minimumNeighborhoodCount": 1,
+  "allowProductInterpolation": true,
+  "interpolationPenalty": 2
+}

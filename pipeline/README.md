@@ -1,5 +1,20 @@
 # Phase 2: NASA raster ingestion
 
+Phase 6 optional mission context: run
+`pipeline/.venv/Scripts/python.exe pipeline/src/build_mission_context.py` to
+reproduce `mission_context.json` from the official archived THEMIS image label
+and ODE footprint KML, including approximate site coverage in Mars coordinates.
+This approximately 1.1 MB observation is historical whole-frame context only;
+it does not change site inputs, scoring, confidence or routes. See
+`docs/data-sources.md` for provenance, units and limitations.
+
+Phase 5 offline routing: run
+`pipeline/.venv/Scripts/python.exe pipeline/src/build_routes.py` to write
+`pipeline/routes.geojson`, then `npm --prefix api test` to validate/package it.
+The preserved reference is the route start. Both current candidates have provisional routes using observed and
+product-interpolated MOLA elevations with explicit uncertainty penalties. See `docs/methodology.md` for A* costs, assumptions, provenance
+and reproduction; no safe route is implied.
+
 For automatic terrain discovery, run
 `pipeline/.venv/Scripts/python.exe pipeline/src/select_candidates.py`, then the
 assessment command below and `npm --prefix api run build`. The selector

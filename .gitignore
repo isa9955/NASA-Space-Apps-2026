@@ -2,6 +2,7 @@
 node_modules/
 api/dist/
 api/coverage/
+web/dist/
 api/.func/
 api/local.settings.json
 
