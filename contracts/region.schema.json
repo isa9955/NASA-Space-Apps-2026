@@ -1,0 +1,301 @@
+{
+  "$ref": "#/definitions/region",
+  "definitions": {
+    "region": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "type": "string"
+        },
+        "region": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "subtitle": {
+              "type": "string"
+            },
+            "bounds": {
+              "type": "array",
+              "minItems": 4,
+              "maxItems": 4,
+              "items": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ]
+            },
+            "dataset": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string"
+                },
+                "sizeKm": {
+                  "type": "array",
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "items": [
+                    {
+                      "type": "number",
+                      "exclusiveMinimum": 0
+                    },
+                    {
+                      "type": "number",
+                      "exclusiveMinimum": 0
+                    }
+                  ]
+                },
+                "resolutionM": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "reliefM": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              },
+              "required": [
+                "label",
+                "sizeKm",
+                "resolutionM",
+                "reliefM"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "id",
+            "name",
+            "subtitle",
+            "bounds",
+            "dataset"
+          ],
+          "additionalProperties": false
+        },
+        "dataBadge": {
+          "type": "object",
+          "properties": {
+            "label": {
+              "type": "string"
+            },
+            "kind": {
+              "type": "string",
+              "enum": [
+                "real",
+                "mock"
+              ]
+            }
+          },
+          "required": [
+            "label",
+            "kind"
+          ],
+          "additionalProperties": false
+        },
+        "basemap": {
+          "type": "object",
+          "properties": {
+            "url": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "url"
+          ],
+          "additionalProperties": false
+        },
+        "layers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string"
+              },
+              "color": {
+                "type": "string",
+                "pattern": "^#[0-9a-fA-F]{6}$"
+              },
+              "defaultOn": {
+                "type": "boolean"
+              },
+              "rule": {
+                "type": "string"
+              },
+              "nominalKm2": {
+                "type": "number",
+                "minimum": 0
+              },
+              "robustKm2": {
+                "type": "number",
+                "minimum": 0
+              },
+              "survivesPct": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 100
+              },
+              "mask": {
+                "type": "object",
+                "properties": {
+                  "url": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "width": {
+                    "type": "integer",
+                    "exclusiveMinimum": 0
+                  },
+                  "height": {
+                    "type": "integer",
+                    "exclusiveMinimum": 0
+                  }
+                },
+                "required": [
+                  "url",
+                  "width",
+                  "height"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "id",
+              "label",
+              "color",
+              "defaultOn",
+              "rule",
+              "nominalKm2",
+              "robustKm2",
+              "survivesPct",
+              "mask"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1
+        },
+        "demoTraverse": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "from": {
+                  "type": "array",
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "items": [
+                    {
+                      "type": "number",
+                      "minimum": -180,
+                      "maximum": 180
+                    },
+                    {
+                      "type": "number",
+                      "minimum": -90,
+                      "maximum": 90
+                    }
+                  ]
+                },
+                "to": {
+                  "type": "array",
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "items": [
+                    {
+                      "type": "number",
+                      "minimum": -180,
+                      "maximum": 180
+                    },
+                    {
+                      "type": "number",
+                      "minimum": -90,
+                      "maximum": 90
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "from",
+                "to"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "algorithmVersion": {
+          "type": "string"
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "provider": {
+                "type": "string"
+              },
+              "product": {
+                "type": "string"
+              },
+              "version": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "url": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "provider",
+              "product",
+              "version",
+              "url"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "region",
+        "dataBadge",
+        "basemap",
+        "layers",
+        "demoTraverse",
+        "algorithmVersion",
+        "sources"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

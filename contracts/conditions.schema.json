@@ -1,0 +1,344 @@
+{
+  "$ref": "#/definitions/conditions",
+  "definitions": {
+    "conditions": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "type": "string"
+        },
+        "location": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": [
+            {
+              "type": "number",
+              "minimum": -180,
+              "maximum": 180
+            },
+            {
+              "type": "number",
+              "minimum": -90,
+              "maximum": 90
+            }
+          ]
+        },
+        "elevation": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "unit": {
+              "type": "string"
+            },
+            "qualifier": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "regional",
+                    "estimated"
+                  ]
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "uncertainty": {
+              "anyOf": [
+                {
+                  "type": "number",
+                  "minimum": 0
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "value",
+            "unit",
+            "qualifier"
+          ],
+          "additionalProperties": false
+        },
+        "slope": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "unit": {
+              "type": "string"
+            },
+            "qualifier": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "regional",
+                    "estimated"
+                  ]
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "uncertainty": {
+              "anyOf": [
+                {
+                  "type": "number",
+                  "minimum": 0
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "value",
+            "unit",
+            "qualifier"
+          ],
+          "additionalProperties": false
+        },
+        "soil": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "bedrock",
+                    "mixed",
+                    "loose-sand"
+                  ]
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "qualifier": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "regional",
+                    "estimated"
+                  ]
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "value",
+            "qualifier"
+          ],
+          "additionalProperties": false
+        },
+        "ice": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "unit": {
+              "type": "string"
+            },
+            "qualifier": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "regional",
+                    "estimated"
+                  ]
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "uncertainty": {
+              "anyOf": [
+                {
+                  "type": "number",
+                  "minimum": 0
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "value",
+            "unit",
+            "qualifier"
+          ],
+          "additionalProperties": false
+        },
+        "radiation": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "unit": {
+              "type": "string"
+            },
+            "qualifier": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "regional",
+                    "estimated"
+                  ]
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "uncertainty": {
+              "anyOf": [
+                {
+                  "type": "number",
+                  "minimum": 0
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "value",
+            "unit",
+            "qualifier"
+          ],
+          "additionalProperties": false
+        },
+        "temperature": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "unit": {
+              "type": "string"
+            },
+            "qualifier": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "regional",
+                    "estimated"
+                  ]
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "uncertainty": {
+              "anyOf": [
+                {
+                  "type": "number",
+                  "minimum": 0
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "value",
+            "unit",
+            "qualifier"
+          ],
+          "additionalProperties": false
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "provider": {
+                "type": "string"
+              },
+              "product": {
+                "type": "string"
+              },
+              "version": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "url": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "provider",
+              "product",
+              "version",
+              "url"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "location",
+        "elevation",
+        "slope",
+        "soil",
+        "ice",
+        "radiation",
+        "temperature",
+        "sources"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

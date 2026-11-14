@@ -4,6 +4,8 @@ api/dist/
 api/coverage/
 api/.func/
 api/local.settings.json
+ui/dist/
+ui/.env.local
 
 # Python pipeline
 __pycache__/

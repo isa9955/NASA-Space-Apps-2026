@@ -4,6 +4,11 @@
 both the current scaffold and planned work; a planned capability is not
 evidence that a service, dataset, or scientific result already exists.
 
+> **New frontend (`ui/`):** the current UI design, its data contract
+> (`contracts/`), and open integration questions are in
+> [`docs/FRONTEND_SPEC.md`](docs/FRONTEND_SPEC.md). This file continues to
+> document the backend phases below.
+
 ### Current frontend handoff status (supersedes earlier UI snapshots)
 
 The temporary Phase 6 `web/` frontend has been removed from the checkout.

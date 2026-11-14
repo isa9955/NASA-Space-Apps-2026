@@ -1,0 +1,67 @@
+{
+  "schemaVersion": "1.0.0",
+  "location": [
+    -165.2,
+    42.1
+  ],
+  "elevation": {
+    "value": -3769,
+    "unit": "m",
+    "qualifier": null
+  },
+  "slope": {
+    "value": 2.5,
+    "unit": "°",
+    "qualifier": null,
+    "uncertainty": 14
+  },
+  "soil": {
+    "value": "mixed",
+    "qualifier": "regional"
+  },
+  "ice": {
+    "value": 69,
+    "unit": "%",
+    "qualifier": "estimated"
+  },
+  "radiation": {
+    "value": 0.66,
+    "unit": "mSv/day",
+    "qualifier": "estimated"
+  },
+  "temperature": {
+    "value": -60,
+    "unit": "°C",
+    "qualifier": "estimated"
+  },
+  "sources": [
+    {
+      "id": "dtm",
+      "provider": "MOCK",
+      "product": "Synthetic DTM standing in for a HiRISE DTM",
+      "version": null,
+      "url": null
+    },
+    {
+      "id": "unc",
+      "provider": "MOCK",
+      "product": "Synthetic slope uncertainty",
+      "version": null,
+      "url": null
+    },
+    {
+      "id": "ice",
+      "provider": "MOCK",
+      "product": "Draft ice-rich ground interpretation",
+      "version": null,
+      "url": null
+    },
+    {
+      "id": "rad",
+      "provider": "MOCK",
+      "product": "Radiation model anchored to MSL RAD (mock constants)",
+      "version": null,
+      "url": null
+    }
+  ]
+}
