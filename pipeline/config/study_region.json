@@ -1,0 +1,19 @@
+{
+  "region": {
+    "id": "arcadia-small-overlap",
+    "name": "Arcadia Planitia sample window",
+    "description": "Three MOLA count-supported sampling points within the published Arcadia SWIM study region; points are inputs for data extraction, not ranked candidate sites.",
+    "coordinateReference": {
+      "body": "Mars",
+      "latitudeType": "planetocentric",
+      "longitudeDirection": "positive east",
+      "longitudeRange": "0 to 360 degrees",
+      "datum": "IAU2000 body-fixed sphere, radius 3396000 m"
+    }
+  },
+  "sites": [
+    { "id": "arcadia-sample-01", "name": "Arcadia sample 01", "longitudeEastDeg": 194.83984375, "latitudePlanetocentricDeg": 37.98828125 },
+    { "id": "arcadia-sample-02", "name": "Arcadia sample 02", "longitudeEastDeg": 194.83203125, "latitudePlanetocentricDeg": 38.05078125 },
+    { "id": "arcadia-sample-03", "name": "Arcadia sample 03", "longitudeEastDeg": 194.82421875, "latitudePlanetocentricDeg": 38.08203125 }
+  ]
+}

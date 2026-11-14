@@ -1,0 +1,245 @@
+{
+  "schemaVersion": "phase2-site-inputs/1.0.0",
+  "generatedAt": "2026-11-14T19:49:06.410145Z",
+  "region": {
+    "id": "arcadia-small-overlap",
+    "name": "Arcadia Planitia sample window",
+    "description": "Three MOLA count-supported sampling points within the published Arcadia SWIM study region; points are inputs for data extraction, not ranked candidate sites.",
+    "coordinateReference": {
+      "body": "Mars",
+      "latitudeType": "planetocentric",
+      "longitudeDirection": "positive east",
+      "longitudeRange": "0 to 360 degrees",
+      "datum": "IAU2000 body-fixed sphere, radius 3396000 m"
+    }
+  },
+  "sources": {
+    "swim": {
+      "id": "swim4imim-combined-ci-0-1m",
+      "provider": "NASA-supported Subsurface Water Ice Mapping (SWIM) project",
+      "productId": "SWIM4IMIM Combined Ice Consistency Map (0-1 m)",
+      "productUrl": "https://swim.psi.edu/SWIM4MIMProducts.php",
+      "regionalStudyUrl": "https://swim.psi.edu/",
+      "release": "SWIM4IMIM product page, last updated 2025-08-04",
+      "variable": "combined ice-consistency index for the 0-1 m sensing-depth product",
+      "valueUnit": "1 (dimensionless index; not water abundance or depth)",
+      "publishedProjection": "simple cylindrical, spherical Mars",
+      "publishedPixelSizeMeters": 3000,
+      "publishedLongitude": "0 to 360 degrees east",
+      "publishedLatitude": "60 degrees south to 60 degrees north",
+      "publishedNoData": -30,
+      "availability": "not-retrieved",
+      "retrievalNote": "Official SWIM product host returned HTTP 523 or timed out during the 2026-11-14 retrieval attempt; no raster values were synthesized."
+    },
+    "mola": {
+      "id": "mola-megdr-128ppd",
+      "provider": "NASA Planetary Data System Geosciences Node",
+      "productId": "MEGT44N180HB",
+      "productUrl": "https://pds-geosciences.wustl.edu/mgs/urn-nasa-pds-mgs_mola_topography_derived/meg128/megt44n180hb.img",
+      "labelUrl": "https://pds-geosciences.wustl.edu/mgs/urn-nasa-pds-mgs_mola_topography_derived/meg128/megt44n180hb.xml",
+      "catalogUrl": "https://pds-geosciences.wustl.edu/missions/mgs/megdr.html",
+      "instrument": "Mars Orbiter Laser Altimeter (MOLA), Mars Global Surveyor",
+      "productType": "MEGDR topography",
+      "productVersion": "2.0 (PDS label: hb tile)",
+      "observationsPeriod": "1999-02 through 2001-06",
+      "coordinateReference": {
+        "body": "Mars",
+        "datum": "IAU2000 body-fixed rotating sphere",
+        "latitudeType": "planetocentric",
+        "longitudeDirection": "positive east",
+        "longitudeRange": "0 to 360 degrees",
+        "projection": "equirectangular, central meridian 180 degrees",
+        "radiusMeters": 3396000
+      },
+      "valueUnit": "meter relative to MOLA areoid",
+      "pixelSizeMeters": 463.0576672,
+      "nodata": {
+        "headerIgnoreValue": 0,
+        "countsProductId": "MEGC44N180HB",
+        "interpretation": "The PDS4 topography label describes interpolation where bins have no observations and does not declare a special constant. The supplied ENVI header marks zero as ignore; the companion count raster is used to distinguish zero-observation bins from observed zero elevation."
+      },
+      "availability": "available",
+      "regionalBytesFetched": 225,
+      "regionalRasterSha256": "c7b61636f2d141796e94bbf52ce48e36e863f57f333535ba2ccaa5013670c87b",
+      "countsProduct": {
+        "productId": "MEGC44N180HB",
+        "productUrl": "https://pds-geosciences.wustl.edu/mgs/urn-nasa-pds-mgs_mola_topography_derived/meg128/megc44n180hb.img",
+        "valueUnit": "observations per grid cell",
+        "dataType": "unsigned 8-bit integer",
+        "zeroMeaning": "No MOLA observations in the bin; a topography value in this cell may be interpolated."
+      },
+      "retrievedAt": "2026-11-14T19:49:06.410145Z"
+    },
+    "molaCounts": {
+      "id": "mola-megdr-128ppd-counts",
+      "provider": "NASA Planetary Data System Geosciences Node",
+      "productId": "MEGC44N180HB",
+      "productUrl": "https://pds-geosciences.wustl.edu/mgs/urn-nasa-pds-mgs_mola_topography_derived/meg128/megc44n180hb.img",
+      "labelUrl": "https://pds-geosciences.wustl.edu/mgs/urn-nasa-pds-mgs_mola_topography_derived/meg128/megc44n180hb.xml",
+      "catalogUrl": "https://pds-geosciences.wustl.edu/missions/mgs/megdr.html",
+      "instrument": "Mars Orbiter Laser Altimeter (MOLA), Mars Global Surveyor",
+      "productType": "MEGDR observation counts",
+      "productVersion": "2.0 (PDS label: hb tile)",
+      "valueUnit": "observations per grid cell",
+      "dataType": "unsigned 8-bit integer",
+      "zeroMeaning": "No observations in that pixel; zero is a valid count, not a missing count.",
+      "availability": "available",
+      "regionalRasterSha256": "7d3c5b2c3e697a0b597870e58bf14e3278105b61b403b9314a855aa00d7c6a1f",
+      "retrievedAt": "2026-11-14T19:49:06.410145Z"
+    }
+  },
+  "dataAvailability": {
+    "swim": "not-retrieved",
+    "mola": "available",
+    "molaCounts": "available"
+  },
+  "sites": [
+    {
+      "id": "arcadia-sample-01",
+      "name": "Arcadia sample 01",
+      "location": {
+        "type": "Point",
+        "coordinates": [
+          194.83984375,
+          37.98828125
+        ],
+        "coordinateReference": {
+          "body": "Mars",
+          "latitudeType": "planetocentric",
+          "longitudeDirection": "positive east",
+          "longitudeRange": "0 to 360 degrees",
+          "datum": "IAU2000 body-fixed sphere, radius 3396000 m"
+        }
+      },
+      "observations": {
+        "swimCombinedIceConsistency": {
+          "value": null,
+          "unit": null,
+          "status": "unavailable",
+          "sourceId": "swim4imim-combined-ci-0-1m",
+          "unavailableReason": "swim_raster_not_retrieved"
+        },
+        "molaTopography": {
+          "value": -3973.0,
+          "unit": "meter relative to MOLA areoid",
+          "status": "sampled_product_value",
+          "sourceId": "mola-megdr-128ppd"
+        },
+        "molaObservationCount": {
+          "value": 4.0,
+          "unit": "observations per 128 ppd cell",
+          "status": "observed",
+          "sourceId": "mola-megdr-128ppd-counts"
+        },
+        "molaRegionalSlope": {
+          "value": 0.1569946805721398,
+          "unit": "degree",
+          "status": "derived",
+          "sourceId": "mola-megdr-128ppd",
+          "method": "3x3-neighborhood central differences on the MOLA 128 ppd grid",
+          "dataBasis": "all_3x3_cells_have_direct_observations"
+        }
+      }
+    },
+    {
+      "id": "arcadia-sample-02",
+      "name": "Arcadia sample 02",
+      "location": {
+        "type": "Point",
+        "coordinates": [
+          194.83203125,
+          38.05078125
+        ],
+        "coordinateReference": {
+          "body": "Mars",
+          "latitudeType": "planetocentric",
+          "longitudeDirection": "positive east",
+          "longitudeRange": "0 to 360 degrees",
+          "datum": "IAU2000 body-fixed sphere, radius 3396000 m"
+        }
+      },
+      "observations": {
+        "swimCombinedIceConsistency": {
+          "value": null,
+          "unit": null,
+          "status": "unavailable",
+          "sourceId": "swim4imim-combined-ci-0-1m",
+          "unavailableReason": "swim_raster_not_retrieved"
+        },
+        "molaTopography": {
+          "value": -3980.0,
+          "unit": "meter relative to MOLA areoid",
+          "status": "sampled_product_value",
+          "sourceId": "mola-megdr-128ppd"
+        },
+        "molaObservationCount": {
+          "value": 4.0,
+          "unit": "observations per 128 ppd cell",
+          "status": "observed",
+          "sourceId": "mola-megdr-128ppd-counts"
+        },
+        "molaRegionalSlope": {
+          "value": 0.5404463066168825,
+          "unit": "degree",
+          "status": "derived",
+          "sourceId": "mola-megdr-128ppd",
+          "method": "3x3-neighborhood central differences on the MOLA 128 ppd grid",
+          "dataBasis": "all_3x3_cells_have_direct_observations"
+        }
+      }
+    },
+    {
+      "id": "arcadia-sample-03",
+      "name": "Arcadia sample 03",
+      "location": {
+        "type": "Point",
+        "coordinates": [
+          194.82421875,
+          38.08203125
+        ],
+        "coordinateReference": {
+          "body": "Mars",
+          "latitudeType": "planetocentric",
+          "longitudeDirection": "positive east",
+          "longitudeRange": "0 to 360 degrees",
+          "datum": "IAU2000 body-fixed sphere, radius 3396000 m"
+        }
+      },
+      "observations": {
+        "swimCombinedIceConsistency": {
+          "value": null,
+          "unit": null,
+          "status": "unavailable",
+          "sourceId": "swim4imim-combined-ci-0-1m",
+          "unavailableReason": "swim_raster_not_retrieved"
+        },
+        "molaTopography": {
+          "value": -3974.0,
+          "unit": "meter relative to MOLA areoid",
+          "status": "sampled_product_value",
+          "sourceId": "mola-megdr-128ppd"
+        },
+        "molaObservationCount": {
+          "value": 3.0,
+          "unit": "observations per 128 ppd cell",
+          "status": "observed",
+          "sourceId": "mola-megdr-128ppd-counts"
+        },
+        "molaRegionalSlope": {
+          "value": 0.6382999636020613,
+          "unit": "degree",
+          "status": "derived",
+          "sourceId": "mola-megdr-128ppd",
+          "method": "3x3-neighborhood central differences on the MOLA 128 ppd grid",
+          "dataBasis": "all_3x3_cells_have_direct_observations"
+        }
+      }
+    }
+  ],
+  "limitations": [
+    "The chosen coordinates are sample locations for ingestion, not scientifically ranked candidate sites.",
+    "The SWIM combined ice-consistency index is a derived proxy and is not a direct measurement of ice abundance, depth, or accessibility.",
+    "MOLA topography is a regional-scale orbital product; derived slope is a local 3x3-grid estimate and is not a landing-safety assessment.",
+    "No suitability score, evidence-confidence score, radiation calculation, route, or safety conclusion is produced."
+  ]
+}
