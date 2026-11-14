@@ -1,0 +1,112 @@
+{
+  "resolution": 1.0017330185711,
+  "size": [
+    8000,
+    4000
+  ],
+  "grid": {
+    "step": 10,
+    "cell_m": 10.017330185711,
+    "rows": 800,
+    "cols": 400
+  },
+  "crop_window": {
+    "row0": 2500,
+    "row1": 10500,
+    "col0": 1500,
+    "col1": 5500
+  },
+  "bounds": {
+    "south": 40.67836276418795,
+    "north": 40.81389281701843,
+    "west": 30.140148337770363,
+    "east": 30.228609297214614
+  },
+  "center": {
+    "lat": 40.74612779060319,
+    "lon": 30.184378817492487
+  },
+  "source": "deut_041222_dtm.IMG \u2014 HiRISE DTM (NASA/JPL/University of Arizona)",
+  "is_synthetic": false,
+  "scales": {
+    "note": "Same DTM, sigma_z and error model at both scales; only the slope baseline differs, and sigma_theta scales as 1/baseline.",
+    "walk": {
+      "label": "per step \u00b7 1 m",
+      "baseline_m": 1.0017330185711,
+      "used_by": [
+        "data_grid.json",
+        "slope.png",
+        "uncertainty.png",
+        "traversability.png",
+        "routes",
+        "scout points",
+        "point inspector"
+      ],
+      "method": "theta, sigma_theta, T, Tw at full resolution, averaged over each 10 m cell (T = expected traversability of a random footstep)",
+      "sigma_theta_median_deg": 11.37,
+      "uncertain_pct": 99.1
+    },
+    "footprint": {
+      "label": "over footprint \u00b7 10 m",
+      "baseline_m": 10.017330185711,
+      "used_by": [
+        "zones.json"
+      ],
+      "method": "theta, sigma_theta from the 10 m block-mean DTM; then averaged over each facility disk in zones.py",
+      "sigma_theta_median_deg": 1.18,
+      "uncertain_pct": 0.0
+    },
+    "ui_sentence": "A pad site can be confidently flat at 10 m even where individual footsteps are uncertain: \u00b111\u00b0 per step vs \u00b11.2\u00b0 over 10 m."
+  },
+  "method": {
+    "slope_basis": "two scales, see \"scales\"",
+    "roughness": "std. dev. of elevation in a 5 px window at full resolution, block-averaged",
+    "sigma_z_m": 0.3,
+    "sigma_z_source": "Sutton et al. 2022, doi:10.3390/rs14102403",
+    "error_model": "independent per-pixel errors (likely an overestimate; real DTM error is correlated)",
+    "rock_abundance_k": 0.06,
+    "rock_abundance_note": "uniform, not measured at this site",
+    "worst_sigma_k": 1.0,
+    "insolation": "terrain-only (no dust/atmosphere): 36-azimuth horizons on the full DTM strip"
+  },
+  "stats": {
+    "scale": "walk",
+    "total_cells": 320000,
+    "uncertain_pct": 99.1,
+    "critical_pct": 78.4,
+    "slope_min": 1.6,
+    "slope_max": 50.0,
+    "slope_mean": 14.5,
+    "slope_unc_mean": 11.08,
+    "slope_unc_max": 12.12,
+    "sigma_z_used": 0.3,
+    "elevation_range": 1206.7
+  },
+  "layers": {
+    "hillshade": {
+      "file": "hillshade.png",
+      "description": "Terrain shading (full resolution)"
+    },
+    "slope": {
+      "file": "slope.png",
+      "description": "Surface slope (degrees)",
+      "range": [
+        0,
+        35
+      ]
+    },
+    "uncertainty": {
+      "file": "uncertainty.png",
+      "description": "Slope measurement uncertainty"
+    },
+    "traversability": {
+      "file": "traversability.png",
+      "description": "EVA traversability (0-1)"
+    },
+    "imagery": {
+      "file": "imagery.png",
+      "description": "HiRISE orthoimage (deut_041222_ortho.JP2)"
+    }
+  },
+  "zones_file": "zones.json"
+}

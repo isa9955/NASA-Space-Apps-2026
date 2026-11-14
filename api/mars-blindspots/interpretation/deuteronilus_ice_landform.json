@@ -1,0 +1,14 @@
+{
+  "label": "INTERPRETATION — ice-rich flow lobes (not a measurement)",
+  "status": "DRAFT, pending team review",
+  "digitized_by": "Claude (AI assistant), 2026-11-14, by eye from HiRISE hillshade (DTEEC_041222_2210_040787_2210_A01) and ortho (ESP_041222_2210_RED_C_01)",
+  "basis": "Raised lobate units with steep, sharp margins and knobby/pitted surface texture, interpreted as ice-rich debris-covered flow (lobate debris apron / lineated flow lobe) units. Radar evidence for ice in Deuteronilus aprons: Plaut et al. 2009, GRL, doi:10.1029/2008GL036379 (regional; no SHARAD track crosses this DTM).",
+  "excluded": "The lineated band crossing rows ~6500-8200 is left out to keep the mask conservative.",
+  "depth_to_ice": "1-10 m, unknown",
+  "coords": "full-resolution DTM pixels [row, col] of DTEEC_041222_2210_040787_2210_A01; polygons may extend past the crop",
+  "polygons": {
+    "mid_alcove_tongue": [[3800,3880],[3800,4250],[4500,4400],[4900,4300],[5250,4050],[5400,3950],[5390,3450],[5300,3400],[5000,3250],[4794,3161],[4486,3394],[4120,3639]],
+    "east_lobe": [[6706,4378],[6500,4550],[6350,4722],[6319,4941],[6294,5500],[6850,5500],[6830,5000],[6800,4700],[6760,4500]],
+    "south_lobe": [[8791,2860],[8611,2968],[8431,3327],[8395,3687],[8467,5500],[10500,5500],[10500,3543],[9981,3399],[9404,3040],[9116,2824]]
+  }
+}

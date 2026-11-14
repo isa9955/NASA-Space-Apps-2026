@@ -4,3 +4,4 @@ scripts/
 .func/
 local.settings.json
 *.ts
+mars-blindspots/
