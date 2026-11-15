@@ -290,9 +290,6 @@ export function Explorer() {
   );
   return (
     <main className="app">
-      <a className="return-globe" href="/overview">
-        ← Mars overview
-      </a>
       <header className="masthead">
         <Mountain size={23} className="brand-mark" />
         <h1>
@@ -301,6 +298,9 @@ export function Explorer() {
         <span className="divider" />
         <span className="site-title">Deuteronilus Mensae</span>
         <span className="badge">HiRISE terrain</span>
+        <a className="return-globe" href="/overview">
+          ← Mars overview
+        </a>
         <span className="prototype-badge">3D EXPLORER</span>
       </header>
       <nav className="toolbar" aria-label="Explorer controls">

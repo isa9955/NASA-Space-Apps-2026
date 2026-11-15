@@ -60,10 +60,8 @@ summary:focus-visible {
   background: #e07a33 !important;
 }
 .return-globe {
-  position: absolute;
-  top: 70px;
-  right: 24px;
-  z-index: 40;
+  flex: none;
+  margin-left: 0;
   padding: 6px 10px;
   border: 1px solid var(--line);
   border-radius: 5px;
@@ -553,6 +551,9 @@ select {
 .switch.on {
   background: var(--accent);
   justify-content: flex-end;
+}
+.switch.on > span {
+  transform: none;
 }
 .zone details {
   border: 0;
