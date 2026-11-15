@@ -319,7 +319,7 @@ export function Explorer() {
           <span className="letter">B</span>Place end
         </Button>
         <Button
-          className="primary"
+          className="primary route-compare"
           onClick={() => calculate()}
           disabled={!ready || !a || !b || status === "loading"}
           icon={status === "loading" ? LoaderCircle : Route}

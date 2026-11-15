@@ -59,6 +59,13 @@ summary:focus-visible {
 .primary:hover {
   background: #e07a33 !important;
 }
+.toolbar .route-compare {
+  background: #2e7d4f !important;
+  border-color: #4b9b69;
+}
+.toolbar .route-compare:hover {
+  background: #368a5b !important;
+}
 .return-globe {
   flex: none;
   margin-left: 0;
