@@ -18,7 +18,8 @@ assert(region.layers.find((layer) => layer.id === "solar")?.rule.includes("4,324
 const { from, to } = region.demoTraverse!;
 const conditions = ConditionsResponse.parse(await json(`/api/conditions?lon=${from[0]}&lat=${from[1]}`));
 assert.equal(conditions.elevation.value, -2211);
-assert.equal(conditions.radiation.value, null);
+assert.deepEqual(conditions.radiation, { value: 0.679, unit: "mSv/day", qualifier: "estimated" });
+assert(conditions.sources.some((source) => source.id === "radiation-elevation-model" && source.url === "https://doi.org/10.1126/science.1244797"));
 assert.equal(conditions.temperature.value, null);
 assert.equal(conditions.soil.value, null);
 const route = RouteResponse.parse(await json(`/api/route?from=${from.join(",")}&to=${to.join(",")}`));
@@ -52,4 +53,4 @@ const unavailable = RouteResponse.parse(await json(`/api/route?from=${from.join(
 assert.equal(unavailable.status, "unavailable");
 assert.equal(unavailable.standard, null);
 assert.equal(unavailable.safe, null);
-console.log("Real HTTP + UI schemas PASS: terrain, six zone masks, conditions, two routes, five scouts, six science targets, solar warning, unavailable route and errors.");
+console.log("Real HTTP + UI schemas PASS: terrain, six zone masks, conditions including estimated radiation, two routes, five scouts, six science targets, solar warning, unavailable route and errors.");
