@@ -61,3 +61,13 @@ Existing API/HTTP cache behavior stays unchanged. Region/mesh requests and image
 - No lint script/config exists. Build reports existing Zod annotation notices and a large Three.js bundle warning; these are non-blocking. Further code splitting and cross-device performance benchmarking are deferred.
 
 Review manually: Try demo, highlight each route, toggle zones/rules/patches, inspect terrain and science/scout candidates, Clear and place endpoints, compare a custom route, test 2D/3D/reset, Sources, Mars overview and return. Unsupported measurements must continue to show Unknown.
+
+## Final three-page integration
+
+On `test/mars-ui-integration`, native URLs now expose `/` (Editorial welcome),
+`/overview` (this whole-Mars globe), and `/explorer` (the Deuteronilus 3D
+Habitat Finder). The globe's site pin and primary action link to `/explorer`;
+the Habitat Finder links back to `/overview`. The original Leaflet app remains
+preserved as `ui/src/LegacyApp.tsx`. Routing changes do not modify APIs,
+scientific calculations, datasets, or caching. Current validation and local
+launch commands are recorded in [`MARS_UI_INTEGRATION.md`](MARS_UI_INTEGRATION.md).

@@ -67,7 +67,7 @@
 - [ ] Implement the path resolver and dynamic screen imports in `main.tsx`.
 - [ ] Change the Welcome CTA to `/overview`; change both Globe site actions to native links to `/explorer`; replace the obsolete state-switching App with an Explorer wrapper and add a native `/overview` link in the Habitat Finder.
 - [ ] Re-run the focused test, then `npm --prefix ui test`, `npm --prefix ui run typecheck`, and `npm --prefix ui run build`.
-- [ ] Commit as `feat: connect welcome overview and habitat finder routes`.
+- [x] Commit as `feat: connect welcome overview and habitat finder routes`.
 
 ### Task 3: Validate the full journey and record results
 
@@ -82,10 +82,10 @@
 - Consumes: final three-route build and unchanged backend/API from Tasks 1–2.
 - Produces: reproducible validation notes and a verified local preview URL.
 
-- [ ] Run frontend unit/contract tests, typecheck, and production build.
-- [ ] Run backend tests for `api/mars-blindspots` and `api/functions`.
-- [ ] Build the Azure Functions API package into an isolated ignored validation directory.
-- [ ] Start the real API and production preview; run `npm --prefix ui run test:live`.
-- [ ] Use Playwright on desktop to check the three links, direct loads, refresh, browser back/forward, globe rendering, Habitat Finder features, loading/error/retry, and console errors; also check reduced motion and a globe texture/WebGL failure.
-- [ ] Record exact commands/results, launch commands, local preview URL, and any environment blockers in `docs/MARS_UI_INTEGRATION.md`.
+- [x] Run frontend unit/contract tests, typecheck, production build, and production dependency audit.
+- [x] Run backend tests for `api/mars-blindspots` and `api/functions`.
+- [x] Build the Azure Functions API package into the ignored `api/functions/dist/` validation directory.
+- [x] Start the real API and production preview; run `npm --prefix ui run test:live`.
+- [x] Use Playwright on desktop to check the three links, direct loads, refresh, browser back/forward, globe rendering, Habitat Finder features, loading/error/retry, and console errors; also check reduced motion and a globe texture/WebGL failure.
+- [x] Record exact commands/results, launch commands, local preview URL, and any environment blockers in `docs/MARS_UI_INTEGRATION.md`.
 - [ ] Commit as `docs: record Mars UI integration validation`.

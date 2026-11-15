@@ -1,8 +1,12 @@
 # Mars Site Planner (NASA Space Apps 2026)
 
 Where can we build on Mars, and how do we get there, when the terrain map has
-blindspots? A 2D web app for one walking-scale site, **Deuteronilus Mensae**,
-built from a real HiRISE terrain model (1 m/px).
+blindspots? A desktop-focused web app for one walking-scale site,
+**Deuteronilus Mensae**, built from a real HiRISE terrain model (1 m/px).
+
+The browser journey is **Welcome → Whole-Mars Overview → Habitat Finder**.
+The overview provides global context; the 3D finder uses the live API for
+terrain conditions, zones, route comparisons, scouts, and science candidates.
 
 - **Buildable zones:** six uses (habitat, landing pad, ice access, greenhouse,
   data center, solar), each shown as nominal ground and the part that survives
@@ -34,7 +38,7 @@ Normal development and preview use the real Python API. Synthetic fixtures requi
 | Path | What |
 |---|---|
 | [`TECHNICAL_SPEC.md`](TECHNICAL_SPEC.md) | Design, data, equations, API contract, open questions |
-| [`ui/`](ui/) | React + Vite + Leaflet frontend |
+| [`ui/`](ui/) | React + Vite frontend with Three.js and Leaflet views |
 | [`api/mars-blindspots/`](api/mars-blindspots/) | Terrain processing, zones, routing and the API (`backend/api_service.py`) |
 | [`contracts/`](contracts/) | JSON Schema + examples for the three endpoints |
 | [`archive/arcadia/`](archive/arcadia/) | Preserved Arcadia Phase 6.2 science and tests; not used by the app |

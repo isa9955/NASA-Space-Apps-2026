@@ -26,6 +26,7 @@ archive/arcadia/api/local.settings.json
 .DS_Store
 Thumbs.db
 .vscode/
+ui/.playwright-cli/
 
 # Azure Functions bundle (built by api/functions/build.py)
 api/functions/dist/

@@ -5,9 +5,9 @@
 - Project base: `88d55435efb1fed092d2994a89c89c830f76e662`, matching `origin/main`.
 - Feature branch: `feature/mars-intro`.
 
-`/` renders only Prototype 01 (Editorial). Its native **Enter the Explorer** link opens `/explorer`, which mounts the original `App.tsx`. Other non-root paths retain the previous map fallback behavior. Refresh and browser history use the existing Azure navigation fallback; no router or hosting-rule changes are required.
+`/` renders the editorial welcome. Its native **Enter the Explorer** link opens `/overview`, which preserves the whole-Mars globe. The globe's Deuteronilus Mensae actions open `/explorer`, the 3D Habitat Finder. All three paths support direct loads, refresh, and browser history through the existing Azure navigation fallback; unknown paths return to the welcome page.
 
-The source globe renderer, color/relief textures, six-degree-per-second rotation, star drift, parallax and shooting stars are retained. Editorial layout is translated to scoped CSS, with locally bundled Geist fonts. No Next.js, Tailwind reset, analytics, prototype switcher, Atlas or Cinematic screen is imported. The globe has a static textured fallback, reduced-motion support and resource cleanup on texture failure. The landing and map load as separate chunks; the landing makes no scientific API calls.
+The source globe renderer, color/relief textures, six-degree-per-second rotation, star drift, parallax and shooting stars are retained. Editorial layout is translated to scoped CSS, with locally bundled Geist fonts. No Next.js, Tailwind reset, analytics, prototype switcher, Atlas or Cinematic screen is imported. The welcome globe has a static textured fallback, reduced-motion support and resource cleanup on texture failure. The welcome, whole-planet overview, and Habitat Finder load as separate screen chunks; only the Habitat Finder makes scientific API calls.
 
 Textures are decorative source assets, not site observations or inputs to scientific calculations. The integration adds no scientific measurements. Existing backend APIs, client caching, science code, data and deployment headers are unchanged. Imported assets receive Vite fingerprints and use the existing immutable `/assets/*` cache policy.
 
