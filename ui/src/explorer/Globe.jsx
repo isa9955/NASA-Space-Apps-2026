@@ -127,12 +127,12 @@ export function Globe() {
         <strong>
           MARS <span>SITE PLANNER</span>
         </strong>
-        <span>PLANET OVERVIEW · DESKTOP PROTOTYPE</span>
+        <span>PLANET OVERVIEW</span>
       </header>
       <div className="globe-stage" ref={host}>
         {webglUnavailable && <div className="globe-static" role="img" aria-label="Illustrative global Mars surface map; rotation is unavailable." />}
         <a ref={pin} className="site-pin" href="/explorer">
-          Deuteronilus Mensae <span>Explore site →</span>
+          Deuteronilus Mensae <span>Explore site</span>
         </a>
       </div>
       <aside className="globe-card">
@@ -151,10 +151,12 @@ export function Globe() {
           <span>~40.74° N · 30.18° E</span>
           <span>4 × 8 km detailed terrain coverage</span>
         </div>
-        <a className="primary overview-enter" href="/explorer">
-          Open detailed explorer →
-        </a>
-        <button onClick={() => reset.current?.()}>Locate site</button>
+        <div className="overview-actions">
+          <a className="primary overview-enter" href="/explorer">
+            Open detailed explorer
+          </a>
+          <button onClick={() => reset.current?.()}>Locate site</button>
+        </div>
         <p className="globe-limit">
           Global imagery is visual context only. Scientific tools are available
           within the regional dataset. The site marker is enlarged for

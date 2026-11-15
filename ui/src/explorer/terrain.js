@@ -49,9 +49,9 @@ export async function createTerrain(host, data, onPick) {
   const reset = (mode = "3d") => {
     controls.target.set(0, 5, -3);
     camera.position.set(
-      mode === "2d" ? 0 : 43,
-      mode === "2d" ? 95 : 36,
-      mode === "2d" ? -2.99 : 22,
+      mode === "2d" ? 0 : 38,
+      mode === "2d" ? 95 : 32,
+      mode === "2d" ? -2.99 : 19,
     );
     controls.update();
   };

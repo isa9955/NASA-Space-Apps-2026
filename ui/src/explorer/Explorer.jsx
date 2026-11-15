@@ -7,7 +7,6 @@ import {
   ChevronRight,
   Compass,
   Crosshair,
-  Database,
   Diamond,
   Home,
   Info,
@@ -49,6 +48,11 @@ const ICONS = {
   datacenter: Server,
   solar: Sun,
 };
+const TASK_TABS = [
+  ["zones", Layers, "Zones", "Where could we build?"],
+  ["routes", Route, "Routes", "How could we get there?"],
+  ["inspect", Search, "Inspect", "What remains uncertain?"],
+];
 const Button = ({ icon: Icon, children, ...props }) => (
   <button {...props}>
     {Icon && <Icon size={16} />} {children}
@@ -273,6 +277,12 @@ export function Explorer() {
       />
     </div>
   );
+  const taskIntro = (question, explanation) => (
+    <div className="task-intro">
+      <p className="task-question">{question}</p>
+      <p className="muted">{explanation}</p>
+    </div>
+  );
   const sources = (
     <div className="source-list">
       {data?.region.sources.map((s) => (
@@ -299,55 +309,20 @@ export function Explorer() {
         <span className="site-title">Deuteronilus Mensae</span>
         <span className="badge">HiRISE terrain</span>
         <a className="return-globe" href="/overview">
-          ← Mars overview
+          Mars overview
         </a>
-        <span className="prototype-badge">3D EXPLORER</span>
+        <span className="explorer-mode-badge">3D EXPLORER</span>
       </header>
       <nav className="toolbar" aria-label="Explorer controls">
-        <Button
-          className={placing === "start" ? "active" : ""}
-          onClick={() => place("start")}
-          disabled={!ready}
-        >
-          <span className="letter">A</span>Place start
-        </Button>
-        <Button
-          className={placing === "end" ? "active" : ""}
-          onClick={() => place("end")}
-          disabled={!ready}
-        >
-          <span className="letter">B</span>Place end
-        </Button>
-        <Button
-          className="primary route-compare"
-          onClick={() => calculate()}
-          disabled={!ready || !a || !b || status === "loading"}
-          icon={status === "loading" ? LoaderCircle : Route}
-        >
-          {status === "loading" ? "Calculating…" : "Compare routes"}
-        </Button>
-        <Button onClick={clear} disabled={!ready}>
-          Clear
-        </Button>
-        <Button icon={Play} onClick={demo} disabled={!ready || !data?.demo}>
-          Try demo
-        </Button>
         <span className="toolbar-spacer" />
-        {[
-          ["routes", Route, "Routes"],
-          ["zones", Layers, "Zones"],
-          ["inspect", Search, "Inspect"],
-          ["sources", Database, "Sources"],
-        ].map(([key, Icon, label]) => (
+        {TASK_TABS.map(([key, Icon, label, question]) => (
           <Button
             key={key}
             icon={Icon}
             className={tab === key ? "active" : ""}
             aria-pressed={tab === key}
-            onClick={() => {
-              setTab(tab === key ? null : key);
-              setPlacing(null);
-            }}
+            aria-label={`${label} — ${question}`}
+            onClick={() => setTab(key)}
           >
             {label}
           </Button>
@@ -369,7 +344,7 @@ export function Explorer() {
         </div>
       </nav>
       <section
-        className={`viewport ${placing ? "placing" : ""}`}
+        className={`viewport ${placing ? "placing" : ""} ${tab ? "has-sidebar" : ""}`}
         aria-label="Mars explorer"
       >
         <div className="terrain-host" ref={host} />
@@ -475,7 +450,7 @@ export function Explorer() {
               </button>
             ))}
         </div>
-        <div className="map-buttons">
+        <div className={`map-buttons ${tab ? "shifted" : ""}`}>
           <Button
             aria-label="Zoom in"
             icon={Plus}
@@ -487,7 +462,7 @@ export function Explorer() {
             onClick={() => engine.current?.zoom(1.2)}
           />
         </div>
-        <div className={`map-bottom ${tab === "inspect" ? "shifted" : ""}`}>
+        <div className={`map-bottom ${tab ? "shifted" : ""}`}>
           <Button
             title="Reset north-facing view"
             icon={Compass}
@@ -501,14 +476,10 @@ export function Explorer() {
         </div>
         {tab === "routes" && (
           <aside className="panel route-panel" aria-label="Route planner">
-            {heading(
-              placing
-                ? placing === "start"
-                  ? "Choose your start"
-                  : "Choose your destination"
-                : status === "ok"
-                  ? "Compare traverses"
-                  : "Plan a traverse",
+            {heading("Routes")}
+            {taskIntro(
+              "How could we get there?",
+              "Compare modeled traverses across the Deuteronilus terrain.",
             )}
             <div className="steps">
               <span className={a ? "done" : ""}>
@@ -521,6 +492,35 @@ export function Explorer() {
               <ArrowRight size={13} />
               <span className={status === "ok" ? "done" : ""}>3 Compare</span>
             </div>
+            <div className="demo-traverse">
+              <div className="demo-label">
+                <Play size={13} /> API-PROVIDED EXAMPLE
+              </div>
+              <h3>Start with a real traverse</h3>
+              <p>
+                Run both route models between the example endpoints supplied
+                by the region API.
+              </p>
+              {data?.demo && (
+                <div className="demo-endpoints">
+                  <span>
+                    <b>A</b> Start <small>{coords(data.demo.from)}</small>
+                  </span>
+                  <span>
+                    <b>B</b> Destination <small>{coords(data.demo.to)}</small>
+                  </span>
+                </div>
+              )}
+              <Button
+                className="primary route-compare demo-button"
+                icon={status === "loading" ? LoaderCircle : Play}
+                disabled={!ready || !data?.demo || status === "loading"}
+                onClick={demo}
+              >
+                {status === "loading" ? "Calculating…" : "Run demo traverse"}
+              </Button>
+              <p className="small muted">Results come from the live route API.</p>
+            </div>
             {placing && (
               <div className="message">
                 <p>
@@ -530,32 +530,6 @@ export function Explorer() {
                 </p>
                 <Button onClick={() => setPlacing(null)}>
                   Cancel placement
-                </Button>
-              </div>
-            )}
-            {status === "idle" && !placing && (
-              <div className="message">
-                <p>
-                  {!a
-                    ? "Choose a start point on the terrain."
-                    : !b
-                      ? "Choose your destination."
-                      : "Endpoints ready. Compare the two traverses."}
-                </p>
-                <Button
-                  className="primary"
-                  onClick={() =>
-                    !a ? place("start") : !b ? place("end") : calculate()
-                  }
-                >
-                  {!a
-                    ? "Place start"
-                    : !b
-                      ? "Place destination"
-                      : "Compare routes"}
-                </Button>
-                <Button onClick={demo} icon={Play}>
-                  Try the demo
                 </Button>
               </div>
             )}
@@ -608,87 +582,193 @@ export function Explorer() {
                 </Button>
               </div>
             )}
+            <details className="custom-route">
+              <summary>Plan a custom route</summary>
+              <p>
+                Place endpoints on the terrain, or enter coordinates within the
+                mapped site.
+              </p>
+              <div className="route-endpoint-actions">
+                <Button
+                  className={placing === "start" ? "active" : ""}
+                  onClick={() => place("start")}
+                  disabled={!ready}
+                >
+                  <span className="letter">A</span>Place start
+                </Button>
+                <Button
+                  className={placing === "end" ? "active" : ""}
+                  onClick={() => place("end")}
+                  disabled={!ready}
+                >
+                  <span className="letter">B</span>Place destination
+                </Button>
+              </div>
+              <p className="small endpoint-status">
+                Start: {a ? coords(a) : "not set"} · Destination: {b ? coords(b) : "not set"}
+              </p>
+              <Button
+                className="primary route-compare custom-compare"
+                disabled={!ready || !a || !b || status === "loading"}
+                onClick={() => calculate()}
+              >
+                Compare selected endpoints
+              </Button>
+              {(a || b) && (
+                <Button className="reset-route" onClick={clear} disabled={!ready}>
+                  Reset endpoints
+                </Button>
+              )}
+              <details className="coordinate-entry">
+                <summary>Enter coordinates</summary>
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    const f = new FormData(e.currentTarget),
+                      p = [Number(f.get("lon")), Number(f.get("lat"))];
+                    const [w, s, east, n] = data.region.region.bounds;
+                    if (p[0] < w || p[0] > east || p[1] < s || p[1] > n) {
+                      setNotice(
+                        "Outside mapped coverage. Choose coordinates within this site.",
+                      );
+                      return;
+                    }
+                    endpoint(p, f.get("which"));
+                  }}
+                >
+                  <div className="form-row">
+                    <label>
+                      Longitude E
+                      <input
+                        name="lon"
+                        type="number"
+                        step="any"
+                        defaultValue={a?.[0] ?? ""}
+                        required
+                      />
+                    </label>
+                    <label>
+                      Latitude N
+                      <input
+                        name="lat"
+                        type="number"
+                        step="any"
+                        defaultValue={a?.[1] ?? ""}
+                        required
+                      />
+                    </label>
+                  </div>
+                  <select name="which" aria-label="Endpoint">
+                    <option value="start">Start A</option>
+                    <option value="end">Destination B</option>
+                  </select>
+                  <Button type="submit">Set point</Button>
+                </form>
+              </details>
+            </details>
             {valid && (
               <>
                 <div className="evidence">LIVE API · MODELED RESULTS</div>
-                <div className="route-choices">
+                <div className="route-summary-grid">
                   {["standard", "safe"].map((k) => (
                     <button
                       key={k}
-                      className={focus === k ? "chosen" : ""}
+                      className={`route-summary-card ${focus === k ? "chosen" : ""}`}
                       aria-pressed={focus === k}
                       onClick={() => setFocus(focus === k ? null : k)}
                     >
-                      <Line kind={k} />
-                      {k === "standard" ? "Standard" : "Uncertainty-aware"}
+                      <span className="route-summary-title">
+                        <Line kind={k} />
+                        {k === "standard" ? "Standard" : "Uncertainty-aware"}
+                      </span>
+                      <strong>
+                        {route[k].distanceKm === null
+                          ? "Not modeled"
+                          : `${fmt(route[k].distanceKm, 2)} km`}
+                      </strong>
+                      <small>modeled grid distance</small>
+                      {route[k].walkMin !== null && (
+                        <span className="route-walk-estimate">
+                          About {fmt(route[k].walkMin)} min walking
+                        </span>
+                      )}
                     </button>
                   ))}
                 </div>
-                <table className="metrics">
-                  <thead>
-                    <tr>
-                      <th>Metric</th>
-                      <th>Standard</th>
-                      <th>Aware</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {[
-                      ["Grid distance", "distanceKm", " km", 2],
-                      ["Estimated walk", "walkMin", " min", 0],
-                      ["Critical blindspots", "criticalBlindspotPct", "%", 0],
-                      ["Worst-case traversability", "worstCaseTravPct", "%", 0],
-                    ].map(([label, key, unit, digits]) => (
-                      <tr key={key}>
-                        <td>{label}</td>
-                        {["standard", "safe"].map((k) => (
-                          <td key={k}>
-                            {route[k][key] === null
-                              ? "Not modeled"
-                              : fmt(route[k][key], digits) + unit}
-                          </td>
-                        ))}
+                <p className="route-explanation">
+                  The uncertainty-aware route includes modeled slope
+                  uncertainty. Neither route is a safety guarantee.
+                </p>
+                <details className="advanced-metrics">
+                  <summary>Technical metrics and assumptions</summary>
+                  <table className="metrics">
+                    <thead>
+                      <tr>
+                        <th>Metric</th>
+                        <th>Standard</th>
+                        <th>Aware</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-                <p className="comparison">
-                  {fmt(
-                    (route.safe.distanceKm - route.standard.distanceKm) * 1000,
-                  )}{" "}
-                  m difference ·{" "}
-                  {fmt(
-                    route.standard.criticalBlindspotPct -
-                      route.safe.criticalBlindspotPct,
-                    1,
-                  )}{" "}
-                  percentage points less modeled blindspot exposure
-                </p>
-                <p className="muted small">
-                  Walking assumes 50 m/min. Both routes are provisional;
-                  percentages describe model sensitivity, not hazard
-                  probability.
-                </p>
-                <div className="marker-toggles">
-                  <label>
-                    <input
-                      type="checkbox"
-                      checked={showScouts}
-                      onChange={(e) => setShowScouts(e.target.checked)}
-                    />{" "}
-                    Scouts · {route.scoutPoints?.length || 0}
-                  </label>
-                  <label>
-                    <input
-                      type="checkbox"
-                      checked={showScience}
-                      onChange={(e) => setShowScience(e.target.checked)}
-                    />{" "}
-                    Science · {route.scienceTargets?.length || 0}
-                  </label>
-                </div>
-                <details>
-                  <summary>Scout & science details</summary>
+                    </thead>
+                    <tbody>
+                      {[
+                        ["Grid distance", "distanceKm", " km", 2],
+                        ["Estimated walk", "walkMin", " min", 0],
+                        ["Critical blindspots", "criticalBlindspotPct", "%", 0],
+                        ["Worst-case traversability", "worstCaseTravPct", "%", 0],
+                      ].map(([label, key, unit, digits]) => (
+                        <tr key={key}>
+                          <td>{label}</td>
+                          {["standard", "safe"].map((k) => (
+                            <td key={k}>
+                              {route[k][key] === null
+                                ? "Not modeled"
+                                : fmt(route[k][key], digits) + unit}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  <p className="comparison">
+                    {fmt(
+                      (route.safe.distanceKm - route.standard.distanceKm) * 1000,
+                    )}{" "}
+                    m difference ·{" "}
+                    {fmt(
+                      route.standard.criticalBlindspotPct -
+                        route.safe.criticalBlindspotPct,
+                      1,
+                    )}{" "}
+                    percentage points less modeled blindspot exposure
+                  </p>
+                  <p className="muted small">
+                    Walking assumes 50 m/min. Percentages describe model
+                    sensitivity, not hazard probability.
+                  </p>
+                </details>
+                <details className="candidate-details">
+                  <summary>
+                    Scouts ({route.scoutPoints?.length || 0}) and science
+                    candidates ({route.scienceTargets?.length || 0})
+                  </summary>
+                  <div className="marker-toggles">
+                    <label>
+                      <input
+                        type="checkbox"
+                        checked={showScouts}
+                        onChange={(e) => setShowScouts(e.target.checked)}
+                      />{" "}
+                      Show scout markers
+                    </label>
+                    <label>
+                      <input
+                        type="checkbox"
+                        checked={showScience}
+                        onChange={(e) => setShowScience(e.target.checked)}
+                      />{" "}
+                      Show science markers
+                    </label>
+                  </div>
                   <div className="target-list">
                     {route.scoutPoints?.map((s) => (
                       <button key={s.rank} onClick={() => inspectScout(s)}>
@@ -708,63 +788,17 @@ export function Explorer() {
                 </details>
               </>
             )}
-            <details>
-              <summary>Enter coordinates</summary>
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  const f = new FormData(e.currentTarget),
-                    p = [Number(f.get("lon")), Number(f.get("lat"))];
-                  const [w, s, east, n] = data.region.region.bounds;
-                  if (p[0] < w || p[0] > east || p[1] < s || p[1] > n) {
-                    setNotice(
-                      "Outside mapped coverage. Choose coordinates within this site.",
-                    );
-                    return;
-                  }
-                  endpoint(p, f.get("which"));
-                }}
-              >
-                <div className="form-row">
-                  <label>
-                    Longitude E
-                    <input
-                      name="lon"
-                      type="number"
-                      step="any"
-                      defaultValue={a?.[0] || 30.16237}
-                      required
-                    />
-                  </label>
-                  <label>
-                    Latitude N
-                    <input
-                      name="lat"
-                      type="number"
-                      step="any"
-                      defaultValue={a?.[1] || 40.71216}
-                      required
-                    />
-                  </label>
-                </div>
-                <select name="which" aria-label="Endpoint">
-                  <option value="start">Start A</option>
-                  <option value="end">Destination B</option>
-                </select>
-                <Button type="submit">Set point</Button>
-              </form>
-            </details>
           </aside>
         )}
         {tab === "zones" && (
           <aside className="panel zones-panel" aria-label="Buildable zones">
             {heading("Buildable zones")}
-            <p className="muted">
-              Ground that passes nominal rules, and what remains under
-              worst-case slope.
-            </p>
+            {taskIntro(
+              "Where could we build?",
+              "Turn on a layer to see its robust modeled area on the terrain.",
+            )}
             <div className="zone-head">
-              Layer <span>Nominal → robust · km²</span>
+              Infrastructure layer <span>Robust area</span>
             </div>
             {data?.region.layers.map((l) => {
               const Icon = ICONS[l.id];
@@ -785,15 +819,20 @@ export function Explorer() {
                     <Icon size={17} style={{ color: l.color }} />
                     <strong>{shortNames[l.id]}</strong>
                     <span className="area">
-                      {l.nominalKm2.toFixed(2)} → {l.robustKm2.toFixed(2)}
-                      <small>
-                        {Math.round(l.survivesPct)}%{" "}
-                        {l.id === "solar" ? "area ratio" : "under assumptions"}
-                      </small>
+                      {fmt(l.robustKm2, 2)} km²
                     </span>
                   </div>
                   <details>
-                    <summary>Rule & layer details</summary>
+                    <summary>Area and rule details</summary>
+                    <p>
+                      Nominal area: {fmt(l.nominalKm2, 2)} km² · Robust area:{" "}
+                      {fmt(l.robustKm2, 2)} km²
+                    </p>
+                    <p>
+                      {Math.round(l.survivesPct)}%{" "}
+                      {l.id === "solar" ? "area ratio" : "under assumptions"}.
+                      This is a model comparison, not a probability.
+                    </p>
                     <p>{l.rule}</p>
                     <p>
                       Areas describe the entire layer. Click terrain to check a
@@ -803,23 +842,26 @@ export function Explorer() {
                 </div>
               );
             })}
-            <div className="zone-key">
-              <span>Solid: robust</span>
-              <span>Hatched: nominal only</span>
-            </div>
-            <p className="small muted">
-              Percentages describe model sensitivity, not probability.
-            </p>
-            <div className="caveat">
-              <Info size={17} />
-              <span>
-                Solar uses different sunlight thresholds. Its robust mask
-                extends beyond nominal; the ratio is not survival.
-              </span>
-            </div>
-            <p className="small muted">
-              Draft ice landforms are not confirmed water.
-            </p>
+            <details className="zone-limitations">
+              <summary>Map key and scientific limits</summary>
+              <div className="zone-key">
+                <span>Solid: robust</span>
+                <span>Hatched: nominal only</span>
+              </div>
+              <p className="small muted">
+                Percentages describe model sensitivity, not probability.
+              </p>
+              <div className="caveat">
+                <Info size={17} />
+                <span>
+                  Solar uses different sunlight thresholds. Its robust mask
+                  extends beyond nominal; the ratio is not survival.
+                </span>
+              </div>
+              <p className="small muted">
+                Draft ice landforms are not confirmed water.
+              </p>
+            </details>
           </aside>
         )}
         {tab === "inspect" && (
@@ -834,17 +876,21 @@ export function Explorer() {
                   ? "Science candidate"
                   : "Terrain conditions",
             )}
+            {taskIntro(
+              "What remains uncertain?",
+              "Inspect local conditions, modeled zone fit, and the evidence behind each result.",
+            )}
             {!point ? (
               <div className="message">
                 <Crosshair size={26} />
                 <h3>Choose a point on the terrain</h3>
                 <p>
-                  Inspect elevation, slope uncertainty, zone fit and draft
-                  landform distance.
+                  Click anywhere on the terrain to request point conditions
+                  from the backend. Estimated and unknown values stay labelled.
                 </p>
                 <Button
-                  disabled={!a && !data.demo}
-                  onClick={() => setPoint(a || data.demo.from)}
+                  disabled={!ready || (!a && !data?.demo)}
+                  onClick={() => setPoint(a || data?.demo?.from)}
                 >
                   Inspect start point
                 </Button>
@@ -930,7 +976,7 @@ export function Explorer() {
                     Use as destination
                   </Button>
                 </div>
-                <details open>
+                <details>
                   <summary>Zone fit at this point</summary>
                   {fits.length ? (
                     <div className="fits">
@@ -946,47 +992,37 @@ export function Explorer() {
                     </p>
                   )}
                 </details>
-                <details>
-                  <summary>Data & assumptions</summary>
-                  {sources}
-                </details>
-                <p className="small muted">
-                  Overall habitability and resource accessibility remain
-                  Unknown.
-                </p>
               </>
             )}
+            <details className="scientific-evidence">
+              <summary>Scientific evidence and limitations</summary>
+              <div className="evidence">LIVE API · HIRISE-DERIVED DATA</div>
+              <p>
+                Point conditions, zone masks, and route results come from the
+                existing API. The display terrain mesh is derived from the
+                committed HiRISE grid and downsampled for desktop rendering.
+              </p>
+              <p>
+                Routes and science candidates are provisional model outputs,
+                not verified safety assessments or confirmed discoveries.
+              </p>
+              {sources}
+              <div className="caveat">
+                <Info size={17} />
+                <span>
+                  Radiation, soil, temperature, overall habitability, and
+                  resource accessibility remain Unknown. Draft ice landforms
+                  are not confirmed water.
+                </span>
+              </div>
+            </details>
+            <p className="small muted">
+              Measurements marked estimated are modeled; Unknown means the
+              source does not provide that value.
+            </p>
           </aside>
         )}
-        {tab === "sources" && (
-          <aside
-            className="panel sources-panel"
-            aria-label="Sources and limitations"
-          >
-            {heading("Data & assumptions")}
-            <div className="evidence">LIVE API · HIRISE-DERIVED DATA</div>
-            <p>
-              Zone masks, point conditions and route results come from the
-              existing API. Display elevation is generated from the committed
-              HiRISE-derived grid. The 3D mesh is downsampled to about 20 m for
-              desktop review, with natural vertical scale.
-            </p>
-            <p>
-              Both demo and custom endpoints use the backend routing engine.
-              Routes and science candidates remain provisional model outputs,
-              not verified safety assessments or discoveries.
-            </p>
-            {sources}
-            <div className="caveat">
-              <Info size={17} />
-              <span>
-                Not a NASA safety assessment. Radiation, soil, temperature and
-                overall habitability are unknown.
-              </span>
-            </div>
-          </aside>
-        )}
-        <div className="map-footer">
+        <div className={`map-footer ${tab ? "shifted" : ""}`}>
           <span>HiRISE-derived terrain · live backend · 3D explorer</span>
           <span>NASA/JPL/University of Arizona</span>
         </div>

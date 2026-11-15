@@ -86,18 +86,26 @@
   font-size: 12px;
   color: #adb5b1;
 }
-.globe-card button {
-  margin-right: 8px;
+.overview-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 .globe-card .overview-enter {
   display: inline-block;
-  margin-right: 8px;
+  margin: 0;
   padding: 9px 12px;
   border: 1px solid #e68744;
   border-radius: 5px;
   color: #fff;
   background: #d36c28;
   text-decoration: none;
+  text-align: center;
+}
+.overview-actions button {
+  margin: 0;
 }
 .globe-card .overview-enter:hover {
   background: #e07a33;
