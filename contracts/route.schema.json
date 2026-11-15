@@ -1,373 +1,376 @@
 {
-  "$ref": "#/definitions/route",
-  "definitions": {
-    "route": {
-      "type": "object",
-      "properties": {
-        "schemaVersion": {
-          "type": "string"
-        },
-        "status": {
-          "type": "string",
-          "enum": [
-            "ok",
-            "unavailable"
-          ]
-        },
-        "reason": {
-          "type": "string"
-        },
-        "from": {
-          "type": "array",
-          "minItems": 2,
-          "maxItems": 2,
-          "items": [
-            {
-              "type": "number",
-              "minimum": -180,
-              "maximum": 180
-            },
-            {
-              "type": "number",
-              "minimum": -90,
-              "maximum": 90
-            }
-          ]
-        },
-        "to": {
-          "type": "array",
-          "minItems": 2,
-          "maxItems": 2,
-          "items": [
-            {
-              "type": "number",
-              "minimum": -180,
-              "maximum": 180
-            },
-            {
-              "type": "number",
-              "minimum": -90,
-              "maximum": 90
-            }
-          ]
-        },
-        "computeMs": {
+  "title": "route",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "ok",
+        "unavailable"
+      ]
+    },
+    "reason": {
+      "type": "string"
+    },
+    "from": {
+      "type": "array",
+      "items": [
+        {
           "type": "number",
-          "minimum": 0
+          "minimum": -180,
+          "maximum": 180
         },
-        "standard": {
-          "anyOf": [
-            {
-              "type": "object",
-              "properties": {
-                "kind": {
-                  "type": "string",
-                  "enum": [
-                    "standard",
-                    "safe"
-                  ]
-                },
-                "geometry": {
-                  "type": "object",
-                  "properties": {
-                    "type": {
-                      "type": "string",
-                      "const": "LineString"
-                    },
-                    "coordinates": {
-                      "type": "array",
-                      "items": {
-                        "type": "array",
-                        "minItems": 2,
-                        "maxItems": 2,
-                        "items": [
-                          {
-                            "type": "number",
-                            "minimum": -180,
-                            "maximum": 180
-                          },
-                          {
-                            "type": "number",
-                            "minimum": -90,
-                            "maximum": 90
-                          }
-                        ]
-                      },
-                      "minItems": 2
-                    }
-                  },
-                  "required": [
-                    "type",
-                    "coordinates"
-                  ],
-                  "additionalProperties": false
-                },
-                "distanceKm": {
-                  "type": "number",
-                  "minimum": 0
-                },
-                "walkMin": {
-                  "type": "number",
-                  "minimum": 0
-                },
-                "criticalBlindspotPct": {
-                  "type": "number",
-                  "minimum": 0,
-                  "maximum": 100
-                },
-                "worstCaseTravPct": {
-                  "type": "number",
-                  "minimum": 0,
-                  "maximum": 100
-                }
-              },
-              "required": [
-                "kind",
-                "geometry",
-                "distanceKm",
-                "walkMin",
-                "criticalBlindspotPct",
-                "worstCaseTravPct"
-              ],
-              "additionalProperties": false
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "safe": {
-          "anyOf": [
-            {
-              "type": "object",
-              "properties": {
-                "kind": {
-                  "type": "string",
-                  "enum": [
-                    "standard",
-                    "safe"
-                  ]
-                },
-                "geometry": {
-                  "type": "object",
-                  "properties": {
-                    "type": {
-                      "type": "string",
-                      "const": "LineString"
-                    },
-                    "coordinates": {
-                      "type": "array",
-                      "items": {
-                        "type": "array",
-                        "minItems": 2,
-                        "maxItems": 2,
-                        "items": [
-                          {
-                            "type": "number",
-                            "minimum": -180,
-                            "maximum": 180
-                          },
-                          {
-                            "type": "number",
-                            "minimum": -90,
-                            "maximum": 90
-                          }
-                        ]
-                      },
-                      "minItems": 2
-                    }
-                  },
-                  "required": [
-                    "type",
-                    "coordinates"
-                  ],
-                  "additionalProperties": false
-                },
-                "distanceKm": {
-                  "type": "number",
-                  "minimum": 0
-                },
-                "walkMin": {
-                  "type": "number",
-                  "minimum": 0
-                },
-                "criticalBlindspotPct": {
-                  "type": "number",
-                  "minimum": 0,
-                  "maximum": 100
-                },
-                "worstCaseTravPct": {
-                  "type": "number",
-                  "minimum": 0,
-                  "maximum": 100
-                }
-              },
-              "required": [
-                "kind",
-                "geometry",
-                "distanceKm",
-                "walkMin",
-                "criticalBlindspotPct",
-                "worstCaseTravPct"
-              ],
-              "additionalProperties": false
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "scoutPoints": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "rank": {
-                "type": "integer",
-                "exclusiveMinimum": 0
-              },
-              "location": {
-                "type": "array",
-                "minItems": 2,
-                "maxItems": 2,
-                "items": [
-                  {
-                    "type": "number",
-                    "minimum": -180,
-                    "maximum": 180
-                  },
-                  {
-                    "type": "number",
-                    "minimum": -90,
-                    "maximum": 90
-                  }
-                ]
-              },
-              "alongM": {
-                "type": "number",
-                "minimum": 0
-              },
-              "blindspotPts": {
-                "type": "number"
-              },
-              "slopeDeg": {
-                "type": "number"
-              },
-              "slopeUncDeg": {
-                "type": "number",
-                "minimum": 0
-              },
-              "worstCaseTravPct": {
-                "type": "number",
-                "minimum": 0,
-                "maximum": 100
-              }
-            },
-            "required": [
-              "rank",
-              "location",
-              "alongM",
-              "blindspotPts",
-              "slopeDeg",
-              "slopeUncDeg",
-              "worstCaseTravPct"
-            ],
-            "additionalProperties": false
-          }
-        },
-        "scienceTargets": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "location": {
-                "type": "array",
-                "minItems": 2,
-                "maxItems": 2,
-                "items": [
-                  {
-                    "type": "number",
-                    "minimum": -180,
-                    "maximum": 180
-                  },
-                  {
-                    "type": "number",
-                    "minimum": -90,
-                    "maximum": 90
-                  }
-                ]
-              },
-              "label": {
-                "type": "string"
-              }
-            },
-            "required": [
-              "id",
-              "location",
-              "label"
-            ],
-            "additionalProperties": false
-          }
-        },
-        "algorithmVersion": {
-          "type": "string"
-        },
-        "sources": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "provider": {
-                "type": "string"
-              },
-              "product": {
-                "type": "string"
-              },
-              "version": {
-                "type": [
-                  "string",
-                  "null"
-                ]
-              },
-              "url": {
-                "type": [
-                  "string",
-                  "null"
-                ]
-              }
-            },
-            "required": [
-              "id",
-              "provider",
-              "product",
-              "version",
-              "url"
-            ],
-            "additionalProperties": false
-          }
+        {
+          "type": "number",
+          "minimum": -90,
+          "maximum": 90
         }
-      },
-      "required": [
-        "schemaVersion",
-        "status",
-        "from",
-        "to",
-        "computeMs",
-        "standard",
-        "safe",
-        "scoutPoints",
-        "scienceTargets",
-        "algorithmVersion",
-        "sources"
       ],
-      "additionalProperties": false
+      "additionalItems": false,
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "to": {
+      "type": "array",
+      "items": [
+        {
+          "type": "number",
+          "minimum": -180,
+          "maximum": 180
+        },
+        {
+          "type": "number",
+          "minimum": -90,
+          "maximum": 90
+        }
+      ],
+      "additionalItems": false,
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "computeMs": {
+      "type": "number",
+      "minimum": 0
+    },
+    "standard": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": [
+                "standard",
+                "safe"
+              ]
+            },
+            "geometry": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "const": "LineString"
+                },
+                "coordinates": {
+                  "minItems": 2,
+                  "type": "array",
+                  "items": {
+                    "type": "array",
+                    "items": [
+                      {
+                        "type": "number",
+                        "minimum": -180,
+                        "maximum": 180
+                      },
+                      {
+                        "type": "number",
+                        "minimum": -90,
+                        "maximum": 90
+                      }
+                    ],
+                    "additionalItems": false,
+                    "minItems": 2,
+                    "maxItems": 2
+                  }
+                }
+              },
+              "required": [
+                "type",
+                "coordinates"
+              ],
+              "additionalProperties": false
+            },
+            "distanceKm": {
+              "type": "number",
+              "minimum": 0
+            },
+            "walkMin": {
+              "type": "number",
+              "minimum": 0
+            },
+            "criticalBlindspotPct": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "worstCaseTravPct": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            }
+          },
+          "required": [
+            "kind",
+            "geometry",
+            "distanceKm",
+            "walkMin",
+            "criticalBlindspotPct",
+            "worstCaseTravPct"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "safe": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": [
+                "standard",
+                "safe"
+              ]
+            },
+            "geometry": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "const": "LineString"
+                },
+                "coordinates": {
+                  "minItems": 2,
+                  "type": "array",
+                  "items": {
+                    "type": "array",
+                    "items": [
+                      {
+                        "type": "number",
+                        "minimum": -180,
+                        "maximum": 180
+                      },
+                      {
+                        "type": "number",
+                        "minimum": -90,
+                        "maximum": 90
+                      }
+                    ],
+                    "additionalItems": false,
+                    "minItems": 2,
+                    "maxItems": 2
+                  }
+                }
+              },
+              "required": [
+                "type",
+                "coordinates"
+              ],
+              "additionalProperties": false
+            },
+            "distanceKm": {
+              "type": "number",
+              "minimum": 0
+            },
+            "walkMin": {
+              "type": "number",
+              "minimum": 0
+            },
+            "criticalBlindspotPct": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "worstCaseTravPct": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            }
+          },
+          "required": [
+            "kind",
+            "geometry",
+            "distanceKm",
+            "walkMin",
+            "criticalBlindspotPct",
+            "worstCaseTravPct"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "scoutPoints": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "rank": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991
+          },
+          "location": {
+            "type": "array",
+            "items": [
+              {
+                "type": "number",
+                "minimum": -180,
+                "maximum": 180
+              },
+              {
+                "type": "number",
+                "minimum": -90,
+                "maximum": 90
+              }
+            ],
+            "additionalItems": false,
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "alongM": {
+            "type": "number",
+            "minimum": 0
+          },
+          "blindspotPts": {
+            "type": "number"
+          },
+          "slopeDeg": {
+            "type": "number"
+          },
+          "slopeUncDeg": {
+            "type": "number",
+            "minimum": 0
+          },
+          "worstCaseTravPct": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100
+          }
+        },
+        "required": [
+          "rank",
+          "location",
+          "alongM",
+          "blindspotPts",
+          "slopeDeg",
+          "slopeUncDeg",
+          "worstCaseTravPct"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "scienceTargets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "location": {
+            "type": "array",
+            "items": [
+              {
+                "type": "number",
+                "minimum": -180,
+                "maximum": 180
+              },
+              {
+                "type": "number",
+                "minimum": -90,
+                "maximum": 90
+              }
+            ],
+            "additionalItems": false,
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "label": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "location",
+          "label"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "algorithmVersion": {
+      "type": "string"
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "product": {
+            "type": "string"
+          },
+          "version": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "provider",
+          "product",
+          "version",
+          "url"
+        ],
+        "additionalProperties": false
+      }
     }
   },
-  "$schema": "http://json-schema.org/draft-07/schema#"
+  "required": [
+    "schemaVersion",
+    "status",
+    "from",
+    "to",
+    "computeMs",
+    "standard",
+    "safe",
+    "scoutPoints",
+    "scienceTargets",
+    "algorithmVersion",
+    "sources"
+  ],
+  "additionalProperties": false
 }

@@ -4,7 +4,7 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { zodToJsonSchema } from "zod-to-json-schema";
+import { z } from "zod";
 import { ConditionsResponse, ErrorResponse, RegionResponse, RouteResponse } from "../src/api/schema";
 import { handleMockRequest } from "../src/mocks/server";
 
@@ -18,7 +18,8 @@ const schemas = {
   error: ErrorResponse
 };
 for (const [name, schema] of Object.entries(schemas)) {
-  const json = zodToJsonSchema(schema, { name, $refStrategy: "none" });
+  // Draft-07 so the Python tests (jsonschema.Draft7Validator) read it unchanged.
+  const json = { title: name, ...z.toJSONSchema(schema, { target: "draft-7", io: "output" }) };
   writeFileSync(join(root, `${name}.schema.json`), JSON.stringify(json, null, 2) + "\n");
 }
 

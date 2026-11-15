@@ -1,31 +1,27 @@
 {
-  "$ref": "#/definitions/error",
-  "definitions": {
+  "title": "error",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
     "error": {
       "type": "object",
       "properties": {
-        "error": {
-          "type": "object",
-          "properties": {
-            "code": {
-              "type": "string"
-            },
-            "message": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "code",
-            "message"
-          ],
-          "additionalProperties": false
+        "code": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
         }
       },
       "required": [
-        "error"
+        "code",
+        "message"
       ],
       "additionalProperties": false
     }
   },
-  "$schema": "http://json-schema.org/draft-07/schema#"
+  "required": [
+    "error"
+  ],
+  "additionalProperties": false
 }

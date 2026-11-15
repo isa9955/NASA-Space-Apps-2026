@@ -132,10 +132,13 @@ services, raw rasters, development tools and virtual environments. Production
 smoke tests must repeat the real HTTP and browser checks against Azure. No Azure
 resources were provisioned or deployed here.
 
-**BLOCKER — dependency security:** after the compatible fflate patch update,
-`npm audit --omit=dev` still reports one high advisory in Zod. The full UI audit
-reports eight advisories (3 moderate, 3 high, 2 critical), including development
-tooling. Major Zod/Vite/Vitest upgrades were deferred to avoid unrelated breaking
-changes; review advisories and upgrade/test before exposing deployment tooling
-or publishing. The archived API audit reported zero advisories at installation.
-These are audit snapshots, not an exhaustive security assessment.
+**Dependency security (updated 2026-11-14):** the shipped bundle's high Zod
+advisory (GHSA-mrhx-c7xc-m3w5) is resolved by upgrading to Zod 4.6.7; JSON Schema
+export now uses Zod's built-in `z.toJSONSchema` (draft-07), replacing
+`zod-to-json-schema`. Regenerated contracts keep the same fields, required flags and
+strictness. `npm audit --omit=dev` reports 0 vulnerabilities. The full audit still
+lists 6 advisories (3 moderate, 1 high, 2 critical) in development-only tooling
+(Vite, Vitest, esbuild); they are not in the deployed site but affect local dev
+servers, so a major Vite/Vitest upgrade remains follow-up work. The archived API
+audit reported zero advisories at installation. These are audit snapshots, not an
+exhaustive security assessment.
