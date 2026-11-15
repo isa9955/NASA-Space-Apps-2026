@@ -37,4 +37,20 @@ describe("backend condition display", () => {
     expect(html).toContain("8.1 ± 11.8 deg (estimated)");
     expect(html.match(/Unknown/g)).toHaveLength(3);
   });
+  it("shows radiation precision without changing other terrain values", () => {
+    const data = {
+      elevation: { value: -1388, unit: "m", qualifier: "estimated" },
+      slope: { value: 21.84, uncertainty: 10.23, unit: "°", qualifier: "estimated" },
+      ice: { value: 1495, unit: "m", qualifier: "estimated", kind: "distance" },
+      soil: { value: null, qualifier: null },
+      radiation: { value: 0.694, unit: "mSv/day", qualifier: "estimated" },
+      temperature: { value: null, unit: "°C", qualifier: null },
+    } as ConditionsResponse;
+    const html = renderToStaticMarkup(<ConditionValues state={{ status: "ok", data }} />);
+    expect(html).toContain("0.69 mSv/day (estimated)");
+    expect(html).toContain("-1,388 m (estimated)");
+    expect(html).toContain("21.8 ± 10.2 ° (estimated)");
+    expect(html).toContain("1,495 m (estimated)");
+    expect(html.match(/Unknown/g)).toHaveLength(2);
+  });
 });

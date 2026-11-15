@@ -91,6 +91,39 @@ SOURCES = [
     },
 ]
 
+GALE_REFERENCE_DOSE_MSV_DAY = 0.64
+GALE_REFERENCE_ELEVATION_M = -4400.0
+MARS_SCALE_HEIGHT_M = 11100.0
+ASSUMED_PRESSURE_EXPONENT = 0.3
+RADIATION_MODEL_SOURCE = {
+    "id": "radiation-elevation-model",
+    "provider": "Experimental model; reference: Hassler et al. 2014",
+    "product": (
+        "Elevation-only estimate: Gale baseline 0.64 mSv/day at -4400 m; "
+        "scale height 11100 m; pressure exponent 0.3 (assumed). "
+        "Day = 86400 s. Local terrain shielding and solar particle events excluded; "
+        "accuracy at this site has not been validated."
+    ),
+    "version": "elevation-only-v1",
+    "url": "https://doi.org/10.1126/science.1244797",
+}
+
+
+def estimate_radiation_msv_day(elevation_m: float) -> float | None:
+    """Experimental elevation scaling of the historical Gale RAD reference.
+
+    This is not a measured local dose or a calibrated pressure/transport model.
+    Solar multiplier is 1; local terrain shielding and solar events are excluded.
+    """
+    if not math.isfinite(elevation_m):
+        return None
+    exponent = ASSUMED_PRESSURE_EXPONENT * (elevation_m - GALE_REFERENCE_ELEVATION_M) / MARS_SCALE_HEIGHT_M
+    try:
+        dose = GALE_REFERENCE_DOSE_MSV_DAY * math.exp(exponent)
+    except OverflowError:
+        return None
+    return dose if math.isfinite(dose) and dose > 0 else None
+
 
 class ApiError(Exception):
     def __init__(self, status, code, message):
@@ -239,6 +272,7 @@ class Site:
     def conditions(self, lon, lat):
         r, c = self.cell_of(lon, lat)
         g = self.g
+        radiation = estimate_radiation_msv_day(float(g["elev"][r, c]))
         return {
             "schemaVersion": SCHEMA_VERSION,
             "location": [lon, lat],
@@ -252,9 +286,13 @@ class Site:
             },
             "soil": {"value": None, "qualifier": None},
             "ice": {"kind": "distance", "value": round(float(self.dist_ice_m[r, c])), "unit": "m", "qualifier": "estimated"},
-            "radiation": {"value": None, "unit": "mSv/day", "qualifier": None},
+            "radiation": {
+                "value": round(radiation, 3) if radiation is not None else None,
+                "unit": "mSv/day",
+                "qualifier": "estimated" if radiation is not None else None,
+            },
             "temperature": {"value": None, "unit": "°C", "qualifier": None},
-            "sources": SOURCES,
+            "sources": [*SOURCES, RADIATION_MODEL_SOURCE],
         }
 
     def route(self, a, b):

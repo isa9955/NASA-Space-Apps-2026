@@ -14,16 +14,16 @@ export function ConditionValues({
     unit: string;
     qualifier: string | null;
     uncertainty?: number | null;
-  }) =>
+  }, digits = 1) =>
     v.value == null
       ? "Unknown"
-      : `${v.value.toLocaleString("en-US", { maximumFractionDigits: 1 })}${v.uncertainty == null ? "" : ` ± ${v.uncertainty.toFixed(1)}`} ${v.unit}${v.qualifier ? ` (${v.qualifier})` : ""}`;
+      : `${v.value.toLocaleString("en-US", { maximumFractionDigits: digits })}${v.uncertainty == null ? "" : ` ± ${v.uncertainty.toFixed(1)}`} ${v.unit}${v.qualifier ? ` (${v.qualifier})` : ""}`;
   const values = [
     ["Elevation", number(c.elevation)],
     ["Slope ± uncertainty", number(c.slope)],
     ["To draft landform", number(c.ice)],
     ["Soil", c.soil.value || "Unknown"],
-    ["Radiation", number(c.radiation)],
+    ["Radiation", number(c.radiation, 2)],
     ["Mean temperature", number(c.temperature)],
   ];
   return (

@@ -46,6 +46,17 @@ def test_region_from_bundle(handler):
     assert len(body["layers"]) == 6
 
 
+def test_conditions_include_estimated_radiation_from_bundle(handler):
+    res = call(handler, "conditions", "lon=30.16580&lat=40.80661")
+    assert res.status_code == 200
+    body = json.loads(res.get_body())
+    assert body["radiation"] == {"value": 0.694, "unit": "mSv/day", "qualifier": "estimated"}
+    assert body["elevation"]["value"] == -1388
+    assert body["soil"]["value"] is None
+    assert body["temperature"]["value"] is None
+    assert any(s["id"] == "radiation-elevation-model" for s in body["sources"])
+
+
 def test_assets_are_cacheable_pngs(handler):
     for path in ("assets/basemap.png", "assets/mask-habitat.png"):
         res = call(handler, path)

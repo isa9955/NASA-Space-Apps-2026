@@ -1007,17 +1007,26 @@ export function Explorer() {
                 not verified safety assessments or confirmed discoveries.
               </p>
               {sources}
+              <p>
+                Radiation is an experimental elevation-based estimate referenced
+                to Curiosity RAD measurements at Gale crater. The pressure
+                correction is assumed; local terrain shielding and solar particle
+                events are excluded. Accuracy at this site has not been validated.{" "}
+                <a href="https://doi.org/10.1126/science.1244797" target="_blank" rel="noreferrer">
+                  Hassler et al. 2014
+                </a>
+              </p>
               <div className="caveat">
                 <Info size={17} />
                 <span>
-                  Radiation, soil, temperature, overall habitability, and
+                  Soil, temperature, overall habitability, and
                   resource accessibility remain Unknown. Draft ice landforms
                   are not confirmed water.
                 </span>
               </div>
             </details>
             <p className="small muted">
-              Measurements marked estimated are modeled; Unknown means the
+              Values marked estimated are modeled; Unknown means the
               source does not provide that value.
             </p>
           </aside>

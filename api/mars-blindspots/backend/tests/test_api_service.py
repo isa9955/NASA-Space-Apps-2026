@@ -2,6 +2,7 @@
 and must reproduce the backend handoff reference values."""
 import io
 import json
+import math
 import os
 import sys
 
@@ -134,13 +135,58 @@ def test_real_evidence_is_qualified_and_solar_inconsistency_is_visible(region):
     point = region["demoTraverse"]["from"]
     conditions = site.conditions(*point)
     assert conditions["slope"]["qualifier"] == "estimated"
-    for key in ("soil", "radiation", "temperature"):
+    for key in ("soil", "temperature"):
         assert conditions[key]["value"] is None
         assert conditions[key]["qualifier"] is None
+    assert conditions["radiation"]["qualifier"] == "estimated"
     solar = next(layer for layer in region["layers"] if layer["id"] == "solar")
     assert "4,324 robust cells" in solar["rule"]
     assert "not a survival fraction" in solar["rule"]
     assert "DRAFT" in next(source for source in region["sources"] if source["id"] == "ice-interpretation")["product"]
+
+
+@pytest.mark.parametrize("elevation,expected", [(-4400, 0.64), (-1388, 0.694278781)])
+def test_radiation_reference_and_elevation_scaling(elevation, expected):
+    assert api_service.estimate_radiation_msv_day(elevation) == pytest.approx(expected, abs=0.000001)
+
+
+@pytest.mark.parametrize("elevation", [math.nan, math.inf, -math.inf, 1e308, -1e308])
+def test_radiation_unrepresentable_inputs_remain_unknown(elevation):
+    assert api_service.estimate_radiation_msv_day(elevation) is None
+
+
+def test_radiation_is_finite_and_increases_across_actual_site_elevations():
+    elevations = api_service.get_site().g["elev"]
+    doses = [api_service.estimate_radiation_msv_day(float(z))
+             for z in (elevations.min(), elevations.mean(), elevations.max())]
+    assert all(d is not None and math.isfinite(d) and d > 0 for d in doses)
+    assert doses[0] < doses[1] < doses[2]
+
+
+@pytest.mark.parametrize("row,col,expected", [
+    (0, 0, 0.697), (0, 399, 0.698), (799, 0, 0.675),
+    (799, 399, 0.685), (600, 100, 0.679), (150, 300, 0.693),
+])
+def test_conditions_radiation_matches_selected_terrain_cell(row, col, expected):
+    site = api_service.get_site()
+    lon, lat = site.lonlat_of(row, col)
+    status, _, body = get("/api/conditions", f"lon={lon}&lat={lat}")
+    assert status == 200
+    validate(body, "conditions")
+    assert body["radiation"] == {"value": expected, "unit": "mSv/day", "qualifier": "estimated"}
+    source = next(s for s in body["sources"] if s["id"] == "radiation-elevation-model")
+    assert source["url"] == "https://doi.org/10.1126/science.1244797"
+    assert "assumed" in source["product"]
+    assert "radiation-elevation-model" not in {s["id"] for s in site.region()["sources"]}
+
+
+def test_conditions_still_load_when_radiation_estimate_is_unavailable(monkeypatch):
+    site = api_service.get_site()
+    monkeypatch.setattr(api_service, "estimate_radiation_msv_day", lambda _: None)
+    conditions = site.conditions(*site.lonlat_of(600, 100))
+    assert conditions["radiation"] == {"value": None, "unit": "mSv/day", "qualifier": None}
+    assert conditions["elevation"]["value"] == -2211
+    assert conditions["slope"]["value"] is not None
 
 
 def test_real_api_rejects_synthetic_metadata(tmp_path, region):
