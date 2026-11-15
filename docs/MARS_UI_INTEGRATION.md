@@ -1,7 +1,7 @@
 # Mars UI integration validation
 
-Branch: `test/mars-ui-integration`  
-Base: `origin/main` at `88d55435efb1fed092d2994a89c89c830f76e662`  
+Branch: `test/mars-ui-integration`
+Base: `origin/main` at `88d55435efb1fed092d2994a89c89c830f76e662`
 Integrated UI commits: `feature/mars-intro` (`98855ce`) and
 `feature/mars-3d-ui` (`514debf`).
 
