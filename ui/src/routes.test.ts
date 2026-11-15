@@ -8,7 +8,7 @@ describe("resolveScreenPath", () => {
     expect(resolveScreenPath("/explorer")).toBe("explorer");
   });
 
-  it("returns the welcome screen for an unknown path", () => {
-    expect(resolveScreenPath("/unknown")).toBe("welcome");
+  it("returns the not-found screen for an unknown path", () => {
+    expect(resolveScreenPath("/unknown")).toBe("not-found");
   });
 });

@@ -1,0 +1,44 @@
+.not-found {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 32px;
+  text-align: center;
+}
+
+.not-found-code {
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+}
+
+.not-found h1 {
+  font-size: clamp(28px, 5vw, 44px);
+  line-height: 1.1;
+}
+
+.not-found-copy {
+  color: var(--muted);
+}
+
+.not-found nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.not-found a {
+  color: var(--text);
+  text-underline-offset: 4px;
+}
+
+.not-found a:hover,
+.not-found a:focus-visible {
+  color: var(--accent);
+}

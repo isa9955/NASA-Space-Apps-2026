@@ -12,7 +12,9 @@ async function bootstrap() {
     ? await import("./landing/EditorialLanding")
     : screen === "overview"
       ? await import("./explorer/Globe").then(({ Globe }) => ({ default: Globe }))
-        : await import("./App");
+      : screen === "explorer"
+        ? await import("./App")
+        : await import("./NotFound");
 
   createRoot(document.getElementById("root")!).render(
     <StrictMode>

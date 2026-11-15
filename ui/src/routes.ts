@@ -1,7 +1,8 @@
-export type ScreenPath = "welcome" | "overview" | "explorer";
+export type ScreenPath = "welcome" | "overview" | "explorer" | "not-found";
 
 export function resolveScreenPath(pathname: string): ScreenPath {
   if (pathname === "/overview") return "overview";
   if (pathname === "/explorer") return "explorer";
-  return "welcome";
+  if (pathname === "/") return "welcome";
+  return "not-found";
 }
