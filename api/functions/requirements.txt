@@ -1,0 +1,6 @@
+# Runtime dependencies only (installed by Azure on Linux, Python 3.11).
+# Offline processing deps (rasterio, matplotlib) are not needed to serve the API.
+azure-functions>=1.20,<2
+numpy>=1.26,<3
+scipy>=1.11,<2
+pillow>=10,<13

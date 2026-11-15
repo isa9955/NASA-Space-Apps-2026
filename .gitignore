@@ -26,3 +26,6 @@ archive/arcadia/api/local.settings.json
 .DS_Store
 Thumbs.db
 .vscode/
+
+# Azure Functions bundle (built by api/functions/build.py)
+api/functions/dist/

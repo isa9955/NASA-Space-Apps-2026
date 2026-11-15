@@ -58,5 +58,8 @@ stored masks/areas were preserved and the solar percentage is not a survival
 fraction. All routes are provisional, uncertainty is model-dependent and overall
 habitability remains Unknown. Radiation, soil and temperature values remain null.
 
-Azure Functions Python wrapping, SWA/CI configuration and security/runtime
-follow-up remain pending. The local development server is not an Azure deployment.
+**Deployment:** one Azure Static Web App (Free plan) serves `ui/` and runs the
+Python API as managed Azure Functions (`api/functions/`, Python 3.11). GitHub
+Actions tests and deploys on every push to `main`. One-time Azure setup and the
+post-deploy smoke test: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md). Not yet
+deployed: the Azure resource and its deployment token still need to be created.
