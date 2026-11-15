@@ -36,7 +36,7 @@ export default function EditorialLanding() {
     setLeaving(true);
     navigationTimer.current = window.setTimeout(() => {
       navigationTimer.current = undefined;
-      window.location.assign('/explorer');
+      window.location.assign('/overview');
     }, 520);
   };
 
@@ -59,7 +59,7 @@ export default function EditorialLanding() {
             <p className="editorial-tagline editorial-reveal" style={delay(700)}>Your survival guide to the Red Planet.</p>
             <p className="editorial-description editorial-reveal" style={delay(820)}>Explore Martian terrain, understand environmental challenges, and investigate potential sites for future human exploration.</p>
             <div className="editorial-action editorial-reveal" style={delay(960)}>
-              <a href="/explorer" onClick={enter}>Enter the Explorer<ArrowRight aria-hidden="true" size={16} /></a>
+              <a href="/overview" onClick={enter}>Enter the Explorer<ArrowRight aria-hidden="true" size={16} /></a>
             </div>
           </div>
         </main>

@@ -290,6 +290,9 @@ export function Explorer() {
   );
   return (
     <main className="app">
+      <a className="return-globe" href="/overview">
+        ← Mars overview
+      </a>
       <header className="masthead">
         <Mountain size={23} className="brand-mark" />
         <h1>

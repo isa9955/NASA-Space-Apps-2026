@@ -2,13 +2,17 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "leaflet/dist/leaflet.css";
 import "./styles.css";
+import { resolveScreenPath } from "./routes";
 
-// Native links preserve refresh, browser history and open-in-new-tab behavior.
-// Keep the map and landing bundles separate; neither screen mounts the other.
+// Native routes preserve refresh, browser history and open-in-new-tab behavior.
+// Load each screen separately so the landing does not load the scientific explorer.
 async function bootstrap() {
-  const { default: Screen } = window.location.pathname === "/"
+  const screen = resolveScreenPath(window.location.pathname);
+  const { default: Screen } = screen === "welcome"
     ? await import("./landing/EditorialLanding")
-    : await import("./App");
+    : screen === "overview"
+      ? await import("./explorer/Globe").then(({ Globe }) => ({ default: Globe }))
+        : await import("./App");
 
   createRoot(document.getElementById("root")!).render(
     <StrictMode>

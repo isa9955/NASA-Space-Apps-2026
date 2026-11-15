@@ -52,8 +52,12 @@
 - Create: `ui/src/routes.ts`
 - Create: `ui/src/routes.test.ts`
 - Modify: `ui/src/main.tsx`
+- Modify: `ui/src/App.tsx`
 - Modify: `ui/src/landing/EditorialLanding.tsx`
 - Modify: `ui/src/explorer/Globe.jsx`
+- Modify: `ui/src/explorer/Explorer.jsx`
+- Modify: `ui/src/explorer/explorer.css`
+- Modify: `ui/src/explorer/globe.css`
 
 **Interfaces:**
 - Consumes: `EditorialLanding` from the intro branch, and `Globe` / `Explorer` from the 3D branch.
@@ -61,14 +65,18 @@
 
 - [ ] Add `resolveScreenPath` tests for `/`, `/overview`, `/explorer`, and unknown paths; run `npm --prefix ui test -- src/routes.test.ts` and observe the missing-module failure.
 - [ ] Implement the path resolver and dynamic screen imports in `main.tsx`.
-- [ ] Change the Welcome CTA to `/overview`; change both Globe site actions to native links to `/explorer`.
+- [ ] Change the Welcome CTA to `/overview`; change both Globe site actions to native links to `/explorer`; replace the obsolete state-switching App with an Explorer wrapper and add a native `/overview` link in the Habitat Finder.
 - [ ] Re-run the focused test, then `npm --prefix ui test`, `npm --prefix ui run typecheck`, and `npm --prefix ui run build`.
 - [ ] Commit as `feat: connect welcome overview and habitat finder routes`.
 
 ### Task 3: Validate the full journey and record results
 
 **Files:**
-- Modify: `docs/MARS_UI_INTEGRATION.md` (validation record and local launch commands).
+- Modify: `.gitignore` (ignore Playwright CLI snapshots created during browser validation).
+- Modify: `README.md` (describe the three-page app accurately).
+- Modify: `docs/EDITORIAL_LANDING.md` (correct its final integrated route description).
+- Modify: `docs/MARS_3D_UI_INTEGRATION.md` (append the final three-page route wiring).
+- Create: `docs/MARS_UI_INTEGRATION.md` (validation record and local launch commands).
 
 **Interfaces:**
 - Consumes: final three-route build and unchanged backend/API from Tasks 1–2.
@@ -76,6 +84,7 @@
 
 - [ ] Run frontend unit/contract tests, typecheck, and production build.
 - [ ] Run backend tests for `api/mars-blindspots` and `api/functions`.
+- [ ] Build the Azure Functions API package into an isolated ignored validation directory.
 - [ ] Start the real API and production preview; run `npm --prefix ui run test:live`.
 - [ ] Use Playwright on desktop to check the three links, direct loads, refresh, browser back/forward, globe rendering, Habitat Finder features, loading/error/retry, and console errors; also check reduced motion and a globe texture/WebGL failure.
 - [ ] Record exact commands/results, launch commands, local preview URL, and any environment blockers in `docs/MARS_UI_INTEGRATION.md`.

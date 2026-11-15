@@ -59,6 +59,26 @@ summary:focus-visible {
 .primary:hover {
   background: #e07a33 !important;
 }
+.return-globe {
+  position: absolute;
+  top: 70px;
+  right: 24px;
+  z-index: 40;
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  color: inherit;
+  background: #202726ee;
+  font-size: 11px;
+  text-decoration: none;
+}
+.return-globe:hover {
+  background: #ffffff0d;
+}
+.return-globe:focus-visible {
+  outline: 2px solid #f0ac67;
+  outline-offset: 3px;
+}
 .active {
   background: #b65a24;
   border-color: #d87535;

@@ -1,17 +1,34 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import "@fontsource/geist/latin-400.css";
+import "@fontsource/geist/latin-500.css";
 import "./globe.css";
 
-export function Globe({ onEnter }) {
+export function Globe() {
   const host = useRef(null),
     pin = useRef(null),
     reset = useRef(null);
   const [error, setError] = useState("");
+  const [webglUnavailable, setWebglUnavailable] = useState(false);
   useEffect(() => {
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    const canvas = document.createElement("canvas");
+    const context = canvas.getContext("webgl2", { antialias: true });
+    if (!context) {
+      setWebglUnavailable(true);
+      setError("Interactive rotation is unavailable here. The site explorer is still available.");
+      return;
+    }
+    let renderer;
+    try {
+      renderer = new THREE.WebGLRenderer({ antialias: true, canvas, context });
+    } catch {
+      setWebglUnavailable(true);
+      setError("Interactive rotation is unavailable here. The site explorer is still available.");
+      return;
+    }
     renderer.setClearColor("#111718");
     renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
     host.current.appendChild(renderer.domElement);
@@ -113,9 +130,10 @@ export function Globe({ onEnter }) {
         <span>PLANET OVERVIEW · DESKTOP PROTOTYPE</span>
       </header>
       <div className="globe-stage" ref={host}>
-        <button ref={pin} className="site-pin" onClick={onEnter}>
+        {webglUnavailable && <div className="globe-static" role="img" aria-label="Illustrative global Mars surface map; rotation is unavailable." />}
+        <a ref={pin} className="site-pin" href="/explorer">
           Deuteronilus Mensae <span>Explore site →</span>
-        </button>
+        </a>
       </div>
       <aside className="globe-card">
         <span className="globe-eyebrow">ONE PLANET. ONE DETAILED SITE.</span>
@@ -133,9 +151,9 @@ export function Globe({ onEnter }) {
           <span>~40.74° N · 30.18° E</span>
           <span>4 × 8 km detailed terrain coverage</span>
         </div>
-        <button className="primary" onClick={onEnter}>
+        <a className="primary overview-enter" href="/explorer">
           Open detailed explorer →
-        </button>
+        </a>
         <button onClick={() => reset.current?.()}>Locate site</button>
         <p className="globe-limit">
           Global imagery is visual context only. Scientific tools are available
