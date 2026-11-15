@@ -239,6 +239,7 @@ export default function App() {
           <>
             <ZonesPanel
               layers={r.layers}
+              sources={r.sources}
               on={layersOn}
               failed={maskFailed}
               onToggle={(id) => setLayersOn((s) => ({ ...s, [id]: !s[id] }))}

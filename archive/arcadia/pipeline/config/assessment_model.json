@@ -1,6 +1,6 @@
 {
   "version": "screening-1.0.0",
-  "confidenceVersion": "evidence-rules-1.0.0",
+  "confidenceVersion": "evidence-rules-1.1.0",
   "weights": {"terrain": 0.5, "water": 0.5},
   "terrainZeroScoreSlopeDeg": 10.0,
   "confidence": {"highCountMinimum": 10, "highResolutionMaximumMeters": 100, "mediumResolutionMaximumMeters": 1000},

@@ -4,7 +4,9 @@
   "private": true,
   "main": "dist/src/index.js",
   "scripts": {
+    "prebuild": "node scripts/build-paths.cjs dist",
     "build": "tsc -p tsconfig.json && node scripts/package-assessments.cjs",
+    "package:azure": "npm run build && node scripts/package-azure.cjs",
     "start": "npm run build && func start",
     "test": "npm run build && tsx --test test/*.test.ts"
   },

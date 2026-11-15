@@ -88,8 +88,9 @@ export const ConditionsResponse = z.object({
   slope: NumValue,
   soil: z.object({ value: z.enum(["bedrock", "mixed", "loose-sand"]).nullable(), qualifier: Qualifier }),
   /**
-   * kind "consistency": ice consistency in % (0–100).
-   * kind "distance": metres to the nearest mapped ice-rich ground (0 = on it).
+   * kind "consistency": legacy mock representation; never an ice probability.
+   * The real API uses "distance": metres to a draft interpreted landform,
+   * with 0 indicating polygon membership, not confirmed ice.
    */
   ice: z.object({
     kind: z.enum(["consistency", "distance"]),
@@ -111,7 +112,7 @@ export const RouteVariant = z.object({
   walkMin: z.number().nonnegative(),
   /** % of the path (cells along it) where traversability could drop by more than 50 points. */
   criticalBlindspotPct: z.number().min(0).max(100),
-  /** Length-weighted mean worst-case traversability along the path (0–100). */
+  /** Cell-mean modeled worst-case traversability along the path (0–100), not safety probability. */
   worstCaseTravPct: z.number().min(0).max(100)
 });
 

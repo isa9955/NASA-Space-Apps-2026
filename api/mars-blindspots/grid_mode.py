@@ -85,14 +85,6 @@ def rle_encode(mask):
     return [int(flat[0])] + np.diff(bounds).astype(int).tolist()
 
 
-def rle_decode(rle, shape):
-    v, out = bool(rle[0]), []
-    for n in rle[1:]:
-        out.append(np.full(n, v))
-        v = not v
-    return np.concatenate(out).reshape(shape) if out else np.zeros(shape, bool)
-
-
 def quantize_u16(a, lo, hi):
     """Encode a float grid as base64 little-endian uint16 with value = lo + q·(hi−lo)/65535."""
     if not np.all(np.isfinite(a)):

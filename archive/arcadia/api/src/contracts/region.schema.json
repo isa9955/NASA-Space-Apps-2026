@@ -1,0 +1,631 @@
+{
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "regionId",
+    "routingVersion",
+    "overallHabitability",
+    "coordinateReference",
+    "bounds",
+    "grid",
+    "inputProvenance",
+    "sourceVerification",
+    "assumptions",
+    "scales",
+    "routes",
+    "scoutPoints",
+    "scienceCandidates",
+    "zoneSummaries",
+    "warnings"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "deuteronilus-analysis/1.0.0"
+    },
+    "regionId": {
+      "const": "deuteronilus"
+    },
+    "routingVersion": {
+      "const": "blindspots-astar-1.1.0"
+    },
+    "overallHabitability": {
+      "const": "unknown"
+    },
+    "coordinateReference": {
+      "type": "object",
+      "required": [
+        "body",
+        "latitudeType",
+        "longitudeDirection",
+        "longitudeRange",
+        "projectionRadiusMeters",
+        "crsWkt"
+      ],
+      "properties": {
+        "body": {
+          "const": "Mars"
+        },
+        "latitudeType": {
+          "const": "planetocentric"
+        },
+        "longitudeDirection": {
+          "const": "positive east"
+        },
+        "longitudeRange": {
+          "const": "0 to 360 degrees"
+        },
+        "projectionRadiusMeters": {
+          "type": "number",
+          "minimum": 3387887.65,
+          "maximum": 3387887.67
+        },
+        "crsWkt": {
+          "type": "string",
+          "minLength": 20
+        }
+      },
+      "additionalProperties": false
+    },
+    "bounds": {
+      "type": "object",
+      "required": [
+        "west",
+        "east",
+        "south",
+        "north"
+      ],
+      "properties": {
+        "west": {
+          "type": "number"
+        },
+        "east": {
+          "type": "number"
+        },
+        "south": {
+          "type": "number"
+        },
+        "north": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false
+    },
+    "grid": {
+      "type": "object",
+      "required": [
+        "rows",
+        "cols",
+        "cellMeters",
+        "rowZero"
+      ],
+      "properties": {
+        "rows": {
+          "const": 800
+        },
+        "cols": {
+          "const": 400
+        },
+        "cellMeters": {
+          "type": "number",
+          "minimum": 10,
+          "maximum": 10.1
+        },
+        "rowZero": {
+          "const": "north"
+        }
+      },
+      "additionalProperties": false
+    },
+    "inputProvenance": {
+      "type": "object",
+      "required": [
+        "metadataSha256",
+        "gridSha256",
+        "zonesSha256",
+        "routingSha256",
+        "sourceAuditSha256"
+      ],
+      "properties": {
+        "metadataSha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "gridSha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "zonesSha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "routingSha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "sourceAuditSha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "sourceVerification": {
+      "type": "object",
+      "properties": {
+        "sourceUrl": {
+          "type": "string",
+          "minLength": 1
+        },
+        "productId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "datasetId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "credit": {
+          "type": "string",
+          "minLength": 1
+        },
+        "valueUnit": {
+          "type": "string",
+          "minLength": 1
+        },
+        "pixelEncoding": {
+          "type": "string",
+          "minLength": 1
+        },
+        "missingConstantHex": {
+          "type": "string",
+          "minLength": 1
+        },
+        "rawSha256Status": {
+          "type": "string",
+          "minLength": 1
+        },
+        "verificationScope": {
+          "type": "string",
+          "minLength": 1
+        },
+        "crsWkt": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reportedRawSha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "sourceLabelPrefixSha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "processedGridSha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "processedMetadataSha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "latitudeType": {
+          "const": "planetocentric"
+        },
+        "longitudeDirection": {
+          "const": "positive east"
+        },
+        "transform": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 6,
+          "maxItems": 6
+        },
+        "shape": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "nodata": {
+          "type": "number"
+        },
+        "pixelSizeMeters": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "samples": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "properties": {
+              "cell": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "minItems": 2,
+                "maxItems": 2
+              },
+              "sourceByteRange": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "minItems": 2,
+                "maxItems": 2
+              },
+              "bytesSha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "rawBlockMeanElevationMeters": {
+                "type": "number"
+              },
+              "exportedRoundedElevationMeters": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "cell",
+              "sourceByteRange",
+              "bytesSha256",
+              "rawBlockMeanElevationMeters",
+              "exportedRoundedElevationMeters"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "sourceUrl",
+        "productId",
+        "datasetId",
+        "credit",
+        "valueUnit",
+        "pixelEncoding",
+        "missingConstantHex",
+        "rawSha256Status",
+        "verificationScope",
+        "crsWkt",
+        "reportedRawSha256",
+        "sourceLabelPrefixSha256",
+        "processedGridSha256",
+        "processedMetadataSha256",
+        "latitudeType",
+        "longitudeDirection",
+        "transform",
+        "shape",
+        "nodata",
+        "pixelSizeMeters",
+        "samples"
+      ],
+      "additionalProperties": true
+    },
+    "assumptions": {
+      "type": "object"
+    },
+    "scales": {
+      "type": "object"
+    },
+    "routes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "type",
+          "geometry",
+          "properties"
+        ],
+        "properties": {
+          "type": {
+            "const": "Feature"
+          },
+          "geometry": {
+            "anyOf": [
+              {
+                "type": "object",
+                "required": [
+                  "type",
+                  "coordinates"
+                ],
+                "properties": {
+                  "type": {
+                    "const": "LineString"
+                  },
+                  "coordinates": {
+                    "type": "array",
+                    "items": {
+                      "type": "array",
+                      "prefixItems": [
+                        {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 360
+                        },
+                        {
+                          "type": "number",
+                          "minimum": -90,
+                          "maximum": 90
+                        }
+                      ],
+                      "items": false,
+                      "minItems": 2,
+                      "maxItems": 2
+                    },
+                    "minItems": 2
+                  }
+                },
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "properties": {
+            "type": "object",
+            "required": [
+              "mode",
+              "status",
+              "startCell",
+              "endCell",
+              "cells",
+              "metrics"
+            ],
+            "properties": {
+              "mode": {
+                "enum": [
+                  "standard",
+                  "uncertainty-aware"
+                ]
+              },
+              "status": {
+                "enum": [
+                  "provisional",
+                  "unavailable"
+                ]
+              },
+              "startCell": {
+                "type": "array",
+                "prefixItems": [
+                  {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 799
+                  },
+                  {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 399
+                  }
+                ],
+                "items": false,
+                "minItems": 2,
+                "maxItems": 2
+              },
+              "endCell": {
+                "type": "array",
+                "prefixItems": [
+                  {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 799
+                  },
+                  {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 399
+                  }
+                ],
+                "items": false,
+                "minItems": 2,
+                "maxItems": 2
+              },
+              "cells": {
+                "type": "array",
+                "items": {
+                  "type": "array",
+                  "prefixItems": [
+                    {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 799
+                    },
+                    {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 399
+                    }
+                  ],
+                  "items": false,
+                  "minItems": 2,
+                  "maxItems": 2
+                }
+              },
+              "metrics": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "required": [
+                      "distance_m",
+                      "time_min",
+                      "uncertain_pct",
+                      "worst_min",
+                      "worst_mean",
+                      "mean_gap"
+                    ],
+                    "properties": {
+                      "distance_m": {
+                        "type": "number",
+                        "minimum": 0
+                      },
+                      "time_min": {
+                        "type": "number",
+                        "minimum": 0
+                      },
+                      "uncertain_pct": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 100
+                      },
+                      "worst_min": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1
+                      },
+                      "worst_mean": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1
+                      },
+                      "mean_gap": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "properties": {
+                  "properties": {
+                    "status": {
+                      "const": "unavailable"
+                    }
+                  },
+                  "required": [
+                    "status"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "geometry": {
+                  "type": "null"
+                },
+                "properties": {
+                  "properties": {
+                    "metrics": {
+                      "type": "null"
+                    },
+                    "cells": {
+                      "maxItems": 0,
+                      "type": "array"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "geometry": {
+                  "type": "object"
+                },
+                "properties": {
+                  "properties": {
+                    "metrics": {
+                      "type": "object"
+                    },
+                    "cells": {
+                      "minItems": 2,
+                      "type": "array"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "scoutPoints": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "scienceCandidates": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "zoneSummaries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "label",
+          "nominalAreaSquareMeters",
+          "robustAreaSquareMeters",
+          "interpretation"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "nominalAreaSquareMeters": {
+            "type": "number",
+            "minimum": 0
+          },
+          "robustAreaSquareMeters": {
+            "type": "number",
+            "minimum": 0
+          },
+          "interpretation": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 6,
+      "maxItems": 6
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 9
+    }
+  },
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

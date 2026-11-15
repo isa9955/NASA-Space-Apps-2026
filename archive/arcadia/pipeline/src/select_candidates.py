@@ -55,14 +55,14 @@ def main():
         "limitation": "Terrain-only discovery with regional MOLA data, not evidence of habitability or site safety."
     }
     config_path = ROOT / "config/selected_sites.json"
-    config_path.write_text(json.dumps(selected_config, indent=2) + "\n", encoding="utf-8")
+    config_path.write_text(json.dumps(selected_config, indent=2) + "\n", encoding="utf-8", newline="\n")
     # Reuse the downloaded, aligned window; do not re-fetch or alter slope/scoring logic.
     document = build_site_inputs(config_path, ROOT / "site_inputs.json", ROOT / "data/selection",
                                 swim_retrieval_note="SWIM remains unavailable; candidate discovery uses MOLA terrain only.",
                                 mola_window=window)
     document["sources"]["mola"]["candidateSelection"] = report
-    (ROOT / "site_inputs.json").write_text(json.dumps(document, indent=2, allow_nan=False) + "\n", encoding="utf-8")
-    (ROOT / "candidate_selection.json").write_text(json.dumps(report, indent=2, allow_nan=False) + "\n", encoding="utf-8")
+    (ROOT / "site_inputs.json").write_text(json.dumps(document, indent=2, allow_nan=False) + "\n", encoding="utf-8", newline="\n")
+    (ROOT / "candidate_selection.json").write_text(json.dumps(report, indent=2, allow_nan=False) + "\n", encoding="utf-8", newline="\n")
     print(f"Selected two of {len(candidates)} eligible cells; reference preserved; {window.source_bytes} source bytes fetched.")
 
 

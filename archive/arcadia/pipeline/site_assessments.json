@@ -3,7 +3,7 @@
   "scoringVersion": "screening-1.0.0",
   "model": {
     "version": "screening-1.0.0",
-    "confidenceVersion": "evidence-rules-1.0.0",
+    "confidenceVersion": "evidence-rules-1.1.0",
     "weights": {
       "terrain": 0.5,
       "water": 0.5
@@ -261,7 +261,7 @@
         "status": "insufficient-evidence",
         "level": "unknown",
         "probability": null,
-        "algorithmVersion": "evidence-rules-1.0.0",
+        "algorithmVersion": "evidence-rules-1.1.0",
         "coverage": {
           "supportedFactors": [
             "terrain"
@@ -297,7 +297,8 @@
           }
         },
         "rationale": [
-          "Overall evidence support is the weakest required factor; independent of factor scores."
+          "Overall habitat evidence remains Unknown: site-specific radiation, shielding, thermal, geotechnical and local resource validation are unresolved, even if terrain and water screening factors are available.",
+          "Factor confidence is independent of suitability; SWIM consistency is not a probability of habitability or confirmed resource accessibility."
         ]
       },
       "radiationReview": {
@@ -562,7 +563,7 @@
         "status": "insufficient-evidence",
         "level": "unknown",
         "probability": null,
-        "algorithmVersion": "evidence-rules-1.0.0",
+        "algorithmVersion": "evidence-rules-1.1.0",
         "coverage": {
           "supportedFactors": [
             "terrain"
@@ -598,7 +599,8 @@
           }
         },
         "rationale": [
-          "Overall evidence support is the weakest required factor; independent of factor scores."
+          "Overall habitat evidence remains Unknown: site-specific radiation, shielding, thermal, geotechnical and local resource validation are unresolved, even if terrain and water screening factors are available.",
+          "Factor confidence is independent of suitability; SWIM consistency is not a probability of habitability or confirmed resource accessibility."
         ]
       },
       "radiationReview": {
@@ -863,7 +865,7 @@
         "status": "insufficient-evidence",
         "level": "unknown",
         "probability": null,
-        "algorithmVersion": "evidence-rules-1.0.0",
+        "algorithmVersion": "evidence-rules-1.1.0",
         "coverage": {
           "supportedFactors": [
             "terrain"
@@ -899,7 +901,8 @@
           }
         },
         "rationale": [
-          "Overall evidence support is the weakest required factor; independent of factor scores."
+          "Overall habitat evidence remains Unknown: site-specific radiation, shielding, thermal, geotechnical and local resource validation are unresolved, even if terrain and water screening factors are available.",
+          "Factor confidence is independent of suitability; SWIM consistency is not a probability of habitability or confirmed resource accessibility."
         ]
       },
       "radiationReview": {
@@ -1071,6 +1074,6 @@
   ],
   "inputProvenance": {
     "file": "site_inputs.json",
-    "sha256": "70766a7582e15c5170a7cf1074427fd33bb123fcc659f584e3be6090246775c2"
+    "sha256": "e3d95c444b828a29f24640713c0aee33b62f7b2dbd9eee9d4982b16516db2c1b"
   }
 }

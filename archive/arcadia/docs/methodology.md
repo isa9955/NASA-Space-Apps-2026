@@ -1,5 +1,55 @@
 # Phase 3 assessment methodology
 
+## Multi-region integration
+
+See [integration methodology and verification](INTEGRATION_ARCADIA_DEUTERONILUS.md)
+for the independently preserved HiRISE Deuteronilus model, its source sampling,
+grid orientation, mask validation and routing boundary fixes. Its modelled
+uncertainty, draft ice polygons and assumed zone/sunlight thresholds are not
+Arcadia measurements or habitability evidence. No shared scientific scoring
+model was introduced. Arcadia site objects and route features match the Phase
+6.2 checkpoint; outer hashes were regenerated with deterministic LF bytes.
+Earlier file hashes below describe earlier snapshots, not current artifacts.
+
+## Phase 6.2 water integration status
+
+**BLOCKER:** Official SWIM raster retrieval remains blocked (catalog/legacy
+catalog HTTP 523; the 2025 paper's NASA Mars Water Maps URL HTTP 404). No real
+water observation was added. See `docs/data-sources.md` for the investigation,
+unverified raster properties and required recovery checks. The three site IDs,
+coordinates, MOLA observations, terrain scores and factor confidence are
+unchanged; SWIM observations remain null.
+
+The existing extractor now validates the numeric raster and samples only the
+containing native SWIM cell using its embedded Mars CRS. Masks, -30, nonfinite
+values and out-of-coverage points remain unavailable; out-of-range numeric
+values and incompatible georeferencing fail rather than becoming evidence.
+`integrate_swim.py` updates only water observations/provenance in an existing
+input artifact, preserving the selected sites and MOLA measurements. It does
+not rerun the old manual sampling configuration or perform candidate selection.
+The available import path has synthetic validation only pending real retrieval.
+
+**IMPORTANT:** `evidence-rules-1.1.0` fixes an overall-confidence gap in 1.0.0:
+the weakest terrain/water factor alone could become Low when both were present,
+despite unresolved critical habitat evidence. Overall habitat evidence now stays
+Unknown while site-specific radiation, shielding, thermal, geotechnical and
+local resource validation are absent. Terrain confidence rules, the Low cap on
+usable water evidence, scoring version/weights/normalization and null overall
+suitability are unchanged. Coverage arrays describe terrain/water screening
+inputs; they do not describe coverage of all habitat safety requirements.
+
+Assessment exports were regenerated for that confidence version/explanation.
+The route artifact's assessment SHA-256 was refreshed by the unchanged offline
+router. Every route feature, vertex, metric, source, coverage record and planning
+parameter matches the preceding commit. Two successive assessment/route builds
+produced identical local file hashes. Current assessment SHA-256:
+`15fa0b39160f6056a5406cc1b0c80fbf9a59c35e01b8177806cda0b85051c36d`;
+route SHA-256:
+`994a7215edc89d9fd9af5952776db46b0bb3da3f2b8ff637ef721a901c0f355a`.
+Verification passed: 22 Python tests, seven API tests including a synthetic v2
+water-payload compatibility check, TypeScript build, schema validation and
+byte-for-byte API packaging. No synthetic values enter the real exports.
+
 ## Frontend handoff status
 
 The temporary `web/` implementation has been removed for independent frontend
@@ -337,7 +387,7 @@ version whenever their meaning or parameters change.
 
 ## Evidence confidence (independent of suitability)
 
-`evidence-rules-1.0.0` provides qualitative, configurable engineering rules.
+`evidence-rules-1.1.0` provides qualitative, configurable engineering rules.
 They are not a calibrated uncertainty model. Lowercase wire levels correspond
 to High/Medium/Low/Unknown. No confidence probability is produced.
 
@@ -354,8 +404,9 @@ to High/Medium/Low/Unknown. No confidence probability is produced.
 - Water support: Unknown if missing/zero/inconclusive; capped at Low for a
   valid nonzero SWIM composite until constituent coverage, quality and local
   validation are available. A composite value alone cannot demonstrate these.
-- Overall evidence confidence is the weakest required terrain/water level.
-  Missing water therefore yields Unknown even with Medium terrain evidence.
+- Overall habitat evidence stays Unknown while critical safety/environmental
+  inputs are unresolved. Terrain/water factor confidence and screening coverage
+  cannot establish complete habitat evidence, even when both are available.
 
 ## Reproduction and integration
 

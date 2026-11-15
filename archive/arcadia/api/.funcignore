@@ -2,6 +2,7 @@ src/
 test/
 scripts/
 .func/
+.azure-package/
 local.settings.json
 *.ts
 mars-blindspots/

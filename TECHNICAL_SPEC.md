@@ -1,3 +1,4 @@
+<!-- Current integration decisions supersede earlier deployment proposals. -->
 # Mars Site Planner — Technical Specification
 
 **Status:** the UI (`ui/`) and the API (`api/mars-blindspots/backend/`) run
@@ -19,9 +20,9 @@ honest about where the map can't be trusted ("blindspots"):
    with nominal slope, and how much **survives** when slope is taken at its
    worst case (slope + uncertainty). Robust ground is drawn solid; ground lost
    to blindspots is drawn faint.
-2. **How do we get there safely?** The user places a start and an end. The app
+2. **How do we compare provisional scouting routes?** The user places a start and an end. The app
    plans two routes and compares them: a **Standard Route** (trusts the map)
-   and a **Safe Route** (plans on worst-case traversability and avoids
+   and an **Uncertainty-aware Route** (wire key `safe`) (plans on worst-case traversability and avoids
    uncertain cells). Numbered **scout points** mark the biggest blindspots on
    the standard route; **science targets** near either route are shown.
 
@@ -33,7 +34,7 @@ uncertainty, soil, ice, radiation, temperature).
 1. Open on the site: shaded relief with Habitat, Landing pad, and Ice zones on.
 2. "Solid survives our uncertainty; faint is what a naive map would promise."
    Point at a zone's nominal → robust area and survival %.
-3. Try the demo traverse: two routes appear. The Safe Route is a little longer
+3. Try the demo traverse: two routes appear. The uncertainty-aware route is a little longer
    but cuts critical-blindspot exposure. Read the one-line comparison.
 4. Hover a scout point: "this is where to send a scout before walking."
 5. Click the ground: the Conditions card, with estimated/regional labels.
@@ -195,7 +196,7 @@ mismatch with the failing field path (e.g. `layers.0.color`).
   Hovering a route card highlights its line.
 - **Phone:** map on top, panel below.
 - **Development:** `npm run dev:live` proxies `/api` to the Python API on
-  port 7071 (real data). `npm run dev` uses the built-in mock backend
+  port 7071 (real data). `npm run dev:mock` explicitly uses the built-in mock backend
   (`ui/src/mocks/`, synthetic terrain at the same location), useful for UI work
   without Python. Either way the UI uses its real fetch + validation path.
 
@@ -275,3 +276,24 @@ conditions; key stays server-side, no new numbers invented.
    site, or drop those tiles for the demo?
 4. **Azure:** SWA managed Python functions vs. a standalone Function App (route
    time and package size with numpy/scipy).
+
+## Integration decisions and verification
+
+See `docs/DEUTERONILUS_INTEGRATION.md`. Python `backend/api_service.py` is the
+sole active backend. Runtime routing is retained from the working teammate API
+as explicitly requested for interactive starts/destinations; offline terrain and
+zone processing remain unchanged. Arcadia Phase 6.2, its Typescript API, audit
+records and reproducibility tests are archived under `archive/arcadia/`, not
+started or deployed by the current app. Earlier archive documents describe the
+former architecture and are historical.
+
+Normal Vite dev/live/preview use the real Python API at 127.0.0.1:7071 unless
+configured otherwise. Only explicit mock mode serves synthetic fixtures.
+Deuteronilus request validation and A* endpoint/corner checks are preserved,
+provenance is inspectable in the UI, missing measurements remain null, and
+`safe` is labeled uncertainty-aware/provisional. Solar's known nonsubset masks
+are flagged without altering stored masks, areas or thresholds.
+
+No Azure deployment or resource provisioning was performed. A Python Functions
+wrapper, hosting/runtime configuration, CI secrets, production smoke checks and
+major-version dependency security remediation remain follow-up work.

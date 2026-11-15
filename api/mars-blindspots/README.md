@@ -1,11 +1,20 @@
 # Mars Blindspots — Back-end (Deuteronilus Mensae)
 
+> Current integration: `backend/api_service.py` is the primary backend for
+> `ui/`. Terrain/zones are processed offline; the working Python API computes
+> the two route modes per request. The older TypeScript service and Arcadia
+> Phase 6.2 work are preserved under `archive/arcadia/` and are not deployed.
+> The `safe` wire key means uncertainty-aware cost, not astronaut safety.
+> Endpoint/corner checks preserve the original reference metrics. Ice polygons
+> remain AI-assisted drafts. See `../../docs/DEUTERONILUS_INTEGRATION.md`.
+
 Python code and processed data for: slope and slope uncertainty, traversability, standard vs safe A* routes, scout
 points, science candidates, and habitability zones (habitat, landing pad, ice access, greenhouse, data center, solar).
 
 Source repo: https://github.com/allison-mk/mars-blindspots (branch `deuteronilus`, which also has the Leaflet viewer).
-This folder is a self-contained Python project. It is **not** part of the Azure Functions app (listed in
-`api/.funcignore`), and run every command below **from `api/mars-blindspots/`**.
+This folder owns the active Python API and offline processing. Run the commands
+below from `api/mars-blindspots/`. Azure Functions wrapping and deployment remain
+future work; the dev server is a local HTTP host, not an Azure Function.
 
 ## Setup
     cd api/mars-blindspots

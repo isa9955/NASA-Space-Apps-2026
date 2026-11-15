@@ -65,19 +65,19 @@ SOURCES = [
         "id": "hirise-dtm",
         "provider": "NASA/JPL/University of Arizona",
         "product": "HiRISE DTM DTEEC_041222_2210_040787_2210_A01",
-        "version": "A01",
-        "url": "https://hirise.lpl.arizona.edu/dtm/ESP_041222_2210",
+        "version": "1 (PDS attached label; A01 product)",
+        "url": "https://hirise.lpl.arizona.edu/ESP_041222_2210",
     },
     {
         "id": "sigma-z",
         "provider": "Sutton et al. 2022",
-        "product": "HiRISE DTM vertical precision (σz = 0.3 m) used for slope uncertainty",
+        "product": "Assumed σz = 0.3 m for slope uncertainty; literature-based, not site-calibrated",
         "version": None,
         "url": "https://doi.org/10.3390/rs14102403",
     },
     {
         "id": "ice-interpretation",
-        "provider": "Mars Blindspots team",
+        "provider": "Mars Blindspots team (AI-assisted draft)",
         "product": "Ice-rich flow lobes: DRAFT interpretation, pending team review (not a measurement)",
         "version": None,
         "url": None,
@@ -128,6 +128,8 @@ class Site:
     def __init__(self, site_dir=SITE_DIR):
         with open(os.path.join(site_dir, "metadata.json"), encoding="utf-8") as f:
             self.meta = json.load(f)
+        if self.meta.get("is_synthetic") is not False:
+            raise ValueError("The real-data API requires explicitly nonsynthetic site metadata")
         with open(os.path.join(site_dir, "data_grid.json"), encoding="utf-8") as f:
             grid = json.load(f)
         with open(os.path.join(site_dir, "zones.json"), encoding="utf-8") as f:
@@ -195,6 +197,10 @@ class Site:
                 CRITERIA_TEXT.get(c["key"], lambda op, v, k=c["key"]: f"{k} {op} {v:g}")(c["op"], float(c["threshold"]))
                 for c in z["nominal"]["criteria"]
             )
+            if zid == "solar":
+                outside = int(np.count_nonzero(self.masks[zid]["robust"] & ~self.masks[zid]["nominal"]))
+                rule += (f". IMPORTANT: {outside:,} robust cells lie outside the nominal solar mask; "
+                         "the variants use different sunlight thresholds, so this is not a survival fraction")
             layers.append({
                 "id": zid,
                 "label": z["label"],
@@ -236,18 +242,18 @@ class Site:
         return {
             "schemaVersion": SCHEMA_VERSION,
             "location": [lon, lat],
-            "elevation": {"value": round(float(g["elev"][r, c])), "unit": "m", "qualifier": None},
+            "elevation": {"value": round(float(g["elev"][r, c])), "unit": "m", "qualifier": "estimated"},
             # Walking scale (1 m baseline), averaged over the 10 m cell; ± is σθ (worst case uses k = 1).
             "slope": {
                 "value": round(float(g["slope"][r, c]), 1),
                 "unit": "°",
-                "qualifier": None,
+                "qualifier": "estimated",
                 "uncertainty": round(float(g["unc"][r, c]), 1),
             },
-            "soil": {"value": None, "qualifier": "regional"},
+            "soil": {"value": None, "qualifier": None},
             "ice": {"kind": "distance", "value": round(float(self.dist_ice_m[r, c])), "unit": "m", "qualifier": "estimated"},
-            "radiation": {"value": None, "unit": "mSv/day", "qualifier": "estimated"},
-            "temperature": {"value": None, "unit": "°C", "qualifier": "estimated"},
+            "radiation": {"value": None, "unit": "mSv/day", "qualifier": None},
+            "temperature": {"value": None, "unit": "°C", "qualifier": None},
             "sources": SOURCES,
         }
 
@@ -353,8 +359,14 @@ def handle(path, query=""):
     """Route one GET request. `path` starts with /api. Returns (status, content_type, body)."""
     try:
         site = get_site()
-        q = {k: v[0] for k, v in parse_qs(query).items()}
+        values = parse_qs(query, keep_blank_values=True)
+        if any(len(v) != 1 for v in values.values()):
+            raise ApiError(400, "INVALID_ARGUMENT", "Query parameters must occur exactly once.")
+        q = {k: v[0] for k, v in values.items()}
         p = path.rstrip("/")
+        allowed = {"/api/region": set(), "/api/conditions": {"lon", "lat"}, "/api/route": {"from", "to"}}
+        if p in allowed and set(q) - allowed[p]:
+            raise ApiError(400, "INVALID_ARGUMENT", "Unsupported query parameter.")
         if p == "/api/region":
             return _json(200, site.region())
         if p == "/api/assets/basemap.png":
@@ -369,6 +381,8 @@ def handle(path, query=""):
                 lon, lat = float(q["lon"]), float(q["lat"])
             except (KeyError, ValueError):
                 raise ApiError(400, "INVALID_ARGUMENT", "lon and lat are required numbers.")
+            if not (math.isfinite(lon) and math.isfinite(lat)):
+                raise ApiError(400, "INVALID_ARGUMENT", "lon and lat must be finite numbers.")
             if not site.contains(lon, lat):
                 raise ApiError(400, "OUT_OF_REGION", "No data here. Click inside Deuteronilus Mensae.")
             return _json(200, site.conditions(lon, lat))

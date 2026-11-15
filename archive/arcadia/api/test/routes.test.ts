@@ -3,6 +3,7 @@ import { readFileSync, mkdtempSync, writeFileSync, rmSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import test from "node:test";
+import { createHash } from "node:crypto";
 import { HttpRequest, InvocationContext } from "@azure/functions";
 import { Ajv2020 } from "ajv/dist/2020.js";
 import siteSchema from "../src/contracts/site.schema.json";
@@ -16,6 +17,16 @@ ajv.addSchema(routeSchema, "routes");
 const validate = ajv.compile({ $ref: "routes#/$defs/response" });
 const errorValid = ajv.compile({ $ref: "sites#/$defs/errorResponse" });
 const request = (query: string) => new HttpRequest({ method: "GET", url: `http://localhost/api/routes?${query}` });
+
+test("scientific JSON hashes use LF bytes on Windows and Linux", () => {
+  const root = join(__dirname, "../../pipeline");
+  for (const file of ["site_inputs.json", "site_assessments.json", "routes.geojson", "mission_context.json", "deuteronilus_analysis.json"]) {
+    assert.equal(readFileSync(join(root, file)).includes(13), false, `${file} must use LF without CR bytes`);
+  }
+  const routes = JSON.parse(readFileSync(join(root, "routes.geojson"), "utf8"));
+  assert.equal(routes.inputProvenance.assessmentSha256,
+    createHash("sha256").update(readFileSync(join(root, "site_assessments.json"))).digest("hex"));
+});
 
 test("route API preserves genuine precomputed paths and validates requests", async () => {
   const bytes = readFileSync(join(__dirname, "../../pipeline/routes.geojson"));

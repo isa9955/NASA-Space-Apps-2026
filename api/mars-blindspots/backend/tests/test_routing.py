@@ -41,3 +41,11 @@ def test_safe_cost_formula():
     g = make([[1.0, 0.5]], [[0.5, 0.5]])
     assert np.allclose(g['gap'], [[0.5, 0.0]])
     assert np.allclose(g['safe'], [[0.5 / 3.5, 0.5]])
+
+
+def test_blocked_endpoints_and_diagonal_corner_are_not_routes():
+    g = make([[1, 0], [0, 1]])
+    assert R.astar(g, (0, 0), (0, 1), g['trav']) is None
+    assert R.astar(g, (0, 1), (0, 0), g['trav']) is None
+    assert R.astar(g, (0, 0), (1, 1), g['trav']) is None
+    assert R.astar(g, (-1, 0), (0, 0), g['trav']) is None

@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { createHash } from "node:crypto";
-import { join } from "node:path";
+import { readValidatedArtifact, packagedArtifact, packagedPath } from "./artifacts.js";
 import { Ajv2020 } from "ajv/dist/2020.js";
 import siteSchema from "./contracts/site.schema.json";
 import routeSchema from "./contracts/route.schema.json";
@@ -13,8 +13,7 @@ ajv.addSchema(routeSchema, "routes");
 const validate = ajv.compile<RouteArtifact>({ $ref: "routes#/$defs/artifact" });
 
 export function readRoutes(path: string, assessmentPath: string): RouteArtifact {
-  const parsed: unknown = JSON.parse(readFileSync(path, "utf8"));
-  if (!validate(parsed)) throw new Error(`Invalid routes artifact: ${ajv.errorsText(validate.errors)}`);
+  const parsed = readValidatedArtifact(path, validate, "routes");
   const bytes = readFileSync(assessmentPath);
   if (createHash("sha256").update(bytes).digest("hex") !== parsed.inputProvenance.assessmentSha256) {
     throw new Error("Routes refer to a different assessment snapshot; regenerate offline");
@@ -58,8 +57,4 @@ export function readRoutes(path: string, assessmentPath: string): RouteArtifact 
   return parsed;
 }
 
-let cached: RouteArtifact | undefined;
-export function getRoutes(): RouteArtifact {
-  cached ??= readRoutes(join(__dirname, "../data/routes.geojson"), join(__dirname, "../data/site_assessments.json"));
-  return cached;
-}
+export const getRoutes = packagedArtifact("routes.geojson", (path) => readRoutes(path, packagedPath("site_assessments.json")));

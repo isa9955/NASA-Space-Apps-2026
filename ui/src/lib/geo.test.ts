@@ -66,7 +66,7 @@ describe("route comparison text", () => {
   });
   it("matches the design sentence", () => {
     expect(compareRoutes(v("standard", 2.74, 11, 45), v("safe", 2.88, 3, 50))).toBe(
-      "The safe route is +140 m (+5%) longer. It cuts critical-blindspot exposure from 11% to 3% of the path and raises worst-case traversability from 45% to 50%."
+      "The uncertainty-aware route is +140 m (+5%) longer. It cuts critical-blindspot exposure from 11% to 3% of the path and raises worst-case traversability from 45% to 50%."
     );
   });
   it("handles a safe route that is shorter and no better", () => {

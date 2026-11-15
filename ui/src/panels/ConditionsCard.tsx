@@ -58,7 +58,7 @@ function Grid({ c }: { c: ConditionsResponse }) {
       />
       <Tile icon={Layers} value={c.soil.value ? SOIL[c.soil.value] : "—"} label="Soil" q={c.soil.qualifier} />
       <IceTile ice={c.ice} />
-      <Tile icon={Radiation} value={fmtNum(c.radiation.value, 2)} label={c.radiation.unit} q={c.radiation.qualifier} />
+      <Tile icon={Radiation} value={withUnit(c.radiation.value, 2, ` ${c.radiation.unit}`)} label="Radiation" q={c.radiation.qualifier} />
       <Tile icon={Thermometer} value={withUnit(c.temperature.value, 0, " °C")} label="Mean temp" q={c.temperature.qualifier} />
     </div>
   );
@@ -67,9 +67,9 @@ function Grid({ c }: { c: ConditionsResponse }) {
 function Fits({ fits }: { fits: ZoneFit[] }) {
   return (
     <div className="fits">
-      <div className="fits-title">Suitable for</div>
+      <div className="fits-title">Passes modeled zone rules</div>
       {fits.length === 0 ? (
-        <p className="muted fits-none">No buildable zone at this spot.</p>
+        <p className="muted fits-none">No modeled zone at this spot.</p>
       ) : (
         <ul>
           {fits.map(({ layer, fit }) => (
@@ -93,13 +93,13 @@ const withUnit = (v: number | null, d: number, unit: string) => (v === null ? "�
 
 function IceTile({ ice }: { ice: ConditionsResponse["ice"] }) {
   if (ice.kind === "consistency") {
-    return <Tile icon={Droplet} value={ice.value === null ? "Unknown" : `${fmtNum(ice.value)}%`} label="Ice" q={ice.qualifier} />;
+    return <Tile icon={Droplet} value={ice.value === null ? "Unknown" : fmtNum(ice.value)} label="Ice index · not probability" q={ice.qualifier} />;
   }
   if (ice.value === null) return <Tile icon={Droplet} value="Unknown" label="Ice" q={ice.qualifier} />;
   return ice.value === 0 ? (
-    <Tile icon={Droplet} value="On ice" label="Ice-rich" q={ice.qualifier} />
+    <Tile icon={Droplet} value="Draft lobe" label="Not confirmed ice" q={ice.qualifier} />
   ) : (
-    <Tile icon={Droplet} value={`${fmtNum(ice.value)} m`} label="To ice" q={ice.qualifier} />
+    <Tile icon={Droplet} value={`${fmtNum(ice.value)} m`} label="To draft landform" q={ice.qualifier} />
   );
 }
 

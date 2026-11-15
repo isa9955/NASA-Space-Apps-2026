@@ -18,7 +18,7 @@ def main():
     data = args.input.read_bytes()
     result = assess_document(json.loads(data), json.loads(args.config.read_text(encoding="utf-8")))
     result["inputProvenance"] = {"file": args.input.name, "sha256": hashlib.sha256(data).hexdigest()}
-    args.output.write_text(json.dumps(result, indent=2, allow_nan=False) + "\n", encoding="utf-8")
+    args.output.write_text(json.dumps(result, indent=2, allow_nan=False) + "\n", encoding="utf-8", newline="\n")
     print(f"Exported {len(result['sites'])} assessments to {args.output}")
 
 

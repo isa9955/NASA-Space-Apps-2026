@@ -19,7 +19,7 @@
     "datum": "IAU2000 body-fixed sphere, radius 3396000 m"
   },
   "inputProvenance": {
-    "assessmentSha256": "2408c811262927ee6189a0591b2bbd97646e25eba09d06ffa85fe793cb6fa57b",
+    "assessmentSha256": "03e4322defe7309d0105c810c5e5e7ecfc36ec306d0341f5f36e759854ade50a",
     "topographyRasterSha256": "f7df8fd2f290643c1de29dd0200fa4f718740286befe86e100ca6bc166b5b9fb",
     "countsRasterSha256": "899bdb1d3cb27dce64fcf1e3f90b9b8b616653167282e50af8c5b2376d806bb8"
   },

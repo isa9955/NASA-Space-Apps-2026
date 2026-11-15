@@ -105,7 +105,7 @@ def main():
             "Context only. Not used in suitability, confidence or routing; site-specific thermal evidence remains missing."
         ]
     }
-    (ROOT / "mission_context.json").write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
+    (ROOT / "mission_context.json").write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8", newline="\n")
     print(result["productId"], result["labelBrightnessTemperatureRange"], "context only")
 
 

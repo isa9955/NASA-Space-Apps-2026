@@ -1,5 +1,12 @@
 # Mars Blindspots — Architecture & Front-end / Back-end Split Guide
 
+> Current repository architecture supersedes the historical proposals below:
+> Python `backend/api_service.py` serves `ui/`, computing both route modes per
+> request from processed grids. Terrain/zones remain offline and unchanged.
+> The former TypeScript API is archived, not a competing service. No new cache,
+> browser A*, FastAPI or radiation model was added. See
+> `../../../docs/DEUTERONILUS_INTEGRATION.md` and root `TECHNICAL_SPEC.md`.
+
 > **Team-repo copy:** paths here describe the source repo (github.com/allison-mk/mars-blindspots). In
 > `api/mars-blindspots/`, `web/sites/<site>/` is `data/<site>/`; the viewer (`web/index.html`) is not included.
 

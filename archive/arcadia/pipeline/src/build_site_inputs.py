@@ -27,6 +27,7 @@ from mars_pipeline.swim import (
     SWIM_PRODUCT_URL,
     SWIM_STUDY_URL,
     extract_consistency,
+    validate_raster,
 )
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
@@ -124,14 +125,7 @@ def _swim_source(path: Path | None, retrieval_note: str | None) -> dict[str, Any
     }
     if path and path.is_file():
         with rasterio.open(path) as dataset:
-            if dataset.crs is None or not dataset.crs.is_projected:
-                raise ValueError("SWIM input must be a projected GIS-ready GeoTIFF")
-            if dataset.count < 1 or not dataset.width or not dataset.height:
-                raise ValueError("SWIM GeoTIFF has no readable raster band")
-            if any(abs(abs(resolution) - 3000) > 150 for resolution in dataset.res):
-                raise ValueError(
-                    f"Unexpected SWIM pixel size {dataset.res}; expected about 3000 m"
-                )
+            validate_raster(dataset)
             base.update(
                 {
                     "inputFile": path.name,
@@ -139,6 +133,9 @@ def _swim_source(path: Path | None, retrieval_note: str | None) -> dict[str, Any
                     "rasterCrs": dataset.crs.to_wkt(),
                     "rasterBounds": list(dataset.bounds),
                     "rasterNodata": dataset.nodata,
+                    "rasterTransform": list(dataset.transform)[:6],
+                    "rasterShape": [dataset.height, dataset.width],
+                    "pixelSizeMeters": list(dataset.res),
                 }
             )
     elif retrieval_note:
@@ -307,6 +304,7 @@ def build_site_inputs(
     output_path.write_text(
         json.dumps(document, indent=2, allow_nan=False) + "\n",
         encoding="utf-8",
+        newline="\n",
     )
     return document
 

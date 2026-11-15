@@ -1,9 +1,58 @@
 # Mars Habitat Finder API — Phase 6
 
+## Architecture cleanup and production staging
+
+All six existing routes and successful payloads are unchanged. Shared artifact
+IO/schema validation/cache infrastructure is `src/artifacts.ts`; scientific
+checks remain in the independent readers and offline pipelines. Old Phase 1
+fixtures and stale compiled output are removed; builds now reset `dist/` first.
+Stop/restart a local Functions host around rebuilds; per-worker caches are retained.
+
+`npm --prefix api run package:azure` (from repository root) builds and validates
+an ignored `api/.azure-package/` containing only host/package manifests,
+compiled JS/schemas/scientific artifacts, and installed production dependencies.
+The command runs a standalone package smoke test for all six handlers outside
+the checkout; no TypeScript/tsx, Python, raw data, project tests/scripts, fixtures
+or local settings are included. This command neither deploys nor provisions.
+Use a fresh successful staged package for Phase 7; Azure/SWA runtime and live
+production configuration still require verification. See
+`../docs/BACKEND_ARCHITECTURE_REVIEW.md` for classification and retained debt.
+
+## Independent regional analysis (additive)
+
+`GET /api/regions/deuteronilus` returns `{schemaVersion: "2.0.0", analysis}`.
+`analysis.schemaVersion` is `deuteronilus-analysis/1.0.0`; types and strict
+schema are `src/contracts/region.ts` and `region.schema.json`. The fixed
+reference pair has standard and uncertainty-aware provisional routes, geometric
+scout/science candidates, assumed zone summaries, provenance and limitations.
+Query parameters yield 400 `INVALID_ARGUMENT`; absent/invalid regional export
+yields 503 `ASSESSMENTS_UNAVAILABLE`. No existing Arcadia response changes.
+See `../docs/FRONTEND_HANDOFF.md` for field/coordinate semantics.
+
+The build validates and copies `../pipeline/deuteronilus_analysis.json` if
+present, binding it to processed metadata/grid/zones, source-audit and routing
+code hashes. A stale supplied artifact fails the build. Runtime reads only
+the compact packaged artifact; `mars-blindspots/` is excluded by `.funcignore`.
+No Python, large regional grids, NASA reads, dynamic A* or zone recomputation
+occur in an HTTP request. Original `safe` means uncertainty-aware cost only.
+
+**IMPORTANT:** JSON/GeoJSON now use LF in Git and Python exports. This resolves
+the cross-platform route/assessment snapshot mismatch without weakening exact
+hash validation. Regenerate assessments, then routes, then build; never manually
+edit a hash to bypass validation. See `../docs/INTEGRATION_ARCADIA_DEUTERONILUS.md`.
+
 The temporary frontend has been removed; the teammate will implement it
 independently. See [`../docs/FRONTEND_HANDOFF.md`](../docs/FRONTEND_HANDOFF.md)
 for the complete integration guide. All five endpoints, shared TypeScript
 contracts, schemas, scientific artifacts and backend tests remain unchanged.
+
+Phase 6.2 preserves all endpoint/wire contracts. The offline confidence export
+now uses `evidence-rules-1.1.0`; overall habitat confidence stays Unknown while
+critical review evidence is absent, even if water is recovered later. SWIM
+retrieval is still blocked and actual water observations remain null. See
+`../docs/data-sources.md` and `../docs/FRONTEND_HANDOFF.md` for recovery/import
+requirements and backward-compatible future water provenance. Rebuild and
+restart the host after replacing scientific exports; handlers cache per worker.
 
 ## Guided-journey discovery and context
 
@@ -187,7 +236,7 @@ Azure verification remain future work; nothing has been deployed.
 
 ## Essential verification
 
-`npm test` builds and runs six checks against compiled handlers: schema
+`npm test` builds and runs fifteen checks against compiled handlers/infrastructure: schema
 validation, unchanged detail records and packaging bytes, null/unknown science
 states, 400/404 behavior, and rejection of missing/malformed artifacts.
 Local HTTP checks were also run through Core Tools for both endpoints, all three

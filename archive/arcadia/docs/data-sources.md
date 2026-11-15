@@ -1,5 +1,72 @@
 # Verified NASA sources
 
+## Deuteronilus HiRISE source audit
+
+The official [DTM product](https://hirise.lpl.arizona.edu/PDS/DTM/ESP/ORB_041200_041299/ESP_041222_2210_ESP_040787_2210/DTEEC_041222_2210_040787_2210_A01.IMG)
+label and three small numeric source ranges were independently checked. See
+`pipeline/deuteronilus_source.json` for exact CRS, NoData, byte ranges, hashes
+and sample means, and [the integration report](INTEGRATION_ARCADIA_DEUTERONILUS.md)
+for crop/grid alignment and verification limits. Credit: NASA/JPL/UArizona;
+the source image is [ESP_041222_2210](https://hirise.lpl.arizona.edu/ESP_041222_2210)
+and stereo partner ESP_040787_2210. The full raw SHA in the teammate's
+`api/mars-blindspots/data/RAW_DATA.md` is retained as reported, not independently
+verified. No full DTM/ortho download or regeneration was performed here.
+
+**IMPORTANT:** Baker & Carter regional context retains its original attribution
+and CC BY 4.0 notice in RAW_DATA.md; it is not promoted to local ice detections.
+The draft ice polygons are AI-assisted interpretations, not measurements.
+Uncertainty and zone/illumination outputs depend on stated model assumptions.
+
+## Phase 6.2 SWIM retrieval investigation — BLOCKER
+
+On 2026-11-14, direct HTTPS requests from this environment returned:
+
+| Official source | Result |
+|---|---|
+| [SWIM4IMIM product catalog](https://swim.psi.edu/SWIM4MIMProducts.php) | HTTP 523; curl exit 22. Response header date: 2026-11-14 22:46:20 UTC. |
+| [Legacy SWIM 2.0 catalog](https://swim.psi.edu/SWIM2Products.php) | HTTP 523; not a substitute release. |
+| [NASA Mars Water Maps](https://ammos.nasa.gov/marswatermaps/?mission=MWR), linked in the 2025 paper | HTTP 404. |
+
+The official catalog's search-index copy identifies the preferred Combined Ice
+Consistency Map (0–1 m), updated 2025-08-04, and documents simple cylindrical
+spherical Mars, approximately 3,000 m pixels, 0–360 east longitude, 60 S–60 N,
+and NoData -30. This is **catalog metadata**, not validation of a retrieved
+raster. [Morgan et al. 2025](https://doi.org/10.3847/PSJ/ad9b24), also listed by
+[USGS](https://www.usgs.gov/publications/refined-mapping-subsurface-water-ice-mars-support-future-missions),
+identifies the SWIM website and JPL MMGIS as data access points. No verified
+working numeric raster mirror was identified during this investigation.
+NASA Photojournal SWIM TIFF/JPEG figures are browse graphics and were not used
+for numerical extraction. No origin bypass, third-party raster or guessed
+download URL was substituted.
+
+**BLOCKER:** No SWIM raster was retrieved. Its file SHA-256, embedded Mars CRS,
+actual bounds/alignment, pixel values, scales, masks and NoData cannot be
+verified yet. All three existing Arcadia water observations remain null;
+the input artifact remains unchanged. No new water measurement or ice-resource
+claim was produced. Failed-request headers are cached locally under ignored
+`pipeline/data/`; a failed HTML response is never hashed as a science raster.
+
+The new `pipeline/src/integrate_swim.py` is an offline import path for a future
+**independently verified official SWIM4IMIM 0–1 m GeoTIFF**. Record the actual
+official file URL and its independently recorded SHA-256. A hash pins bytes
+for reproduction; it is not proof of scientific identity or a publisher
+checksum unless the publisher supplies one. The import validates single-band
+numeric georeferencing, spherical Mars simple cylindrical CRS in meters,
+approximately 3 km north-up cells, unscaled values, NoData -30, coverage and
+sampled values in [-1,1]. It records WKT, affine transform, shape, resolution,
+bounds, file hash and each site's containing native raster cell. It does not
+require SWIM to align to MOLA pixels or resample one grid onto the other.
+The radius gate (3,390–3,400 km, spherical) is a wrong-body check, not validation
+of the exact publisher datum; inspect the exported WKT against the actual
+product documentation before accepting a recovered raster. The current import
+has only been tested with synthetic rasters, never a real retrieved SWIM file.
+
+**IMPORTANT:** Ice consistency is a dimensionless derived agreement index.
+The 0–1 m label is a sensing-depth interval, not a measured ice-table depth.
+The index is neither ice probability nor abundance, thickness, purity, confirmed
+accessibility or habitability. A zero is retained as an observation but is
+unscored/inconclusive; missing/masked/-30 data remain null.
+
 ## Mars Global Surveyor / MOLA (existing science and routes)
 
 The existing `MEGT44N180HB` topography and `MEGC44N180HB` observation-count

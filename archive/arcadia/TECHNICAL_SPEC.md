@@ -4,10 +4,59 @@
 both the current scaffold and planned work; a planned capability is not
 evidence that a service, dataset, or scientific result already exists.
 
-> **New frontend (`ui/`):** the current UI design, its data contract
-> (`contracts/`), and open integration questions are in
-> [`docs/FRONTEND_SPEC.md`](docs/FRONTEND_SPEC.md). This file continues to
-> document the backend phases below.
+### Backend architecture review and packaging boundary
+
+`docs/BACKEND_ARCHITECTURE_REVIEW.md` is the current ownership/cleanup record.
+One Functions host and API v2 transport serve independent, versioned offline
+models. Shared artifact loading/validation/cache code is consolidated; existing
+six paths and successful payloads are unchanged. Deuteronilus provenance now
+has explicit types/schema requirements for its already-exported fields.
+Obsolete Phase 1 fixtures and an unused decoder were removed after consumer
+checks; active legacy scientific CLI paths remain documented technical debt.
+
+Clean builds prevent stale compiled fixtures. `npm --prefix api run package:azure`
+stages a validated, production-dependency-only app at `api/.azure-package/`,
+then exercises all six handlers in an isolated copy. No raw processing code or
+project development files enter that package. This is packaging readiness,
+not Azure deployment verification. No scientific output changes in this cleanup.
+
+### Arcadia / Deuteronilus integration
+
+Both workstreams are preserved on the integration branch. Arcadia's existing
+v2 endpoints, sites and route features are unchanged. An additive read-only
+`GET /api/regions/deuteronilus` returns the compact, separately versioned
+`deuteronilus-analysis/1.0.0` export. Do not mix its cells or model scores into
+Arcadia CandidateSite records. All scientific computation remains offline;
+`api/mars-blindspots/` is excluded from Functions deployment via `.funcignore`.
+
+The source audit confirms official HiRISE georeferencing and three sampled
+elevation blocks, not the full raw raster hash or complete regeneration. Draft
+ice polygons, assumed uncertainty and terrain-only sunlight remain explicitly
+unvalidated. Both route models are provisional and overall habitability Unknown.
+
+JSON/GeoJSON LF serialization fixes the cross-platform assessment snapshot
+failure while preserving exact hash validation. See
+`docs/INTEGRATION_ARCADIA_DEUTERONILUS.md` for root cause, contracts, tradeoffs,
+checkpoint recovery, checks and outstanding blockers. Earlier artifact hashes
+in phase notes are historical and change with serialization/provenance updates.
+
+### Phase 6.2 current scientific integration status
+
+**BLOCKER:** SWIM4IMIM retrieval remains blocked (official/legacy catalogs HTTP
+523; the paper-linked NASA Mars Water Maps portal HTTP 404). No numerical water
+evidence was recovered; all three values remain null. An offline, hash-checked
+water-only import path is available for an independently verified official
+GeoTIFF; exact source and limitations are in `docs/data-sources.md`.
+
+API v2, endpoint paths and shared schemas/types are unchanged. Source metadata
+can carry additional raster provenance under the existing extensible Source
+contract; frontend instructions are in `docs/FRONTEND_HANDOFF.md`.
+Confidence rule version `evidence-rules-1.1.0` preserves Unknown overall habitat
+evidence even with future valid terrain/water inputs while critical domains
+remain unresolved. Screening formulas/weights, site coordinates, terrain data,
+route algorithm and route features are unchanged. Only route assessment-hash
+binding was refreshed after regenerating confidence explanations. No frontend
+or deployment changes are included.
 
 ### Current frontend handoff status (supersedes earlier UI snapshots)
 

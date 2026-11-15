@@ -38,6 +38,10 @@ class AssessmentChecks(unittest.TestCase):
             site = assess_document(inputs, self.model)["sites"][0]
             self.assertEqual(site["suitability"]["factors"]["water"]["score"], expected)
             self.assertIsNone(site["suitability"]["score"])
+            self.assertEqual(site["evidenceConfidence"]["level"], "unknown")
+            self.assertEqual(site["evidenceConfidence"]["status"], "insufficient-evidence")
+            self.assertEqual(site["evidenceConfidence"]["factors"]["water"]["level"],
+                             "low" if value in (-1, 1) else "unknown")
         for value, expected in [(0, 100), (10, 0), (20, 0), (float("nan"), None)]:
             inputs = deepcopy(self.inputs)
             inputs["sites"][0]["observations"]["molaRegionalSlope"]["value"] = value

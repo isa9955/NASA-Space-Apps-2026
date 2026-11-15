@@ -1,6 +1,7 @@
 # Node / Azure Functions
 node_modules/
 api/dist/
+api/.azure-package/
 api/coverage/
 api/.func/
 api/local.settings.json
@@ -14,6 +15,12 @@ __pycache__/
 venv/
 .pytest_cache/
 archive/arcadia/pipeline/data/
+pipeline/data/
+archive/arcadia/api/dist/
+archive/arcadia/api/.azure-package/
+archive/arcadia/api/coverage/
+archive/arcadia/api/.func/
+archive/arcadia/api/local.settings.json
 
 # Editors / OS
 .DS_Store

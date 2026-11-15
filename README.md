@@ -7,10 +7,10 @@ built from a real HiRISE terrain model (1 m/px).
 - **Buildable zones:** six uses (habitat, landing pad, ice access, greenhouse,
   data center, solar), each shown as nominal ground and the part that survives
   worst-case slope uncertainty.
-- **Routes:** a standard route and a safe route that avoids blindspots,
+- **Routes:** a standard route and an uncertainty-aware route that penalizes modeled blindspots,
   compared side by side, with scout points and science candidates.
 - **Conditions:** click the terrain for elevation, slope ± uncertainty and
-  distance to ice-rich ground.
+  distance to draft interpreted landforms (not confirmed ice).
 
 ## Run it
 
@@ -22,12 +22,12 @@ python -m backend.dev_server
 
 # Terminal 2: UI on http://localhost:5173
 cd ui
-npm install
-npm run dev:live
+npm ci
+npm run dev
 ```
 
-`npm run dev` (without `:live`) runs the UI on built-in mock data, no Python
-needed.
+Normal development and preview use the real Python API. Synthetic fixtures require
+`npm --prefix ui run dev:mock` explicitly and are not real-data validation.
 
 ## Where things are
 
@@ -37,8 +37,26 @@ needed.
 | [`ui/`](ui/) | React + Vite + Leaflet frontend |
 | [`api/mars-blindspots/`](api/mars-blindspots/) | Terrain processing, zones, routing and the API (`backend/api_service.py`) |
 | [`contracts/`](contracts/) | JSON Schema + examples for the three endpoints |
-| [`archive/arcadia/`](archive/arcadia/) | Earlier Arcadia Planitia work, archived and unused |
+| [`archive/arcadia/`](archive/arcadia/) | Preserved Arcadia Phase 6.2 science and tests; not used by the app |
 
 Decision support only: slope uncertainty is a modeled bound, ice-rich ground is
 a draft interpretation, and nothing here is a NASA safety assessment. HiRISE
 data: NASA/JPL/University of Arizona.
+
+## Integrated verification
+
+See [docs/DEUTERONILUS_INTEGRATION.md](docs/DEUTERONILUS_INTEGRATION.md) for
+checkpoint preservation, contract ownership, exact checks and remaining blockers.
+The existing React/Leaflet design is retained. No competing TypeScript service
+is used by the current app. Real HTTP checks: `npm --prefix ui run test:live`
+after starting the Python API and Vite. Unit tests: `npm --prefix ui test`;
+production frontend: `npm --prefix ui run build`.
+
+**IMPORTANT:** The solar robust mask has 4,324 cells outside the nominal mask
+because its variants used different sunlight thresholds. This is visibly flagged;
+stored masks/areas were preserved and the solar percentage is not a survival
+fraction. All routes are provisional, uncertainty is model-dependent and overall
+habitability remains Unknown. Radiation, soil and temperature values remain null.
+
+Azure Functions Python wrapping, SWA/CI configuration and security/runtime
+follow-up remain pending. The local development server is not an Azure deployment.

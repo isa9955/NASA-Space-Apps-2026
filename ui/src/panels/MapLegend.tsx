@@ -29,7 +29,7 @@ export function MapLegend({ region, activeLayers }: { region: RegionResponse; ac
           <span className="ll standard" /> Standard route
         </li>
         <li>
-          <span className="ll safe" /> Safe route
+          <span className="ll safe" /> Uncertainty-aware route
         </li>
         <li>
           <span className="ld scout" /> Scout point

@@ -1,0 +1,3 @@
+# Scientific JSON hashes must not depend on checkout OS or core.autocrlf.
+*.json text eol=lf
+*.geojson text eol=lf

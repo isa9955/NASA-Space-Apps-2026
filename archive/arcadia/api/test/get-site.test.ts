@@ -55,3 +55,27 @@ test("missing or malformed artifacts fail instead of returning fixtures", () => 
     assert.throws(() => readAssessments(path), /Invalid assessment artifact/);
   } finally { rmSync(directory, { recursive: true }); }
 });
+
+test("v2 accepts future water evidence while overall habitat evidence remains unknown", () => {
+  // Synthetic compatibility fixture only; never written to scientific artifacts.
+  const artifact = JSON.parse(readFileSync(join(__dirname, "../../pipeline/site_assessments.json"), "utf8"));
+  const site = structuredClone(artifact.sites[0]);
+  const observation = { value: 0.25, unit: "1 (dimensionless index)", status: "derived", sourceId: "swim4imim-combined-ci-0-1m" };
+  site.observations.swimCombinedIceConsistency = observation;
+  const water = site.suitability.factors.water;
+  Object.assign(water, { observation, status: "assessed", score: 62.5, weightedContribution: water.weight * 62.5 });
+  site.suitability.modelStatus = "complete";
+  site.suitability.availableWeight = 1;
+  site.suitability.modelScore = site.suitability.factors.terrain.weightedContribution + water.weightedContribution;
+  site.evidenceConfidence.factors.water = { level: "low", rationale: ["Synthetic compatibility fixture; not a verified observation."] };
+  site.evidenceConfidence.coverage = { supportedFactors: ["terrain", "water"], requiredFactors: ["terrain", "water"], missingFactors: [] };
+  site.missingInformation = site.missingInformation.filter((item: string) => item !== "water");
+  Object.assign(site.sources.find((source: { id: string }) => source.id === observation.sourceId),
+    { availability: "available", inputSha256: "0".repeat(64), rasterUrl: "https://swim.psi.edu/synthetic-test-only.tif" });
+  const { schemaVersion, scoringVersion, inputProvenance } = { ...artifact, schemaVersion: "2.0.0" };
+  const body = { schemaVersion, scoringVersion, inputProvenance, assessmentSchemaVersion: artifact.schemaVersion, site };
+  assert.ok(validResponse(body), ajv.errorsText(validResponse.errors));
+  assert.equal(site.suitability.score, null);
+  assert.equal(site.evidenceConfidence.level, "unknown");
+  assert.equal(site.radiationReview.dose, null);
+});

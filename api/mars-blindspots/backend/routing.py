@@ -40,9 +40,15 @@ def prepare_grids(meta, grid):
     """Port of JS prepareGrids(): returns dict of 2-D float arrays + cell size in metres."""
     T = np.asarray(grid['traversability'], float)
     Tw = np.asarray(grid['trav_worst'], float)
+    if (T.ndim != 2 or not T.size or Tw.shape != T.shape
+            or not np.isfinite(T).all() or not np.isfinite(Tw).all()
+            or np.any((T < 0) | (T > 1)) or np.any((Tw < 0) | (Tw > 1))):
+        raise ValueError('Invalid traversability grid; unsupported cells cannot become routes')
     rows, cols = T.shape
     step = grid.get('step_r') or (meta['size'][0] / rows)
     cell_m = step * (meta.get('resolution') or 1.0)
+    if not math.isfinite(cell_m) or cell_m <= 0 or grid.get('step_c', step) != step:
+        raise ValueError('Routing requires finite, positive square grid spacing')
     gap = np.maximum(0.0, T - Tw)
     safe = np.maximum(0.01, Tw / (1.0 + gap * SAFE_GAP_WEIGHT))
     g = {
@@ -53,6 +59,9 @@ def prepare_grids(meta, grid):
     }
     elev = grid.get('elevation')
     g['elev'] = np.asarray(elev, float) if elev else None
+    for key in ('slope', 'unc', 'elev'):
+        if g[key] is not None and (g[key].shape != T.shape or not np.isfinite(g[key]).all()):
+            raise ValueError('Invalid or unsupported terrain grid: ' + key)
     # Local relief (elevation minus 9×9 mean) and slope variability (5×5 std), edge windows clipped like the JS
     g['relief'] = g['elev'] - box_mean(g['elev'], 4) if g['elev'] is not None else None
     m = box_mean(g['slope'], 2)
@@ -85,13 +94,21 @@ _DIRS = [(-1, 0, 1.0), (1, 0, 1.0), (0, -1, 1.0), (0, 1, 1.0),
 def astar(g, start, end, pass_grid):
     """Port of JS astar(). start/end = (row, col). pass_grid = g['trav'] (standard) or g['safe'] (safe).
 
-    Step cost = move / (pass + 0.01), move ∈ {1, √2}. Cells with NOMINAL T < 0.05 are walls (except the goal);
+    Step cost = move / (pass + 0.01), move ∈ {1, √2}. Cells with NOMINAL T < 0.05 are walls, including endpoints;
     the safe planner treats worst-case-impassable cells as very expensive, not forbidden.
     Heuristic: octile distance × (1/1.01) — admissible because pass ≤ 1 ⇒ min step cost = 1/1.01.
     Returns list of (row, col) or None.
     """
     rows, cols = g['rows'], g['cols']
     T = g['trav']
+    if (pass_grid.shape != T.shape or not np.isfinite(pass_grid).all()
+            or np.any((pass_grid < 0) | (pass_grid > 1))):
+        raise ValueError('Invalid routing cost grid')
+    for point in (start, end):
+        if (len(point) != 2 or any(not isinstance(v, (int, np.integer)) for v in point)
+                or not 0 <= point[0] < rows or not 0 <= point[1] < cols
+                or T[tuple(point)] < IMPASSABLE_T):
+            return None
     er, ec = end
     min_step = 1.0 / 1.01
 
@@ -119,7 +136,9 @@ def astar(g, start, end, pass_grid):
             nr, nc = r + dr, c + dc
             if nr < 0 or nr >= rows or nc < 0 or nc >= cols or closed[nr, nc]:
                 continue
-            if T[nr, nc] < IMPASSABLE_T and (nr, nc) != tuple(end):
+            if T[nr, nc] < IMPASSABLE_T:
+                continue
+            if dr and dc and (T[r, nc] < IMPASSABLE_T or T[nr, c] < IMPASSABLE_T):
                 continue
             ng = best[r, c] + mv / (pass_grid[nr, nc] + COST_EPS)
             if ng < best[nr, nc]:

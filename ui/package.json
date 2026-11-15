@@ -8,9 +8,11 @@
     "build": "tsc -p tsconfig.json && vite build",
     "preview": "vite preview",
     "test": "vitest run",
+    "test:live": "vite-node scripts/verify-live.ts",
     "typecheck": "tsc -p tsconfig.json",
     "contracts": "vite-node scripts/export-contracts.ts",
-    "dev:live": "vite --mode live"
+    "dev:live": "vite --mode live",
+    "dev:mock": "vite --mode mock"
   },
   "dependencies": {
     "@turf/turf": "^7.2.0",

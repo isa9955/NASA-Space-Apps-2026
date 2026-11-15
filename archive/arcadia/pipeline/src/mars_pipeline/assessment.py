@@ -92,9 +92,9 @@ def assess_site(site, sources, model):
     water_evidence = {"level": "low" if water_ok else "unknown", "rationale": [
         "SWIM composite alone lacks constituent quality/coverage and local validation; confidence capped at Low."
         if water_ok else "SWIM is missing, invalid, or zero/inconclusive; water evidence support is Unknown."]}
-    levels = [terrain_evidence["level"], water_evidence["level"]]
-    rank = {"unknown": 0, "low": 1, "medium": 2, "high": 3}
-    overall_level = min(levels, key=rank.get)
+    # Terrain/water screening coverage cannot establish overall habitat evidence.
+    # This engine has no verified inputs for the other critical review domains.
+    overall_level = "unknown"
     warnings = ["IMPORTANT: Sampling points are not ranked habitat recommendations.",
                 "IMPORTANT: Regional slope cannot resolve rocks, small craters, soil bearing capacity or construction hazards.",
                 "BLOCKER: Radiation risk and shielding requirements are unresolved; no site is certified safe."]
@@ -117,7 +117,8 @@ def assess_site(site, sources, model):
                                "coverage": {"supportedFactors": [key for key, factor in factors.items() if factor["score"] is not None],
                                             "requiredFactors": ["terrain", "water"], "missingFactors": missing},
                                "factors": {"terrain": terrain_evidence, "water": water_evidence},
-                               "rationale": ["Overall evidence support is the weakest required factor; independent of factor scores."]},
+                               "rationale": ["Overall habitat evidence remains Unknown: site-specific radiation, shielding, thermal, geotechnical and local resource validation are unresolved, even if terrain and water screening factors are available.",
+                                             "Factor confidence is independent of suitability; SWIM consistency is not a probability of habitability or confirmed resource accessibility."]},
         "radiationReview": {"status": "insufficient-evidence", "risk": "unknown",
                             "shieldingRequirements": "unresolved", "dose": None, "observationIds": [],
                             "summary": "No site-specific radiation or shielding evidence exists in the Phase 2 input; specialist review required."},

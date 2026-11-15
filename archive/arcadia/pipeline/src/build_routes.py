@@ -108,7 +108,7 @@ def main():
                      "invalidElevationCellCount": int((~np.isfinite(elevation) | ((elevation == 0) & (count_values == 0))).sum())},
         "features": features,
     }
-    (ROOT / "routes.geojson").write_text(json.dumps(output, indent=2, allow_nan=False) + "\n", encoding="utf-8")
+    (ROOT / "routes.geojson").write_text(json.dumps(output, indent=2, allow_nan=False) + "\n", encoding="utf-8", newline="\n")
     for feature in features:
         print(feature["properties"]["siteId"], feature["properties"]["status"], feature["properties"]["unavailableReason"])
 

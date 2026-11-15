@@ -4,9 +4,11 @@ React + Vite + Leaflet. Design and contract: `../TECHNICAL_SPEC.md` §7–8.
 
 ```powershell
 cd ui
-npm install
+npm ci
 npm run dev:live   # http://localhost:5173 with real data (start the Python API first)
-npm run dev        # same UI on built-in mock data
+npm run dev        # real Python API (same default as dev:live)
+npm run dev:mock   # explicit synthetic UI-development fixtures only
+npm run test:live  # real HTTP + Zod checks, requires Python and Vite
 npm test           # contract + client + logic tests
 npm run build
 npm run contracts  # export JSON Schema + examples to ../contracts
@@ -21,9 +23,9 @@ error naming the bad field instead of breaking the screen.
 
 - **Real data:** start the Python API (`python -m backend.dev_server` in
   `api/mars-blindspots/`), then `npm run dev:live`. `/api` is forwarded to
-  `http://localhost:7071` (set in `.env.live`). The header shows **Real HiRISE
+  `http://127.0.0.1:7071` (set in `.env.live`). The header shows **Real HiRISE
   data**.
-- **Mock data:** `npm run dev` answers `/api` from a built-in mock backend
+- **Mock data:** `npm run dev:mock` answers `/api` from a built-in mock backend
   (`src/mocks/`, synthetic terrain at the same site). The header shows **Mock
   data**. Mock values are never real measurements, and mocks are not in the
   production bundle.
@@ -35,3 +37,9 @@ error naming the bad field instead of breaking the screen.
 - `src/map/SiteMap.tsx` – Leaflet map (relief, zones, routes, markers)
 - `src/panels/` – header, zones, route planner, conditions card, legend
 - `src/mocks/` – dev-only mock backend (terrain, zones, two-route A*)
+
+Normal dev/preview never falls back to mock data if the API is down. Sources
+and solar/model limitations are visible without changing the existing layout.
+The `safe` field is retained for compatibility but displayed as uncertainty-aware
+and provisional. Contract examples and ordinary mock unit tests are synthetic;
+use `test:live` and browser checks for real-data evidence.

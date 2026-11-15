@@ -1,0 +1,76 @@
+{
+  "sourceUrl": "https://hirise.lpl.arizona.edu/PDS/DTM/ESP/ORB_041200_041299/ESP_041222_2210_ESP_040787_2210/DTEEC_041222_2210_040787_2210_A01.IMG",
+  "rawSha256Status": "Reported by teammate in RAW_DATA.md; full raw raster not independently downloaded or hashed",
+  "reportedRawSha256": "3960ea48d43f3d823d79c4dd253a131e15cf9b5dfa5090f8cc92909f522bb13c",
+  "samples": [
+    {
+      "cell": [
+        600,
+        100
+      ],
+      "sourceByteRange": [
+        238198020,
+        238478219
+      ],
+      "bytesSha256": "c71e766c14668a395b35c1d92e54921ab2dcdb279a5b8eab1b3c848ac73a58e7",
+      "rawBlockMeanElevationMeters": -2210.783837890625,
+      "exportedRoundedElevationMeters": -2210.8
+    },
+    {
+      "cell": [
+        150,
+        300
+      ],
+      "sourceByteRange": [
+        112108020,
+        112388219
+      ],
+      "bytesSha256": "1561bf596130a3636cf4ca54e90629be4edd75ea3a941b7414bc0a0335a65640",
+      "rawBlockMeanElevationMeters": -1455.6675769042968,
+      "exportedRoundedElevationMeters": -1455.7
+    },
+    {
+      "cell": [
+        400,
+        200
+      ],
+      "sourceByteRange": [
+        182158020,
+        182438219
+      ],
+      "bytesSha256": "8315b62534bb2a913f30c9cb1357a8f4e6fcd2e6cecac0fd38ab9678f0161cc2",
+      "rawBlockMeanElevationMeters": -1997.0173034667969,
+      "exportedRoundedElevationMeters": -1997.0
+    }
+  ],
+  "crsWkt": "PROJCS[\"EQUIRECTANGULAR MARS\",GEOGCS[\"GCS_MARS\",DATUM[\"D_MARS\",SPHEROID[\"MARS_localRadius\",3387887.658234,0]],PRIMEM[\"Reference_Meridian\",0],UNIT[\"degree\",0.0174532925199433,AUTHORITY[\"EPSG\",\"9122\"]]],PROJECTION[\"Equirectangular\"],PARAMETER[\"standard_parallel_1\",40],PARAMETER[\"central_meridian\",30.18],PARAMETER[\"false_easting\",0],PARAMETER[\"false_northing\",0],UNIT[\"metre\",1,AUTHORITY[\"EPSG\",\"9001\"]],AXIS[\"Easting\",EAST],AXIS[\"Northing\",NORTH]]",
+  "transform": [
+    1.0017330185711,
+    0.0,
+    -3307.722427321872,
+    0.0,
+    -1.0017330185711,
+    2415821.420372945
+  ],
+  "shape": [
+    13880,
+    7005
+  ],
+  "nodata": -3.4028226550889045e+38,
+  "pixelSizeMeters": [
+    1.0017330185711,
+    1.0017330185711
+  ],
+  "sourceLabelPrefixSha256": "10a4b7f7ebb358887047fa3ae145a27925833bf16b1d35a74e29654f425961ec",
+  "processedGridSha256": "74bafdba317a1bda6b552ed6fd4fb35779ef955afb9281e1adbd4dabec6de82e",
+  "processedMetadataSha256": "0ecba9e3fb49bb58730ca8982d5c97f8ef0c9781691b14eb1e03a2d382c599d0",
+  "productId": "DTEEC_041222_2210_040787_2210_A01",
+  "datasetId": "MRO-M-HIRISE-5-DTM-V1.0",
+  "credit": "NASA/JPL/UArizona",
+  "valueUnit": "meter above Mars 2000 equipotential surface",
+  "pixelEncoding": "PC_REAL little-endian float32; scale 1; offset 0",
+  "latitudeType": "planetocentric",
+  "longitudeDirection": "positive east",
+  "missingConstantHex": "FF7FFFFB",
+  "verificationScope": "Official attached-label metadata and three 10x10 block means only; not full raster hash or complete derived-grid regeneration"
+}

@@ -3,7 +3,8 @@ import react from "@vitejs/plugin-react";
 
 /**
  * /api handling in development:
- *   - API_PROXY_TARGET unset  -> in-process mock backend (src/mocks/server.ts)
+ *   - normal/live mode -> Python API (no synthetic fallback)
+ *   - explicit mock mode -> in-process synthetic backend for isolated UI work
  *   - API_PROXY_TARGET=http://localhost:7071 -> forward to the Python Functions host
  * The UI code is identical in both cases: it always fetches /api/*.
  */
@@ -36,7 +37,8 @@ function mockApi(): Plugin {
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
-  const target = env.API_PROXY_TARGET;
+  const useMock = mode === "mock";
+  const target = useMock ? undefined : env.API_PROXY_TARGET || "http://127.0.0.1:7071";
   return {
     plugins: [react(), ...(target ? [] : [mockApi()])],
     server: target ? { proxy: { "/api": target } } : undefined,

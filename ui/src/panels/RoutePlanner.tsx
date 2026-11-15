@@ -19,12 +19,12 @@ const COPY: Record<RouteKind, { title: string; badge: string; desc: string }> = 
   standard: {
     title: "Standard Route",
     badge: "Trusts the map",
-    desc: "Shortest path on nominal traversability. Ignores measurement uncertainty."
+    desc: "Lowest modeled cost on nominal traversability. Does not penalise uncertainty."
   },
   safe: {
-    title: "Safe Route",
+    title: "Uncertainty-aware Route",
     badge: "Avoids blindspots",
-    desc: "Plans on worst-case traversability and penalises uncertain cells."
+    desc: "Plans on modeled worst-case traversability. Provisional, not certified safe."
   }
 };
 
@@ -85,6 +85,8 @@ export function RoutePlanner({ hasStart, hasEnd, placing, onPlace, onClear, onDe
           <RouteCard v={state.data.standard} onFocus={onFocus} />
           <RouteCard v={state.data.safe} onFocus={onFocus} />
           <p className="compare">{compareRoutes(state.data.standard, state.data.safe)}</p>
+          <p className="footnote">Both routes are provisional. Walking time assumes 50 m/min;
+            blindspot percentages describe model sensitivity, not hazard probability.</p>
         </>
       )}
     </section>
@@ -111,7 +113,7 @@ function RouteCard({ v, onFocus }: { v: RouteVariant; onFocus: (k: RouteKind | n
       <div className="rc-stats">
         <div>
           <strong>{fmtNum(v.distanceKm, 2)} km</strong>
-          <span>Distance</span>
+          <span>Grid distance</span>
         </div>
         <div>
           <strong>{fmtNum(v.walkMin)} min</strong>
